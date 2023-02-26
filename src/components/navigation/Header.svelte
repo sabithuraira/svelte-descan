@@ -8,7 +8,7 @@
 
         <div class="d-flex flex-row w-100 justify-content-between align-items-center d-lg-none">
             <div class="navbar-brand py-2">
-                <a href="./index.html">
+                <a href="/">
                     <img class="logo-dark" src="/images/logo/logofont.png" srcset="/images/logo/logofont.png 8x" alt="" />
                     <img class="logo-light" src="/images/logo/logofont.png" srcset="/images/logo/logofont.png 8x"
                     alt="" />
@@ -38,7 +38,7 @@
         <div class="navbar-collapse-wrapper d-flex flex-row align-items-center w-100">
             <div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">
             <div class="navbar-brand  px-2">
-                <a href="./index.html">
+                <a href="/">
                 <img src="/images/logo/logofont.png" srcset="/images/logo/logofont.png 8x" alt="" />
                 </a>
             </div>
