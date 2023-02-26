@@ -1,4 +1,4 @@
-export interface Wilayah {
+export type Wilayah = {
 	kode_prov: string,
 	kode_kab: string,
 	kode_kec: string,

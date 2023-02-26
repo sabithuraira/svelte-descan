@@ -2,8 +2,8 @@
 	import Header from '../../../components/navigation/Header.svelte';
 	import CenterMenu from '../../../components/navigation/CenterMenu.svelte';
 	import Footer from '../../../components/navigation/Footer.svelte';
-	import TopContent from '../../../components/monograph/TopContent.svelte';
-	import Body from '../../../components/monograph/Body.svelte';
+	import TopContent from '../../../components/umkm/TopContent.svelte';
+	import Body from '../../../components/umkm/Body.svelte';
 
 	import { onMount } from 'svelte';
  	import axios from 'axios'
@@ -81,7 +81,7 @@
     <Header></Header>
     <TopContent></TopContent>
 	<CenterMenu kode_wilayah={data.kode}
-		name_page="monograph"></CenterMenu>
+		name_page="umkm"></CenterMenu>
     <Body></Body>
 </div>
 

@@ -1,9 +1,10 @@
 <script>
+// @ts-nocheck
 	import Header from '../../../components/navigation/Header.svelte';
 	import CenterMenu from '../../../components/navigation/CenterMenu.svelte';
 	import Footer from '../../../components/navigation/Footer.svelte';
-	import TopContent from '../../../components/monograph/TopContent.svelte';
-	import Body from '../../../components/monograph/Body.svelte';
+	import TopContent from '../../../components/kemiskinan/TopContent.svelte';
+	import Body from '../../../components/kemiskinan/Body.svelte';
 
 	import { onMount } from 'svelte';
  	import axios from 'axios'
@@ -70,8 +71,11 @@
 <svelte:head>
     <link rel="stylesheet" href="/sandbox/css/plugins.css">
     <link rel="stylesheet" href="/sandbox/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+
 	<script src="/sandbox/js/plugins.js"></script>
 	<script src="/sandbox/js/theme.js"></script>
+
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
 		integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -81,8 +85,8 @@
     <Header></Header>
     <TopContent></TopContent>
 	<CenterMenu kode_wilayah={data.kode}
-		name_page="monograph"></CenterMenu>
-    <Body></Body>
+		name_page="kemiskinan"></CenterMenu>
+    <Body kode_wilayah={data.kode}></Body>
 </div>
 
 <Footer></Footer>

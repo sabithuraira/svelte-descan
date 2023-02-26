@@ -36,20 +36,17 @@
 				data-cues="slideInDown"
 				data-group="page-title"
 				data-disabled="true">
-			<h1
-				class="display-1 text-white fs-60 mb-4 px-md-15 px-lg-0"
+			<h1 class="display-1 text-white fs-60 mb-4 px-md-15 px-lg-0"
 				data-cue="slideInDown"
 				data-group="page-title"
 				data-show="true"
-				style="
-				animation-name: slideInDown;
-				animation-duration: 700ms;
-				animation-timing-function: ease;
-				animation-delay: 0ms;
-				animation-direction: normal;
-				animation-fill-mode: both;
-				"
-			>
+				style="animation-name: slideInDown;
+					animation-duration: 700ms;
+					animation-timing-function: ease;
+					animation-delay: 0ms;
+					animation-direction: normal;
+					animation-fill-mode: both;
+					" >
 				Desa Bumi <span class="underline-3 style-2 yellow">Sriwijaya</span>
 			</h1>
 			<p
