@@ -18,16 +18,7 @@
 	const statusKesejahteraanLabel = {1: "Sangat Miskin", 2: "Miskin", 3: "Tidak Miskin"};
 	let jKeluarga = 0;
 
-
 	const createMap = () => {
-            // map = leaflet.map(document.getElementById("petaKemiskinan"), {
-            //   	attributionControl: false,
-            // }).setView([-2.990934, 104.756554], 7);
-
-            // leaflet.tileLayer("https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}", {
-            //   	subdomains: ["mt0", "mt1", "mt2", "mt3"],
-            // }).addTo(map);
-
 			map = leaflet.map("petaKemiskinan").setView([-2.9655006, 104.7335063], 13);
 			leaflet
 				.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {

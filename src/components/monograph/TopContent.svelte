@@ -20,10 +20,12 @@
 						style="max-height: 300px; max-width: 200px; height:100% ; width: 100%;"></figure>
 				</div>
 				<div class="col-md-6 text-center ">
-					<figure class="rounded mx-4"><img src="/images/kabs-logo/logo1601.png"
-						srcset="/images/kabs-logo/logo1601.png 2x" alt=""
-						style="max-height: 300px; max-width: 200px;  height:100% ; width: 100%;"></figure>
-				</div>
+						{#if info_wilayah.kode_kab}
+						<figure class="rounded mx-4"><img src="/images/kabs-logo/logo{info_wilayah.kode_prov+info_wilayah.kode_kab}.png"
+							srcset="/images/kabs-logo/logo{info_wilayah.kode_prov+info_wilayah.kode_kab}.png 2x" alt=""
+							style="max-height: 300px; max-width: 200px;  height:100% ; width: 100%;"></figure>
+						{/if}
+					</div>
 				</div>
 			</div>
 			<div class="col-lg-6 text-white">

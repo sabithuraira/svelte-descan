@@ -72,8 +72,7 @@
     <link rel="stylesheet" href="/sandbox/css/plugins.css">
     <link rel="stylesheet" href="/sandbox/css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
-
-	<script src="/sandbox/js/plugins.js"></script>
+	
 	<script src="/sandbox/js/theme.js"></script>
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"

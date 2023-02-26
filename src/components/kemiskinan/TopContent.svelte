@@ -37,19 +37,11 @@
 			</figure>
 			</div>
 			<div class="col-md-6 text-center">
-			<figure class="rounded mx-4">
-				<img
-				src="/images/kabs-logo/logo1601.png"
-				srcset="/images/kabs-logo/logo1601.png 2x"
-				alt=""
-				style="
-					max-height: 300px;
-					max-width: 200px;
-					height: 100%;
-					width: 100%;
-				"
-				/>
-			</figure>
+				{#if info_wilayah.kode_kab}
+				<figure class="rounded mx-4"><img src="/images/kabs-logo/logo{info_wilayah.kode_prov+info_wilayah.kode_kab}.png"
+					srcset="/images/kabs-logo/logo{info_wilayah.kode_prov+info_wilayah.kode_kab}.png 2x" alt=""
+					style="max-height: 300px; max-width: 200px;  height:100% ; width: 100%;"></figure>
+				{/if}
 			</div>
 		</div>
 		</div>
@@ -60,23 +52,12 @@
 			data-delay="600"
 		>
 			<h1 class="display-1 text-white mb-4">
-			Desa/Kelurahan <br />
-			<span
-				class="typer text-sky"
-				data-delay="100"
-				data-words="Bandar Jaya"
-			>
-			</span>
-			<span class="cursor text-sky" data-owner="typer"></span>
+			{ info_wilayah.nama }
+				<span class="cursor text-sky" data-owner="typer"></span>
 			</h1>
 			<p class="lead fs-24 lh-sm text-white mb-7">
 			Desa Penghasil Karet Terbanyak di Kabupaten Ogan Komering Ulu
 			</p>
-			<div>
-			<a class="btn btn-lg btn-sky rounded" id="btn_lanjutkan"
-				>Lanjutkan</a
-			>
-			</div>
 		</div>
 		</div>
 	</div>
