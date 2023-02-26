@@ -1,10 +1,20 @@
 <script>
-	import { infoWilayah, parentWilayah, childWilayah } from '../../stores/wilayahStores';
+	import { infoWilayah, deskripsi } from '../../stores/wilayahStores';
 
-	let info_wilayah = null;
+	let info_wilayah = {
+		kode_prov: '16', 
+		kode_kab: '',
+		nama: ''
+	};
+
+	let deskripsiLabel = '';
 
 	infoWilayah.subscribe((value) => {
 		info_wilayah = value;
+	});
+
+	deskripsi.subscribe((value) => {
+		deskripsiLabel = value;
 	});
 </script>
 
@@ -37,7 +47,7 @@
 			</figure>
 			</div>
 			<div class="col-md-6 text-center">
-				{#if info_wilayah.kode_kab}
+				{#if info_wilayah.kode_kab!=''}
 				<figure class="rounded mx-4"><img src="/images/kabs-logo/logo{info_wilayah.kode_prov+info_wilayah.kode_kab}.png"
 					srcset="/images/kabs-logo/logo{info_wilayah.kode_prov+info_wilayah.kode_kab}.png 2x" alt=""
 					style="max-height: 300px; max-width: 200px;  height:100% ; width: 100%;"></figure>
@@ -51,13 +61,8 @@
 			data-group="page-title"
 			data-delay="600"
 		>
-			<h1 class="display-1 text-white mb-4">
-			{ info_wilayah.nama }
-				<span class="cursor text-sky" data-owner="typer"></span>
-			</h1>
-			<p class="lead fs-24 lh-sm text-white mb-7">
-			Desa Penghasil Karet Terbanyak di Kabupaten Ogan Komering Ulu
-			</p>
+			<h1 class="display-1 text-white mb-4">{ info_wilayah.nama }</h1>
+			<p class="lead fs-24 lh-sm text-white mb-7">{deskripsiLabel}</p>
 		</div>
 		</div>
 	</div>

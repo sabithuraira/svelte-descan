@@ -14,6 +14,7 @@
                 <li><a class="{name_page=='stunting' ? 'active' : ''}" href="/stunting/{kode_wilayah}">Stunting</a></li>
                 <li><a class="{name_page=='penduduk' ? 'active' : ''}" href="/penduduk/{kode_wilayah}">Penduduk</a></li>
                 <li><a class="{name_page=='umkm' ? 'active' : ''}" href="/umkm/{kode_wilayah}">UMKM</a></li>
+                <li><a class="{name_page=='pengurus' ? 'active' : ''}"  href="/tematik/{kode_wilayah}">Pengurus</a></li>
                 <li><a class="{name_page=='tematik' ? 'active' : ''}"  href="/tematik/{kode_wilayah}">Peta Tematik</a></li>
             </ul>
             </div>

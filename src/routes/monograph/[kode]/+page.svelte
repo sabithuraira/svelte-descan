@@ -11,7 +11,7 @@
 	/** @type {import('./$types').PageData} */
 	export let data;
 
-	import { infoWilayah, parentWilayah, childWilayah } from '../../../stores/wilayahStores';
+	import { infoWilayah, parentWilayah, childWilayah, deskripsi } from '../../../stores/wilayahStores';
 	import { urlApi } from '../../../stores/generalStores';
 
 	async function loadWilayah(){
@@ -21,6 +21,8 @@
 				infoWilayah.set(data.datas.result);
 				parentWilayah.set(data.datas.info_induk);
 				childWilayah.set(data.datas.info_child);
+				deskripsi.set(data.datas.deskripsi);
+
 			}).catch(({ response })=>{
 				console.error(response)
 			})
