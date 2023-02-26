@@ -56,7 +56,6 @@ var theme = {
 				if (navbarClonedClass.contains('transparent') && navbarClonedClass.contains('navbar-dark')) {
 					this.clonedElem.className = this.clonedElem.className.replace("navbar-dark","navbar-light");
 				}
-				console.log("masuk on stick doang")
 			}
 		};
 		var banner = new Headhesive('.navbar', options);

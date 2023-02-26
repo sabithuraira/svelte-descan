@@ -28,7 +28,8 @@
 </svelte:head>
 
 <section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-300"
-	data-image-src="https://webapps.bps.go.id/sumsel/tematik/images/footage/img_(8).jpg" >
+	data-image-src="https://webapps.bps.go.id/sumsel/tematik/images/footage/img_(8).jpg"
+	style="background-image: url('https://webapps.bps.go.id/sumsel/tematik/images/footage/img_(8).jpg');" >
 	<div class="container pt-17 pb-19 pt-md-18 pb-md-17 text-center">
 		<div class="row">
 			<div class="col-lg-8 col-xl-7 col-xxl-6 mx-auto"
@@ -82,7 +83,7 @@
 				"
 			>
 				<figure class="img-responsive overlay overlay-1 hover-scale rounded mb-0">
-				<a href="/monograph">
+				<a href="/monograph/16">
 					<img class="img-responsive"
 						src="/images/prov-logo/logo1600.png"
 						alt="" style="max-height:200px; width: auto" />

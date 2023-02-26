@@ -1,3 +1,13 @@
+<script>
+	import { infoWilayah, parentWilayah, childWilayah } from '../../stores/wilayahStores';
+
+	let info_wilayah = [];
+
+	infoWilayah.subscribe((value) => {
+		info_wilayah = value;
+	});
+</script>
+
 <section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-900 bg-overlay-900 "
     data-image-src="/images/img/desa/desa_1.jpg">
   <div class="container pt-6 pt-md-15 pb-8">
@@ -14,15 +24,10 @@
                 srcset="/images/kabs-logo/logo1601.png 2x" alt=""
                 style="max-height: 300px; max-width: 200px;  height:100% ; width: 100%;"></figure>
           </div>
-          <!-- <div class="col-md-12 text-center">
-              <figure class="rounded"><img src="/images/img/foto_pengurus/ronaldo.jpeg"
-                  srcset="/images/img/foto_pengurus/ronaldo.jpeg 2x" alt=""
-                  style="max-height: 300px; max-width: 200px; height:100% ; width: 100%;"></figure>
-            </div> -->
         </div>
       </div>
       <div class="col-lg-6 text-white">
-        <h2 class="display-4 mb-3 text-white">Desa/Kelurahan Bandar Jaya</h2>
+        <h2 class="display-4 mb-3 text-white">{ info_wilayah.nama }</h2>
         <p class="lead fs-lg mb-8 pe-xxl-2">Desa Penghasil Karet Terbanyak di Kabupaten Ogan Komering
           Ulu</p>
         <div class="row gx-xl-10 gy-6" data-cues="slideInUp" data-group="services">

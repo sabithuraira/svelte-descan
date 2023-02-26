@@ -1,9 +1,36 @@
 <script>
-	import Header from '../../components/navigation/Header.svelte';
-	import Footer from '../../components/navigation/Footer.svelte';
-	import Body from '../../components/monograph/Body.svelte';
+	import Header from '../../../components/navigation/Header.svelte';
+	import Footer from '../../../components/navigation/Footer.svelte';
+	import Body from '../../../components/monograph/Body.svelte';
 
 	import { onMount } from 'svelte';
+ 	import axios from 'axios'
+
+	/** @type {import('./$types').PageData} */
+	export let data;
+
+	import { infoWilayah, parentWilayah, childWilayah } from '../../../stores/wilayahStores';
+	import { urlApi } from '../../../stores/generalStores';
+
+	async function loadWilayah(){
+		await axios
+			.get(`${$urlApi}wilayah/${data.kode}/show`)
+			.then(({data})=>{
+				infoWilayah.set(data.datas.result);
+				parentWilayah.set(data.datas.info_induk);
+				childWilayah.set(data.datas.info_child);
+			}).catch(({ response })=>{
+				console.error(response)
+			})
+
+		// await axios
+		// 	.get(`${urlApi}pengurus/${props.kode}/list`)
+		// 	.then(({data})=>{
+		// 		pengurusStore.setPengurus(data.datas.data);
+		// 	}).catch(({ response })=>{
+		// 		console.error(response)
+		// 	})
+	}
 
     onMount(() => {
 		theme.stickyHeader();
@@ -33,6 +60,8 @@
 		// theme.pricingSwitcher();
 		// theme.textRotator();
 		// theme.codeSnippet();
+
+		loadWilayah();
     });
 </script>
 
