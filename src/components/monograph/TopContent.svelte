@@ -1,13 +1,21 @@
 <script>
-	import { infoWilayah, deskripsi } from '../../stores/wilayahStores';
+// @ts-nocheck
 
-	let info_wilayah = {
-		kode_prov: '16', 
-		kode_kab: '',
-		nama: ''
-	};
+	import { infoWilayah, deskripsi } from '../../stores/wilayahStores';
+	import { monografData } from '../../stores/monografStores';
+
+	let info_wilayah = { kode_prov: '16',  kode_kab: '', nama: '' };
 
 	let deskripsiLabel = '';
+	let infrastruktur_ibadah = [];
+	let sum_infrastruktur_ibadah = '0';
+
+	let infrastruktur_kesehatan = [];
+	let sum_infrastruktur_kesehatan = '0';
+
+	let penduduk = [];
+	let sum_penduduk = '0';
+	let sum_luas_wilayah = '0';
 
 	infoWilayah.subscribe((value) => {
 		info_wilayah = value;
@@ -15,6 +23,19 @@
 
 	deskripsi.subscribe((value) => {
 		deskripsiLabel = value;
+	});
+
+	monografData.subscribe((value) => {
+		infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.sort((a,b) => { return a.nilai - b.nilai; });
+		sum_infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+
+		infrastruktur_kesehatan = value.jumlah_infrastruktur_kesehatan.sort((a,b) => { return a.nilai - b.nilai; });
+		sum_infrastruktur_kesehatan = value.jumlah_infrastruktur_kesehatan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+
+		penduduk = value.jumlah_penduduk.sort((a,b) => { return a.nilai - b.nilai; });
+		sum_penduduk = value.jumlah_penduduk.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+
+		sum_luas_wilayah = value.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 	});
 </script>
 
@@ -51,7 +72,7 @@
 					</div>
 					<div>
 						<h4 class="mb-1 text-white">Luas Wilayah</h4>
-						<h2 class="mb-0  text-white">12 Km<sup>2</sup></h2>
+						<h2 class="mb-0  text-white">{sum_luas_wilayah} Km<sup>2</sup></h2>
 					</div>
 					</button>
 				</div>
@@ -66,7 +87,7 @@
 					</div>
 					<div>
 						<h4 class="mb-1 text-white">Penduduk</h4>
-						<h2 class="mb-0  text-white">7.385 jiwa</h2>
+						<h2 class="mb-0  text-white">{sum_penduduk} jiwa</h2>
 					</div>
 
 					</button>
@@ -81,7 +102,7 @@
 					</div>
 					<div>
 						<h4 class="mb-1 text-white">Fasilitas Kesehatan</h4>
-						<h2 class="mb-0  text-white">16</h2>
+						<h2 class="mb-0  text-white">{ sum_infrastruktur_kesehatan }</h2>
 					</div>
 
 					</button>
@@ -96,7 +117,7 @@
 					</div>
 					<div>
 						<h4 class="mb-1 text-white">Tempat Ibadah</h4>
-						<h2 class="mb-0  text-white">38</h2>
+						<h2 class="mb-0  text-white">{ sum_infrastruktur_ibadah }</h2>
 					</div>
 					</button>
 				</div>

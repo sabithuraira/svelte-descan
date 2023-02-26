@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
 	import Header from '../../../components/navigation/Header.svelte';
 	import CenterMenu from '../../../components/navigation/CenterMenu.svelte';
 	import Footer from '../../../components/navigation/Footer.svelte';
@@ -12,6 +14,8 @@
 	export let data;
 
 	import { infoWilayah, parentWilayah, childWilayah, deskripsi } from '../../../stores/wilayahStores';
+	import { monografData } from '../../../stores/monografStores';
+	import { pengurusLast } from '../../../stores/pengurusStores';
 	import { urlApi } from '../../../stores/generalStores';
 
 	async function loadWilayah(){
@@ -27,13 +31,40 @@
 				console.error(response)
 			})
 
-		// await axios
-		// 	.get(`${urlApi}pengurus/${props.kode}/list`)
-		// 	.then(({data})=>{
-		// 		pengurusStore.setPengurus(data.datas.data);
-		// 	}).catch(({ response })=>{
-		// 		console.error(response)
-		// 	})
+		await axios
+			.get(`${$urlApi}dashboard/${data.kode}/monograph`)
+			.then(({data})=>{
+				let tempData = data.datas;
+				monografData.set({
+					luas_wilayah: tempData.filter(item => item.kategori_variabel=='luas_wilayah'),  
+					ketinggian_wilayah: tempData.filter(item => item.kategori_variabel=='ketinggian_wilayah'), 
+					batas_wilayah: tempData.filter(item => item.kategori_variabel=='batas_wilayah'),
+					jumlah_penduduk: tempData.filter(item => item.kategori_variabel=='jumlah_penduduk'), 
+					jumlah_keluarga: tempData.filter(item => item.kategori_variabel=='jumlah_keluarga'), 
+					jumlah_infrastruktur_pendidikan: tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_pendidikan'),
+					jumlah_infrastruktur_kesehatan: tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_kesehatan'),
+					jumlah_infrastruktur_ibadah: tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_ibadah'),
+					informasi_internet: tempData.filter(item => item.kategori_variabel=='informasi_internet'),
+					jumlah_lembaga_keuangan: tempData.filter(item => item.kategori_variabel=='jumlah_lembaga_keuangan'),
+					jumlah_infrastruktur_ekonomi: tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_ekonomi'),
+					jumlah_industri: tempData.filter(item => item.kategori_variabel=='jumlah_industri'),
+					keunggulan_wilayah: tempData.filter(item => item.kategori_variabel=='keunggulan_wilayah'),
+					pangan_unggulan: tempData.filter(item => item.kategori_variabel=='pangan_unggulan'),
+					hortikultura_unggulan: tempData.filter(item => item.kategori_variabel=='hortikultura_unggulan'),
+				});
+
+			}).catch(({ response })=>{
+				console.error(response)
+			})
+
+		await axios
+			.get(`${$urlApi}pengurus/${data.kode}/last`)
+			.then(({data})=>{
+				pengurusLast.set(data.datas);
+				console.log(data)
+			}).catch(({ response })=>{
+				console.error(response)
+			})
 	}
 
     onMount(() => {
