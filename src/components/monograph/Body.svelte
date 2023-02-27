@@ -220,25 +220,25 @@
 		<div class="row gx-lg-8 gx-xl-12 gy-10 align-items-center">
 		<div class="col-lg-8 mt-0">
 			<!-- <h2 class="fs-15 text-uppercase text-line text-primary text-center mb-3">Meet the Team</h2> -->
-			<h3 class="display-5 mb-5">Desa/Kelurahan Bandar Jaya</h3>
-			<p>Luas Wilayah: 12 Km<sup>2</sup></p>
+			<h3 class="display-5 mb-5">{ info_wilayah.nama }</h3>
+			<p>Luas Wilayah: {sum_luas_wilayah} Km<sup>2</sup></p>
 			<p>Batas Wilayah: Desa Sumber Jaya, Desa Sumber Terang</p>
 			<p>Keunggulan Wilayah: Tanah Gembur</p>
 			<p>Komoditas Tanaman Pangan Unggulan: Padi</p>
 			<div class="row counter-wrapper gy-6">
-			<div class="col-md-4">
-				<h3 class="counter text-primary">2184</h3>
-				<p>Luas Tanam Padi</p>
-			</div>
-			<div class="col-md-4">
-				<h3 class="counter text-primary">7518</h3>
-				<p>Luas Panen Padi</p>
-			</div>
+				<div class="col-md-4">
+					<h3 class="counter text-primary">2184</h3>
+					<p>Luas Tanam Padi</p>
+				</div>
+				<div class="col-md-4">
+					<h3 class="counter text-primary">7518</h3>
+					<p>Luas Panen Padi</p>
+				</div>
 
-			<div class="col-md-4">
-				<h3 class="counter text-primary">3472</h3>
-				<p>Produktifitas</p>
-			</div>
+				<div class="col-md-4">
+					<h3 class="counter text-primary">3472</h3>
+					<p>Produktifitas</p>
+				</div>
 
 
 			</div>
@@ -246,7 +246,7 @@
 
 		<div class="col-lg-4">
 			<div class="swiper-container text-center mb-6" data-margin="30" data-dots="true" data-items-xl="1"
-			data-items-md="1" data-items-xs="1">
+				data-items-md="1" data-items-xs="1">
 			<div class="swiper">
 				<div class="swiper-wrapper">
 				<div class="swiper-slide">
