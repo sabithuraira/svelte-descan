@@ -1,7 +1,6 @@
 <script>
 	// @ts-nocheck
 		import Header from '../../../components/navigation/Header.svelte';
-		import CenterMenu from '../../../components/navigation/CenterMenu.svelte';
 		import Footer from '../../../components/navigation/Footer.svelte';
 		import TopContent from '../../../components/stunting/TopContent.svelte';
 		import Body from '../../../components/stunting/Body.svelte';
@@ -83,8 +82,6 @@
 	<div class="content-wrapper">
 		<Header></Header>
 		<TopContent></TopContent>
-		<CenterMenu kode_wilayah={data.kode}
-			name_page="stunting"></CenterMenu>
 		<Body kode_wilayah={data.kode}></Body>
 	</div>
 	

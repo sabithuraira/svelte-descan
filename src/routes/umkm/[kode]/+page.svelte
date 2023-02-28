@@ -1,6 +1,5 @@
 <script>
 	import Header from '../../../components/navigation/Header.svelte';
-	import CenterMenu from '../../../components/navigation/CenterMenu.svelte';
 	import Footer from '../../../components/navigation/Footer.svelte';
 	import TopContent from '../../../components/umkm/TopContent.svelte';
 	import Body from '../../../components/umkm/Body.svelte';
@@ -79,8 +78,6 @@
 <div class="content-wrapper">
     <Header></Header>
     <TopContent></TopContent>
-	<CenterMenu kode_wilayah={data.kode}
-		name_page="umkm"></CenterMenu>
     <Body></Body>
 </div>
 
