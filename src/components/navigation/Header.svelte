@@ -1,4 +1,7 @@
 <script>
+	import { redirect } from '@sveltejs/kit';
+    
+    let keyword = ""
 </script>
 
 <header class="wrapper bg-soft-primary">
@@ -86,10 +89,11 @@
                 <ul class="navbar-nav ms-auto me-0 ">
                 <li>
                     <aside class="col-lg-12 sidebar">
-                    <form class="search-form">
+                    <form class="search-form" action="/search?keyword={keyword}">
                         <div class="form-floating mb-0" style="border-color:white">
                         <input id="search-form" type="text" class="form-control text-white" placeholder="Search"
-                            style="background-color: transparent; border-color: #ffffff81">
+                            style="background-color: transparent; border-color: #ffffff81" 
+                            bind:value={keyword}>
                         <label for="search-form" class=" text-white">Search</label>
                         </div>
                     </form>
