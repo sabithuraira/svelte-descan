@@ -79,7 +79,7 @@
 					animation-direction: normal;
 					animation-fill-mode: both;">
 					<figure class="img-responsive overlay overlay-1 hover-scale rounded mb-0">
-						<a href="/monograph/16">
+						<a href="/profile/16">
 							<img class="img-responsive"
 								src="/images/prov-logo/logo1600.png"
 								alt="" style="max-height:200px; width: auto" />

@@ -40,7 +40,7 @@
 </script>
 
 <section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-900 bg-overlay-900 "
-	data-image-src="/images/img/desa/desa_1.jpg">
+	data-image-src="/images/img/desa/desa_3.jpg">
 	<div class="container pt-6 pt-md-15 pb-8">
 		<div class="row gx-lg-8 gy-8 mt-5 mt-md-12 mt-lg-0 mb-8 align-items-center">
 			<div class="col-lg-6 order-lg-2">

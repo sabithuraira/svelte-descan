@@ -148,10 +148,8 @@
 			<p class="lead fs-lg mb-0 pe-xxl-10">Masjid menjadi fasilitas ibadah terbanyak di { info_wilayah.nama }
 			</p>
 			<div class="mt-2">
-			<button class=" btn btn-soft-primary" data-bs-toggle="modal" data-bs-target="#modal_ibadah">Lihat Lebih
-				Banyak</button>
+				<button class=" btn btn-soft-primary" data-bs-toggle="modal" data-bs-target="#modal_ibadah">Selengkapnya</button>
 			</div>
-		</div>
 
 		</div>
 		<!-- /.row -->
@@ -213,7 +211,6 @@
 		</div>
 	</div>
 	</section>
-
 
 	<section class="wrapper bg-light" id="section_luas_wilayah">
 	<div class="container py-12 py-md-3 py-md-5">
@@ -280,3 +277,80 @@
   </div>
   <!-- /.container -->
 </section>
+
+<div class="modal fade" id="modal_ibadah" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content text-center">
+        <div class="modal-body">
+          <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="col d-flex">
+            <h2 class="me-2">Fasilitas Ibadah</h2>
+            <div class="icon btn btn-circle disabled btn-primary me-4"> <i class="fa-solid fa-star-and-crescent"></i>
+            </div>
+          </div>
+
+          <table
+            class="table table-bordered table-responsive table-sm table-striped table-hover table-primary text-start"
+            style="border: #00000034;">
+            <thead>
+              <tr>
+                <th class="text-center bg-primary text-white">No</th>
+                <th scope="col" class="bg-primary  text-center  text-white">Fasilitas</th>
+                <th scope="col" class="bg-primary text-center text-white ">Jumlah</th>
+              </tr>
+            </thead>
+            <tbody style="border: #00000034;">
+              <tr>
+                <th scope="row" class="text-center">1</th>
+                <td>Masjid</td>
+                <td class="text-center">13</td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-center">2</th>
+                <td>Surau/Langgar/Mushola</td>
+                <td class="text-center">15</td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-center">3</th>
+                <td>Gereja Kristen</td>
+                <td class="text-center">3</td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-center">4</th>
+                <td>Gereja Katolik</td>
+                <td class="text-center">2</td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-center">5</th>
+                <td>Kapel</td>
+                <td class="text-center">2</td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-center">6</th>
+                <td>Wihara</td>
+                <td class="text-center">1</td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-center">7</th>
+                <td>Pura</td>
+                <td class="text-center">1</td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-center">8</th>
+                <td>Kelenteng</td>
+                <td class="text-center">1</td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-center">9</th>
+                <td>Tempat Ibadah Lainnya</td>
+                <td class="text-center">0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!--/.modal-body -->
+      </div>
+      <!--/.modal-content -->
+    </div>
+    <!--/.modal-dialog -->
+  </div>

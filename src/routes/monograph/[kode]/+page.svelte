@@ -1,14 +1,13 @@
 <script>
 // @ts-nocheck
-
 	import Header from '../../../components/navigation/Header.svelte';
-	import CenterMenu from '../../../components/navigation/CenterMenu.svelte';
 	import Footer from '../../../components/navigation/Footer.svelte';
 	import TopContent from '../../../components/monograph/TopContent.svelte';
 	import Body from '../../../components/monograph/Body.svelte';
 
 	import { onMount } from 'svelte';
- 	import axios from 'axios'
+ 	import axios from 'axios';
+ 	import * as jq from 'jquery';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -25,8 +24,14 @@
 				infoWilayah.set(data.datas.result);
 				parentWilayah.set(data.datas.info_induk);
 				childWilayah.set(data.datas.info_child);
-				deskripsi.set(data.datas.deskripsi);
+			}).catch(({ response })=>{
+				console.error(response)
+			})
 
+		await axios
+			.get(`${$urlApi}wilayah/${data.kode}/deskripsi`)
+			.then(({data})=>{
+				deskripsi.set(data.datas.deskripsi);
 			}).catch(({ response })=>{
 				console.error(response)
 			})
@@ -65,6 +70,8 @@
 			}).catch(({ response })=>{
 				console.error(response)
 			})
+	
+		jq('.preloader').hide();
 	}
 
     onMount(() => {
@@ -103,6 +110,8 @@
 <svelte:head>
     <link rel="stylesheet" href="/sandbox/css/plugins.css">
     <link rel="stylesheet" href="/sandbox/css/style.css">
+    <link rel="stylesheet" href="/sandbox/css/preloader.css">
+	<script src="/sandbox/js/plugins.js"></script>
 	<script src="/sandbox/js/theme.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
 		integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
@@ -110,10 +119,11 @@
 </svelte:head>
 
 <div class="content-wrapper">
-    <Header></Header>
+	<div class="preloader">
+		<img src="/images/logo/loader-logo.gif" alt="spinner" class="h-10">
+	</div>
+    <Header kode="{$infoWilayah.kode_wilayah}"></Header>
     <TopContent></TopContent>
-	<CenterMenu kode_wilayah={data.kode}
-		name_page="monograph"></CenterMenu>
     <Body></Body>
 </div>
 
