@@ -7,6 +7,21 @@
 	
 	let kabKotas = []; //as Wilayah[];
 	let keyword = "";
+	let randomNumberFoto = 1;
+	let arrFoto = [
+		'descan_1.jpeg',
+		'descan_2.jpeg',
+		'descan_3.jpeg',
+		'descan_4.jpeg',
+		'descan_5.jpeg',
+		'descan_6.jpeg',
+		'descan_7.jpeg',
+		'descan_8.JPG',
+		'descan_9.JPG',
+		'descan_10.JPG',
+		'descan_11.JPG',
+		'descan_12.JPG',
+	];
 
 	async function loadWilayah(){
 		await axios
@@ -18,8 +33,15 @@
 			})
 	}
 
+	function getRandomInt(min, max) {
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min) + min);
+	}
+
 	onMount(() => {
 		loadWilayah();
+		randomNumberFoto = getRandomInt(1,12);
 	});
 </script>
 
@@ -32,8 +54,8 @@
 </svelte:head>
 
 <section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-300"
-	data-image-src="https://webapps.bps.go.id/sumsel/tematik/images/footage/img_(8).jpg"
-	style="background-image: url('https://webapps.bps.go.id/sumsel/tematik/images/footage/img_(8).jpg');" >
+	data-image-src="/images/landing/{arrFoto[randomNumberFoto]}"
+	style="background-image: url('/images/landing/{arrFoto[randomNumberFoto]}');" >
 	<div class="container pb-19 pt-md-18 pb-md-17 text-center">
 		<div class="row">
 			<div class="col-lg-8 col-xl-7 col-xxl-6 mx-auto"
