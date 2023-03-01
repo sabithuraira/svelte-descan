@@ -96,7 +96,7 @@
 								placeholder="Cari wilayah......" 
 								aria-label="Search">
 							<div class="input-group-append">
-								<span class="input-group-text"><i class="fa fa-search"></i></span>
+								<button type="submit" class="input-group-text"><i class="fa fa-search"></i></button>
 							</div>
 						</div>
 					</form>
