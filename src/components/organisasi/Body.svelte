@@ -60,8 +60,8 @@
 					<div class="card-body px-0">
 						<div class="row">
 							<div class="col-5 col-lg-2 position-relative">
-								<figure class="rounded text-center"><img :src="item.foto"
-										:srcset="item.foto" alt="" style="max-height: 200px; max-width: 200px;
+								<figure class="rounded text-center"><img src={item.foto}
+										srcset={item.foto} alt="" style="max-height: 200px; max-width: 200px;
 										height: auto;  width: auto; ">
 								</figure>
 							</div>

@@ -3,8 +3,10 @@
 	import { onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
  	import axios from 'axios'
-	import { urlApi } from '../../stores/generalStores';
 	import leaflet from "leaflet";
+	import Swal from 'sweetalert2';
+
+	import { urlApi } from '../../stores/generalStores';
 
 	export let kode_wilayah = '';
 
@@ -13,10 +15,13 @@
 	let tooltipMap;
 	let keluarga = { data: [], links: [] };
 	let listStatusKesejahteraanKeluarga = {};
+	let bantuan = [];
+    let kategoriBantuan =  {};
 	let listStatusKesejahteraanKeluargaPersentase = {};
 	let statusKesejahteraanSelected = '';
 	const statusKesejahteraanLabel = {1: "Sangat Miskin", 2: "Miskin", 3: "Tidak Miskin"};
 	let jKeluarga = 0;
+	let keyword = "";
 
 	const createMap = () => {
 			map = leaflet.map("petaKemiskinan").setView([-2.9655006, 104.7335063], 13);
@@ -112,37 +117,73 @@
 	const getKeluarga = (suffix)  => {
             let url = "";
             if (suffix) url = kode_wilayah + suffix;
-            else url = `${$urlApi}keluarga_miskin/${kode_wilayah}/list?status_kesejahteraan=${statusKesejahteraanSelected}`;
+            else url = `${$urlApi}keluarga_miskin/${kode_wilayah}/list?status_kesejahteraan=${statusKesejahteraanSelected}&keyword=${keyword}`;
             
 			axios.get(url).then((d) => {
               	keluarga = d.data.datas;
             });
         };
+
+	const getKategoriBantuan = async() => {
+            await axios.get(`${$urlApi}master_bantuan`).then((d) => {
+              	kategoriBantuan = d.data.datas;
+            });
+        };
+
+	const getBantuan = (param_bantuan) => {
+            bantuan = param_bantuan;
+
+            if (bantuan.length != 0) {
+				setTimeout(() =>
+					document.getElementById("tabelBantuan").scrollIntoView({
+						behavior: "smooth",
+						block: "start",
+						inline: "start",
+					}), 100
+				);
+            } else{
+				Swal.fire({
+					text: "Tidak ada bantuan",
+					toast: true,
+					showConfirmButton: false,
+					position: "center",
+					timer: 1000,
+					timerProgressBar: true,
+				});
+			}
+		};
 	
     const getLokasi = (lat, lng, nama) => {
-			if (markerMap) map.removeLayer(markerMap);
-			if (tooltipMap) map.removeLayer(tooltipMap);
-			if (lat && lng) {
-				markerMap = leaflet.marker([lat, lng]).addTo(map);
-				tooltipMap = leaflet.tooltip([lat, lng], {
-					content: nama,
-					permanent: true,
-				}).addTo(map);
-				map.setView([lat, lng], 20);
-				// $refs["petaKemiskinan"].scrollIntoView({
-				document.getElementById("petaKemiskinan").scrollIntoView({
-					behavior: "smooth",
-					block: "start",
-					inline: "start",
-				});
-			} 
-			else map.setView([-2.990934, 104.756554], 7);
-        };
+		if (markerMap) map.removeLayer(markerMap);
+		if (tooltipMap) map.removeLayer(tooltipMap);
+		if (lat && lng) {
+			markerMap = leaflet.marker([lat, lng]).addTo(map);
+			tooltipMap = leaflet.tooltip([lat, lng], {
+				content: nama,
+				permanent: true,
+			}).addTo(map);
+			map.setView([lat, lng], 20);
+			// $refs["petaKemiskinan"].scrollIntoView({
+			document.getElementById("petaKemiskinan").scrollIntoView({
+				behavior: "smooth",
+				block: "start",
+				inline: "start",
+			});
+		} 
+		else map.setView([-2.990934, 104.756554], 7);
+	};
+
+	const nameKategoriBantuan = (id, tag) => {
+			const bantuan = kategoriBantuan.find((b) => b.id == id);
+			if (bantuan) return bantuan[tag];
+			else return "";
+		};
 
     onMount(() => {
 		getStatusKesejahteraanKeluarga();
 		getKeluarga();
         createMap();
+		getKategoriBantuan();
     });
 </script>
 
@@ -151,7 +192,7 @@
 		<div class="row gx-lg-8 gx-xl-12 gy-10 gy-lg-0 mb-4">
             <div class="col-lg-4">
 				<h3 class="display-4 mb-3 pe-xl-10">Jumlah Keluarga</h3>
-				<h1 class="display-1 mb-0 pe-xxl-10">{ jKeluarga }</h1>
+				<h1 class="display-1 mb-0 pe-xxl-10 counter">{ jKeluarga }</h1>
             </div>
             <!-- /column -->
             <div class="col-lg-8 mt-lg-2">
@@ -224,60 +265,138 @@
 				<!--/.card -->
 			</div>
 		<!--/column -->
+
+
+
+
+		<div class="col-12">
+			<div class="card">
+				<div class="card-body">
+					<div class="row">
+					<div class="col-xl-11 col-lg-10 col-md-9 col-sm-8 mb-2">
+						<div class="form-floating">
+						<input id="pencarian" type="text"
+							class="form-control" placeholder="Pencarian"
+							bind:value={keyword}
+							on:keyup={(event) => {
+								if(event===undefined || event.key=='Enter'){
+									getKeluarga();
+								}
+							}}
+						/>
+						<label for="pencarian">Pencarian</label>
+						</div>
+					</div>
+					<div class="col-xl-1 col-lg-2 col-md-3 col-sm-4 mb-2">
+						<button class="btn btn-primary rounded-0" on:click={ getKeluarga() }>Cari!</button>
+					</div>
+					<div class="col-12 mb-2">
+						<div class="table-responsive" ref="tabelKemiskinan">
+						<table class="table table-hover">
+							<thead>
+							<tr>
+								<th>No KK</th>
+								<th>Nama Kepala Keluarga</th>
+								<th>Jumlah Anggota Keluarga</th>
+								<th>Satuan Lingkungan Setempat</th>
+								<th>Alamat</th>
+								<th>Status Kesejahteraan</th>
+								<th>Lokasi</th>
+								<th>Bantuan</th>
+							</tr>
+							</thead>
+							<tbody>
+								{#each keluarga.data as data}
+									<tr>
+										<td>{ data.no_kk }</td>
+										<td>{ data.nama_kepala }</td>
+										<td>{ data.jumlah_art }</td>
+										<td>{ data.nama_sls }</td>
+										<td>{ data.alamat }</td>
+										<td>{ statusKesejahteraanLabel[data.status_kesejahteraan] }</td>
+										<td>
+											<a class="btn btn-outline-primary btn-sm rounded-0"
+												on:click={ getLokasi(data.latitude, data.longitude, data.nama_kepala) }>Lokasi</a>
+										</td>
+										<td>
+											<a class="btn btn-outline-primary btn-sm rounded-0" 
+												on:click={ getBantuan(data.bantuan) }>Bantuan</a>
+										</td>
+									</tr>
+								{/each}
+							</tbody>
+						</table>
+						</div>
+					</div>
+					<div class="col-12 d-flex justify-content-center">
+						<div class="table-responsive">
+						<nav aria-label="pagination keluarga">
+							<ul class="pagination">
+								{#each keluarga.links as data}
+									<li class="page-item disabled:' { data.active || !data.url }">
+										<a class="page-link" on:click={ getKeluarga(data.url) }>
+											<span>{@html data.label.replace('Previous', '').replace('Next', '')}</span>
+										</a>
+									</li>
+								{/each}
+							</ul>
+						</nav>
+						</div>
+					</div>
+					</div>
+				</div>
+				</div>
+			</div>
+		
+			<!--/column -->
+		</div>
+
+		{#if bantuan.length>0}
 			<div class="col-12">
 				<div class="card">
 					<div class="card-body">
 						<div class="row">
-							<div class="col-12">
-								<div class="table-responsive" id="tabelKemiskinan">
+						<div class="col-12">
+							<div class="table-responsive" id="tabelBantuan">
 								<table class="table table-hover">
 									<thead>
-									<tr>
-										<th>No KK</th>
-										<th>Nama Kepala Keluarga</th>
-										<th>Jumlah Anggota Keluarga</th>
-										<th>Satuan Lingkungan Setempat</th>
-										<th>Alamat</th>
-										<th>Status Kesejahteraan</th>
-									</tr>
+										<tr>
+											<th>No KK</th>
+											<th>NIK Penerima Bantuan</th>
+											<th>Nama Kepala Keluarga</th>
+											<th>Nama Bantuan</th>
+											<th>Deskripsi Bantuan</th>
+											<th>Bentuk Bantuan</th>
+											<th>Instansi Pemberi Bantuan</th>
+											<th>Waktu Bantuan</th>
+											<th>Jumlah Bantuan</th>
+											<th>Satuan Bantuan</th>
+										</tr>
 									</thead>
+
 									<tbody>
-										{#each keluarga.data as item}
-											<tr on:click={ getLokasi(item.latitude, item.longitude, item.nama_kepala) }>
+										{#each bantuan as item}
+											<tr>
 												<td>{ item.no_kk }</td>
+												<td>{ item.nik }</td>
 												<td>{ item.nama_kepala }</td>
-												<td>{ item.jumlah_art }</td>
-												<td>{ item.nama_sls }</td>
-												<td>{ item.alamat }</td>
-												<td>{ statusKesejahteraanLabel[item.status_kesejahteraan] }</td>
+												<td>{ nameKategoriBantuan(item.bantuan_id,"nama_bantuan") }</td>
+												<td>{ nameKategoriBantuan(item.bantuan_id,"deskripsi_bantuan") }</td>
+												<td>{ nameKategoriBantuan(item.bantuan_id, "bentuk_bantuan") }</td>
+												<td>{ nameKategoriBantuan(item.bantuan_id,"instansi_pemberi") }</td>
+												<td>{ item.waktu_bantuan }</td>
+												<td>{ item.jumlah_bantuan }</td>
+												<td>{ item.satuan_bantuan }</td>
 											</tr>
 										{/each}
 									</tbody>
 								</table>
-								</div>
-							</div>
-							<div class="col-12 d-flex justify-content-center">
-								<div class="table-responsive">
-									<nav aria-label="pagination keluarga">
-										<ul class="pagination">
-											{#each keluarga.links as item}
-												<li class="page-item disabled:{ item.active || !item.url }">
-													<a class="page-link" href="#" on:click={ getKeluarga(item.url) }>
-														<span>{@html item.label.replace('Previous', '').replace('Next', '')}</span>
-													</a>
-												</li>
-											{/each}
-										</ul>
-									</nav>
-								</div>
 							</div>
 						</div>
+						</div>
 					</div>
-				<!--/.card-body -->
 				</div>
-				<!--/.card -->
 			</div>
-		<!--/column -->
-		</div>
+		{/if}
 	</div>
 </section>

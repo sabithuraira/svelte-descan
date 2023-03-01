@@ -18,10 +18,6 @@
 			})
 	}
 
-	const searchWilayah = () => {
-
-	}
-
 	onMount(() => {
 		loadWilayah();
 	});

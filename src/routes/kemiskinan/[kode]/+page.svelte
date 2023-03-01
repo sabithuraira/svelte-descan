@@ -2,16 +2,17 @@
 // @ts-nocheck
 	import Header from '../../../components/navigation/Header.svelte';
 	import Footer from '../../../components/navigation/Footer.svelte';
-	import TopContent from '../../../components/kemiskinan/TopContent.svelte';
+	import TopProfile from '../../../components/navigation/TopProfile.svelte';
 	import Body from '../../../components/kemiskinan/Body.svelte';
 
 	import { onMount } from 'svelte';
- 	import axios from 'axios'
+ 	import axios from 'axios';
+ 	import * as jq from 'jquery';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
 
-	import { infoWilayah, parentWilayah, childWilayah } from '../../../stores/wilayahStores';
+	import { infoWilayah, parentWilayah, childWilayah, deskripsi } from '../../../stores/wilayahStores';
 	import { urlApi } from '../../../stores/generalStores';
 
 	async function loadWilayah(){
@@ -25,13 +26,15 @@
 				console.error(response)
 			})
 
-		// await axios
-		// 	.get(`${urlApi}pengurus/${props.kode}/list`)
-		// 	.then(({data})=>{
-		// 		pengurusStore.setPengurus(data.datas.data);
-		// 	}).catch(({ response })=>{
-		// 		console.error(response)
-		// 	})
+		await axios
+			.get(`${$urlApi}wilayah/${data.kode}/deskripsi`)
+			.then(({data})=>{
+				deskripsi.set(data.datas.deskripsi);
+			}).catch(({ response })=>{
+				console.error(response)
+			})
+
+		jq('.preloader').hide();
 	}
 
     onMount(() => {
@@ -52,7 +55,7 @@
 		// theme.plyr();
 		// theme.progressBar();
 		// theme.pageProgress();
-		// theme.counterUp();
+		theme.counterUp();
 		// theme.bsTooltips();
 		// theme.bsPopovers();
 		// theme.bsModal();
@@ -70,8 +73,10 @@
 <svelte:head>
     <link rel="stylesheet" href="/sandbox/css/plugins.css">
     <link rel="stylesheet" href="/sandbox/css/style.css">
+    <link rel="stylesheet" href="/sandbox/css/preloader.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
 	
+	<script src="/sandbox/js/plugins.js"></script>
 	<script src="/sandbox/js/theme.js"></script>
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
@@ -80,8 +85,11 @@
 </svelte:head>
 
 <div class="content-wrapper">
-    <Header></Header>
-    <TopContent></TopContent>
+	<div class="preloader">
+		<img src="/images/logo/loader-logo.gif" alt="spinner" class="h-10">
+	</div>
+    <Header kode="{$infoWilayah.kode_wilayah}"></Header>
+    <TopProfile></TopProfile>
     <Body kode_wilayah={data.kode}></Body>
 </div>
 
