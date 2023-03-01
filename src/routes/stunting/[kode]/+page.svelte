@@ -32,6 +32,7 @@
 			// 	}).catch(({ response })=>{
 			// 		console.error(response)
 			// 	})
+			jq('.preloader').hide();
 		}
 	
 		onMount(() => {
@@ -70,8 +71,10 @@
 	<svelte:head>
 		<link rel="stylesheet" href="/sandbox/css/plugins.css">
 		<link rel="stylesheet" href="/sandbox/css/style.css">
+		<link rel="stylesheet" href="/sandbox/css/preloader.css">
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
 	
+		<script src="/sandbox/js/plugins.js"></script>
 		<script src="/sandbox/js/theme.js"></script>
 	
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
@@ -80,7 +83,10 @@
 	</svelte:head>
 	
 	<div class="content-wrapper">
-		<Header></Header>
+		<div class="preloader">
+			<img src="/images/logo/loader-logo.gif" alt="spinner" class="h-10">
+		</div>
+		<Header kode="{$infoWilayah.kode_wilayah}"></Header>
 		<TopContent></TopContent>
 		<Body kode_wilayah={data.kode}></Body>
 	</div>
