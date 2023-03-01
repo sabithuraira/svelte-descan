@@ -1,10 +1,11 @@
 <script>
 // @ts-nocheck
-	import { page } from '$app/stores';
 	import Footer from '../../components/navigation/Footer.svelte';
+	import TopContent from '../../components/search/TopContent.svelte';
 
 	import { onMount } from 'svelte';
  	import axios from 'axios';
+ 	import jq from 'jquery';
 	import { urlApi, keywordSearch } from '../../stores/generalStores';
 
 	let keyword = "";
@@ -14,18 +15,19 @@
 		keyword = value;
 	});
 
-	const search = async(event) => {
-		if(event===undefined || event.key=='Enter'){
-			keywordSearch.set(keyword)
-			
-			await axios.post(`${$urlApi}wilayah/search`, {
-						keyword: $keywordSearch,
-					}).
-					then(({data}) => {
-						if(data.status=='success') listWilayah = data.datas;
-						else console.log("Data gagal disimpan, silahkan ulangi lagi")
-					});
-		}
+	const search = async() => {
+		keywordSearch.set(keyword)
+		jq('.preloader').show();
+		await axios.post(`${$urlApi}wilayah/search`, {
+					keyword: $keywordSearch,
+				}).
+				then(({data}) => {
+					if(data.status=='success') listWilayah = data.datas;
+					else console.log("Data gagal disimpan, silahkan ulangi lagi")
+				});
+
+		jq('.preloader').hide();
+		loadTheme();
 	};
 
 	const labelLevel = (kodeWilayah)  => {
@@ -48,27 +50,74 @@
 		}
 	};
 
+	function loadTheme(){
+		theme.stickyHeader();
+		// theme.subMenu();
+		// theme.offCanvas();
+		theme.isotope();
+		// theme.onepageHeaderOffset();
+		// theme.anchorSmoothScroll();
+		// theme.svgInject();
+		theme.backgroundImage();
+		// theme.backgroundImageMobile();
+		// theme.imageHoverOverlay();
+		// theme.rellax();
+		theme.scrollCue();
+		theme.swiperSlider();
+		// theme.lightbox();
+		// theme.plyr();
+		theme.progressBar();
+		theme.pageProgress();
+		// theme.counterUp();
+		// theme.bsTooltips();
+		// theme.bsPopovers();
+		// theme.bsModal();
+		// theme.iTooltip();
+		// theme.forms();
+		// theme.passVisibility();
+		theme.pricingSwitcher();
+		theme.textRotator();
+		theme.codeSnippet();
+	}
+
     onMount(() => {
+		jq('.preloader').hide();
 		if($keywordSearch!=''){
 			search()
 		}
-		console.log($keywordSearch);
-		// console.log(keyword);
+		else{
+			setTimeout(function () {
+				loadTheme();
+			}, 1000)
+		}
     });
 </script>
 
 <svelte:head>
     <link rel="stylesheet" href="/sandbox/css/plugins.css">
     <link rel="stylesheet" href="/sandbox/css/style.css">
+    <link rel="stylesheet" href="/sandbox/css/preloader.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="/sandbox/js/plugins.js"></script>
 	<script src="/sandbox/js/theme.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+		integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
 </svelte:head>
+
+
+
+<div class="preloader">
+	<img src="/images/logo/loader-logo.gif" alt="spinner" class="h-10">
+</div>
+<TopContent></TopContent>
 
 <div class="content-wrapper">
     <section class="wrapper bg-light">
-		<div class="container py-14 py-md-16">
+		<div class="container py-14 py-md-6">
 		  <div class="row text-center">
 			<div class="col-xl-10 mx-auto">
-			  <h3 class="display-4 mb-5 px-xxl-15">Cari Wilayah</h3>
+			  <h3 class="">Cari Wilayah</h3>
 			</div>
 			<!-- /column -->
 		  </div>
@@ -77,9 +126,21 @@
 			<div class="col-xl-10 mx-auto">
 				<div class="row">
 				  <div class="form-floating mb-4 px-2">
-					<input id="textInputExample" type="text" class="form-control" bind:value={keyword} 
-						placeholder="Masukkan kata kunci..." on:keyup={search}>
-					<label for="textInputExample">Masukkan kata kunci...</label>
+
+					<div class="input-group mb-3">
+						<input type="text" class="form-control" 
+							bind:value={keyword}
+							on:keyup={(e) => { 
+								if(e.key=='Enter'){
+									search();
+								}
+							}}
+							placeholder="Cari wilayah......" 
+							aria-label="Search">
+						<div class="input-group-append">
+							<button on:click={() => search() } class="input-group-text"><i class="fa fa-search"></i></button>
+						</div>
+					</div>
 				  </div>
 				</div>
 			  
