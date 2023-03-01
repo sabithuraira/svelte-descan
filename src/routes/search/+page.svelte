@@ -23,6 +23,7 @@
 					if(data.status=='success') listWilayah = data.datas;
 					else console.log("Data gagal disimpan, silahkan ulangi lagi")
 				});
+		loadTheme();
 	};
 
 	const labelLevel = (kodeWilayah)  => {
@@ -45,7 +46,7 @@
 		}
 	};
 
-    onMount(() => {
+	function loadTheme(){
 		theme.stickyHeader();
 		// theme.subMenu();
 		// theme.offCanvas();
@@ -73,9 +74,16 @@
 		theme.pricingSwitcher();
 		theme.textRotator();
 		theme.codeSnippet();
+	}
 
+    onMount(() => {
 		if($keywordSearch!=''){
 			search()
+		}
+		else{
+			setTimeout(function () {
+				loadTheme();
+			}, 1000)
 		}
     });
 </script>
