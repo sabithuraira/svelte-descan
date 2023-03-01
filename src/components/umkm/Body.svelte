@@ -1,223 +1,152 @@
 <script>
-	import { infoWilayah, parentWilayah, childWilayah } from '../../stores/wilayahStores';
+  // @ts-nocheck
+  import { onMount } from "svelte";
+  import axios from "axios";
 
-	let info_wilayah = [];
+  import { urlApi } from "../../stores/generalStores";
 
-	infoWilayah.subscribe((value) => {
-		info_wilayah = value;
-	});
+  export let kode = "";
+
+  let kategori = [];
+  let umkm = { data: [], links: [] };
+  let keyword = "";
+  let show = false;
+
+  const getKategori = async () => {
+    let total = await axios.get($urlApi + "kategori");
+
+    total = total.data.datas.total;
+
+    await axios.get(`${$urlApi}kategori?per_page=${total}`).then((d) => {
+      kategori = d.data.datas.data;
+    });
+  };
+
+  const nameKategori = (kode, tag) => {
+    let kategoriByTag = kategori.filter((k) => k.tag == tag);
+    let kategoriGetKode = kategoriByTag.find((k) => k.kode == kode);
+    if (kategoriGetKode) return kategoriGetKode.name;
+    else return "";
+  };
+
+  const getUMKM = async (suffix) => {
+    var url = "";
+
+    if (suffix) url = $urlApi + suffix;
+    else url = `${$urlApi}umkm/${kode}/list?keyword=${keyword}`;
+
+    await axios.get(url).then((d) => {
+      umkm = d.data.datas;
+
+      show = umkm.data.length != 0 ? true : false;
+    });
+  };
+
+  onMount(() => {
+    getKategori().then(() => getUMKM());
+  });
 </script>
 
-<section class="wrapper bg-light" id="section_penduduk">
-	<div class="container py-5 py-md-8">
-		<div class="row gx-lg-8 gx-xl-12 gy-10 align-items-center">
-			<div class="col-md-8 col-lg-6 col-xl-6 order-lg-2 position-relative">
-				<div class="row gx-md-5 gy-5 align-items-center">
-					<div class="col-6 text-center">
-						<img class="img-fluid" src="/images/img/illustrations/i1.png"
-						srcset="/images/img/illustrations/i1@2x.png 2x" alt="" style="height:200px; width: auto;" />
-						<h2>Laki-Laki</h2>
-						<h1>4.125</h1>
-					</div>
-					<div class="col-6 text-center">
-						<img class="img-fluid" src="/images/img/illustrations/i7.png"
-						srcset="/images/img/illustrations/i7@2x.png 2x" alt="" style="height:200px; width: auto" />
-						<h2>Perempuan</h2>
-						<h1>3.260</h1>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-6">
-				<h2 class="display-4 mb-3">Penduduk</h2>
-				<p class="lead fs-lg">Jumlah Penduduk di Desa/Kelurahan Bandar Jaya sebanyak <span class="fs-30">7.385
-				</span>jiwa</p>
-
-				<p class="mb-6">Karakteristik penduduk di Desa/Bandar jaya cenderung <b>didominasi</b> oleh laki-laki</p>
-			</div>
-		</div>
-	</div>
-</section>
-
-<section class="wrapper bg-light" id="section_tempat_ibadah">
-  <div class="container py-5 py-md-8">
-    <div class="row gx-lg-8 gx-xl-12 gy-10 gy-lg-0 ">
-      <div class="col-lg-8 mt-lg-2">
-        <div class="row align-items-center counter-wrapper gy-6 text-center">
-
-          <div class="col-md-4">
-            <button class="btn" data-bs-toggle="modal" data-bs-target="#modal_ibadah">
-              <div>
-                <span class="text-primary">
-                  <i class="fa-solid fa-mosque fa-4x" width="70px"></i>
-                </span>
-                <h3 class="counter">10</h3>
-                <p>Masjid</p>
-              </div>
-            </button>
-          </div>
-
-
-          <div class="col-md-4">
-            <button class="btn" data-bs-toggle="modal" data-bs-target="#modal_ibadah">
-              <div>
-                <span class="text-primary">
-                  <i class="fa-solid fa-church fa-4x" width="70px"></i>
-                </span>
-                <h3 class="counter">2</h3>
-                <p>Gereja</p>
-              </div>
-            </button>
-          </div>
-
-          <div class="col-md-4">
-            <button class="btn" data-bs-toggle="modal" data-bs-target="#modal_ibadah">
-              <div>
-                <span class="text-primary">
-                  <i class="fa-solid fa-vihara fa-4x" width="70px"></i>
-                </span>
-                <h3 class="counter">1</h3>
-                <p>Wihara</p>
-              </div>
-            </button>
-          </div>
-
-        </div>
-
-      </div>
-      <div class="col-lg-4">
-        <h3 class="display-4 mb-3 pe-xl-10">Fasilitas Peribadatan</h3>
-        <p class="lead fs-lg mb-0 pe-xxl-10">Masjid menjadi fasilitas ibadah terbanyak di Desa/Kelurahan Bandar Jaya
-        </p>
-        <div class="ms-2">
-          <button class=" btn btn-soft-primary" data-bs-toggle="modal" data-bs-target="#modal_ibadah">Lihat Lebih
-            Banyak</button>
+{#if show}
+  <section class="wrapper bg-light">
+    <div class="container py-6 py-md-8">
+      <div class="row text-center">
+        <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+          <h3 class="display-4 mb-2 px-xl-10">Usaha Mikro Kecil Menengah</h3>
+          <p>
+            <b>Usaha mikro kecil menengah</b> adalah istilah umum dalam dunia
+            ekonomi yang merujuk kepada usaha ekonomi produktif yang dimiliki
+            perorangan maupun badan usaha.
+            <b>UMKM</b>
+            dapat berarti bisnis yang dijalankan individu, rumah tangga, atau badan
+            usaha ukuran kecil.
+          </p>
+          <hr class="mt-2 mb-6" />
         </div>
       </div>
-
+      <div class="row gx-lg-12 gx-xl-16 gy-4 text-center align-items-center">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-xl-11 col-lg-10 col-md-9 col-sm-8 mb-2">
+              <div class="form-floating">
+                <input
+                  id="pencarian"
+                  type="text"
+                  class="form-control"
+                  placeholder="Pencarian"
+                  bind:value={keyword}
+                  on:keyup={(event) => {
+                    if (event === undefined || event.key == "Enter") {
+                      getUMKM();
+                    }
+                  }}
+                />
+                <label for="pencarian">Pencarian</label>
+              </div>
+            </div>
+            <div class="col-xl-1 col-lg-2 col-md-3 col-sm-4 mb-2">
+              <a class="btn btn-primary rounded-0" on:click={() => getUMKM()}
+                >Cari!</a
+              >
+            </div>
+          </div>
+        </div>
+        {#each umkm.data as item}
+          <div class="col-12">
+            <div class="card gradient-7">
+              <div class="card-body">
+                <h2 class="display-4 text-white mb-3">{item.nama_umkm}</h2>
+                <p class="lead fs-md text-white">
+                  Bergerak di Bidang {nameKategori(
+                    item.kategori_umkm,
+                    "lap_usaha"
+                  )}
+                </p>
+                <p class="d-flex justify-content-center text-white mb-1">
+                  <span>{@html item.deskripsi}</span>
+                </p>
+                <div
+                  class="d-flex flex-row justify-content-center align-items-center"
+                >
+                  <h1 class="display-3 text-white px-1">
+                    <i class="uil uil-user-circle" />
+                  </h1>
+                  <h4 class="text-white px-1">{item.nama_pemilik}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        {/each}
+        <div class="col-12 d-flex justify-content-center">
+          <div class="table-responsive">
+            <nav aria-label="pagination umkm">
+              <ul class="pagination">
+                {#each umkm.links as item}
+                  <li
+                    class="page-item {item.active || !item.url
+                      ? 'disabled'
+                      : ''}"
+                  >
+                    <a class="page-link" on:click={() => getUMKM(item.url)}>
+                      <span
+                        >{@html item.label
+                          .replace("Previous", "")
+                          .replace("Next", "")}</span
+                      >
+                    </a>
+                  </li>
+                {/each}
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- /.row -->
-  </div>
-</section>
-
-<section class="wrapper bg-light" id="section_faskes">
-  <div class="container py-5 py-md-7">
-    <div class="row">
-      <div class="col-lg-12 ">
-        <h2 class="display-4 text-center">Fasilitas Kesehatan</h2>
-        <div class="row my-3">
-          <div class="col-md-9 col-12 ">
-            Fasilitas Kesehatan pada Desa/Kelurahan Bandar Jaya lebih terdepan dari desa/kelurahan lainnya di
-            Kecamatan Sialang
-          </div>
-          <div class="col-md-3 col-12 text-center p-2">
-            <span class="text-primary">
-              <i class="fa-solid fa-hospital fa-3x"></i>
-            </span>
-          </div>
-        </div>
-
-        <ul class="icon-list mb-0">
-          <div class="row gy-3 gx-xl-8">
-            <div class="col-12 col-md-6 col-xl-4">
-              <li class=" icon-list bullet-bg bullet-soft-red">
-                <i class="uil uil-multiply "></i>Rumah Sakit
-              </li>
-            </div>
-            <div class="col-12 col-md-6 col-xl-4">
-              <li class=" icon-list bullet-bg bullet-soft-green">
-                <span> <i class="uil uil-check "></i></span><span>Puskesmas</span>
-              </li>
-            </div>
-            <div class="col-12 col-md-6 col-xl-4">
-              <li class=" icon-list bullet-bg bullet-soft-green">
-                <span> <i class="uil uil-check "></i></span><span>Poliklinik</span>
-              </li>
-            </div>
-            <div class="col-12 col-md-6 col-xl-4">
-              <li class=" icon-list bullet-bg bullet-soft-green">
-                <span> <i class="uil uil-check "></i></span><span>Puskesdes</span>
-              </li>
-            </div>
-            <div class="col-12 col-md-6 col-xl-4">
-              <li class=" icon-list bullet-bg bullet-soft-green">
-                <span> <i class="uil uil-check "></i></span><span>Pustu</span>
-              </li>
-            </div>
-          </div>
-        </ul>
-
-
-
-
-      </div>
-
+  </section>
+{:else}
+  <section class="wrapper bg-light">
+    <div class="container py-6 py-md-8">
+      <h3>Belum Ada Data</h3>
     </div>
-  </div>
-</section>
-
-
-<section class="wrapper bg-light" id="section_luas_wilayah">
-  <div class="container py-12 py-md-3 py-md-5">
-    <div class="row gx-lg-8 gx-xl-12 gy-10 align-items-center">
-      <div class="col-lg-8 mt-0">
-        <!-- <h2 class="fs-15 text-uppercase text-line text-primary text-center mb-3">Meet the Team</h2> -->
-        <h3 class="display-5 mb-5">Desa/Kelurahan Bandar Jaya</h3>
-        <p>Luas Wilayah: 12 Km<sup>2</sup></p>
-        <p>Batas Wilayah: Desa Sumber Jaya, Desa Sumber Terang</p>
-        <p>Keunggulan Wilayah: Tanah Gembur</p>
-        <p>Komoditas Tanaman Pangan Unggulan: Padi</p>
-        <div class="row counter-wrapper gy-6">
-          <div class="col-md-4">
-            <h3 class="counter text-primary">2184</h3>
-            <p>Luas Tanam Padi</p>
-          </div>
-          <div class="col-md-4">
-            <h3 class="counter text-primary">7518</h3>
-            <p>Luas Panen Padi</p>
-          </div>
-
-          <div class="col-md-4">
-            <h3 class="counter text-primary">3472</h3>
-            <p>Produktifitas</p>
-          </div>
-
-
-        </div>
-      </div>
-
-      <div class="col-lg-4">
-        <div class="swiper-container text-center mb-6" data-margin="30" data-dots="true" data-items-xl="1"
-          data-items-md="1" data-items-xs="1">
-          <div class="swiper">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <img class="rounded-circle w-20 h-20 mx-auto mb-4" src="/images/img/foto_pengurus/ronaldo.jpeg"
-                  srcset="/images/img/foto_pengurus/ronaldo.jpeg 2x" alt="" />
-                <h4 class="mb-1">Ronaldo</h4>
-                <div class="meta mb-2">Ketua Daerah</div>
-                <p class="mb-2">2019 s.d 2024</p>
-                <nav class="nav social justify-content-center text-center mb-0">
-                  <a href="https://www.facebook.com/people/Bps-Provinsi-Sumatera-Selatan/100015484759318/"
-                    target="_blank"><i class="uil uil-facebook-f"></i></a>
-                  <a href="https://www.instagram.com/bpssumsel/?hl=en" target="_blank"><i
-                      class="uil uil-instagram"></i></a>
-                  <a href="https://www.youtube.com/channel/UC-9WQN-5cNTVTGDF8Rkiu6A" target="_blank"><i
-                      class="uil uil-youtube"></i></a>
-                </nav>
-                <!-- /.social -->
-              </div>
-              <!--/.swiper-slide -->
-
-            </div>
-            <!--/.swiper-wrapper -->
-          </div>
-          <!-- /.swiper -->
-        </div>
-        <!-- /.swiper-container -->
-      </div>
-
-    </div>
-
-  </div>
-  <!-- /.container -->
-</section>
+  </section>
+{/if}

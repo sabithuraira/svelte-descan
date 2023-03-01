@@ -3,7 +3,7 @@
   import PreLoader from "../../../components/navigation/PreLoader.svelte";
   import Header from "../../../components/navigation/Header.svelte";
   import TopProfile from "../../../components/navigation/TopProfile.svelte";
-  import Body from "../../../components/kemiskinan/Body.svelte";
+  import Body from "../../../components/penduduk/Body.svelte";
   import Footer from "../../../components/navigation/Footer.svelte";
   import BackToTop from "../../../components/navigation/BackToTop.svelte";
 
