@@ -2,7 +2,6 @@
 // @ts-nocheck
 	import Header from '../../../components/navigation/Header.svelte';
 	import Footer from '../../../components/navigation/Footer.svelte';
-    import { browser } from '$app/environment'
 
 	import { onMount } from 'svelte';
  	import axios from 'axios';
@@ -25,25 +24,26 @@
 	};
 
 	async function loadWilayah(){
-		await axios
-			.get(`${$urlApi}wilayah/${data.kode}/show`)
-			.then(({data})=>{
-				infoWilayah.set(data.datas.result);
-				parentWilayah.set(data.datas.info_induk);
-				childWilayah.set(data.datas.info_child);
-			}).catch(({ response })=>{
-				console.error(response)
-			})
+		if(data.kode!=info_wilayah.kode_wilayah){
+			console.log("masuk")
+			await axios
+				.get(`${$urlApi}wilayah/${data.kode}/show`)
+				.then(({data})=>{
+					infoWilayah.set(data.datas.result);
+					parentWilayah.set(data.datas.info_induk);
+					childWilayah.set(data.datas.info_child);
+				}).catch(({ response })=>{
+					console.error(response)
+				})
 
-		await axios
-			.get(`${$urlApi}wilayah/${data.kode}/deskripsi`)
-			.then(({data})=>{
-				deskripsi.set(data.datas.deskripsi);
-			}).catch(({ response })=>{
-				console.error(response)
-			})
-
-		jq('.preloader').hide();
+			await axios
+				.get(`${$urlApi}wilayah/${data.kode}/deskripsi`)
+				.then(({data})=>{
+					deskripsi.set(data.datas.deskripsi);
+				}).catch(({ response })=>{
+					console.error(response)
+				})
+		}
 	}
 
     let info_wilayah = {
@@ -64,35 +64,40 @@
         }
 	});
 
+	function loadJS(){
+		theme.stickyHeader();
+		theme.subMenu();
+		theme.offCanvas();
+		theme.isotope();
+		theme.onepageHeaderOffset();
+		theme.anchorSmoothScroll();
+		theme.svgInject();
+		theme.backgroundImage();
+		theme.backgroundImageMobile();
+		theme.imageHoverOverlay();
+		theme.rellax();
+		theme.scrollCue();
+		theme.swiperSlider();
+		theme.lightbox();
+		theme.plyr();
+		theme.progressBar();
+		theme.pageProgress();
+		theme.counterUp();
+		theme.bsTooltips();
+		theme.bsPopovers();
+		theme.bsModal();
+		theme.iTooltip();
+		theme.forms();
+		theme.passVisibility();
+		theme.pricingSwitcher();
+		theme.textRotator();
+		theme.codeSnippet();
+	}
+
     onMount(() => {
-		loadWilayah().then(() => {
-			theme.stickyHeader();
-			theme.subMenu();
-			theme.offCanvas();
-			theme.isotope();
-			theme.onepageHeaderOffset();
-			theme.anchorSmoothScroll();
-			theme.svgInject();
-			theme.backgroundImage();
-			theme.backgroundImageMobile();
-			theme.imageHoverOverlay();
-			theme.rellax();
-			theme.scrollCue();
-			theme.swiperSlider();
-			theme.lightbox();
-			theme.plyr();
-			theme.progressBar();
-			theme.pageProgress();
-			theme.counterUp();
-			theme.bsTooltips();
-			theme.bsPopovers();
-			theme.bsModal();
-			theme.iTooltip();
-			theme.forms();
-			theme.passVisibility();
-			theme.pricingSwitcher();
-			theme.textRotator();
-			theme.codeSnippet();
+		loadJS();
+		loadWilayah().then(() => { 
+			jq('.preloader').hide(); 
 		});
     });
 </script>

@@ -5,6 +5,7 @@
 
 	import { onMount } from 'svelte';
  	import axios from 'axios';
+ 	import jq from 'jquery';
 	import { urlApi, keywordSearch } from '../../stores/generalStores';
 
 	let keyword = "";
@@ -16,6 +17,7 @@
 
 	const search = async() => {
 		keywordSearch.set(keyword)
+		jq('.preloader').show();
 		await axios.post(`${$urlApi}wilayah/search`, {
 					keyword: $keywordSearch,
 				}).
@@ -23,6 +25,8 @@
 					if(data.status=='success') listWilayah = data.datas;
 					else console.log("Data gagal disimpan, silahkan ulangi lagi")
 				});
+
+		jq('.preloader').hide();
 		loadTheme();
 	};
 
@@ -77,6 +81,7 @@
 	}
 
     onMount(() => {
+		jq('.preloader').hide();
 		if($keywordSearch!=''){
 			search()
 		}
@@ -91,6 +96,7 @@
 <svelte:head>
     <link rel="stylesheet" href="/sandbox/css/plugins.css">
     <link rel="stylesheet" href="/sandbox/css/style.css">
+    <link rel="stylesheet" href="/sandbox/css/preloader.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<script src="/sandbox/js/plugins.js"></script>
 	<script src="/sandbox/js/theme.js"></script>
@@ -99,6 +105,11 @@
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
 </svelte:head>
 
+
+
+<div class="preloader">
+	<img src="/images/logo/loader-logo.gif" alt="spinner" class="h-10">
+</div>
 <TopContent></TopContent>
 
 <div class="content-wrapper">

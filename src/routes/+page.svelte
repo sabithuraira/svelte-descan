@@ -15,7 +15,7 @@
 		'descan_4.jpeg',
 		'descan_5.jpeg',
 		'descan_6.jpeg',
-		'descan_7.jpeg',
+		'descan_7.JPG',
 		'descan_8.JPG',
 		'descan_9.JPG',
 		'descan_10.JPG',
