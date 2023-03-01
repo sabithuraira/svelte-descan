@@ -6,7 +6,7 @@
 
 	import { onMount } from 'svelte';
  	import axios from 'axios';
- 	import * as jq from 'jquery';
+ 	import jq from 'jquery';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
