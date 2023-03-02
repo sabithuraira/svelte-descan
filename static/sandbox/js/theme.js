@@ -36,8 +36,8 @@ var theme = {
 		theme.codeSnippet();
 	},
 	initWoHeader: function () {
-		theme.stickyHeader();
-		theme.subMenu();
+		// theme.stickyHeader();
+		// theme.subMenu();
 		// theme.offCanvas();
 		theme.isotope();
 		// theme.onepageHeaderOffset();
