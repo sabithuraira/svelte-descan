@@ -111,7 +111,7 @@
 							<i class="fa-solid fa-mosque fa-4x" width="70px"></i>
 							</span>
 							<h3 class="counter">10</h3>
-							<p>Masjid</p>
+							<p class="text-navy">Masjid</p>
 						</div>
 					</button>
 				</div>
@@ -123,7 +123,7 @@
 					<i class="fa-solid fa-church fa-4x" width="70px"></i>
 					</span>
 					<h3 class="counter">2</h3>
-					<p>Gereja</p>
+					<p class="text-navy">Gereja</p>
 				</div>
 				</button>
 			</div>
@@ -135,7 +135,7 @@
 					<i class="fa-solid fa-vihara fa-4x" width="70px"></i>
 					</span>
 					<h3 class="counter">1</h3>
-					<p>Wihara</p>
+					<p class="text-navy">Wihara</p>
 				</div>
 				</button>
 			</div>
@@ -283,7 +283,7 @@
       <div class="modal-content text-center">
         <div class="modal-body">
           <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          <div class="col d-flex">
+          <div class="col d-flex mb-2">
             <h2 class="me-2">Fasilitas Ibadah</h2>
             <div class="icon btn btn-circle disabled btn-primary me-4"> <i class="fa-solid fa-star-and-crescent"></i>
             </div>
