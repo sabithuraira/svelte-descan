@@ -89,27 +89,11 @@
 <svelte:head>
   <link rel="stylesheet" href="/sandbox/css/plugins.css" />
   <link rel="stylesheet" href="/sandbox/css/style.css" />
+  <link rel="stylesheet" href="/sandbox/css/preloader.css">
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
   />
-  <style>
-    .preloader {
-      align-items: center;
-      background: linear-gradient(rgba(53, 147, 255, 1), rgba(218, 33, 255, 1));
-      display: flex;
-      height: 100vh;
-      justify-content: center;
-      left: 0;
-      position: fixed;
-      top: 0;
-      transition: opacity 0.2s linear;
-      width: 100%;
-      z-index: 9999;
-      opacity: 1;
-      transform: opacity 1s linear;
-    }
-  </style>
 </svelte:head>
 
 <div class="content-wrapper">

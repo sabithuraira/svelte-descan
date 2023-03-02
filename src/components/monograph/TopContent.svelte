@@ -4,8 +4,6 @@
 	import { infoWilayah, deskripsi } from '../../stores/wilayahStores';
 	import { monografData } from '../../stores/monografStores';
 
-	let info_wilayah = { kode_prov: '16',  kode_kab: '', nama: '' };
-
 	let deskripsiLabel = '';
 	let infrastruktur_ibadah = [];
 	let sum_infrastruktur_ibadah = '0';
@@ -17,8 +15,22 @@
 	let sum_penduduk = '0';
 	let sum_luas_wilayah = '0';
 
+	let info_wilayah = {
+		kode_prov: "",
+		kode_kab: "",
+		kode_kec: "",
+		kode_desa: "",
+		kode_wilayah: "",
+		nama: "",
+		nama_prov: "",
+		nama_kab: "",
+		nama_kec: "",
+	};
+
 	infoWilayah.subscribe((value) => {
+		if (value.kode_wilayah) {
 		info_wilayah = value;
+		}
 	});
 
 	deskripsi.subscribe((value) => {
@@ -37,6 +49,26 @@
 
 		sum_luas_wilayah = value.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 	});
+
+	const labelLevel = (kodeWilayah) => {
+		switch (kodeWilayah.length) {
+		case 10:
+			return "Desa/Kelurahan";
+			break;
+		case 7:
+			return "Kecamatan";
+			break;
+		case 4:
+			return "Kabupaten/Kota";
+			break;
+		case 2:
+			return "Provinsi";
+			break;
+		default:
+			return "-";
+			break;
+		}
+	};
 </script>
 
 <section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-900 bg-overlay-900 "
@@ -60,7 +92,12 @@
 				</div>
 			</div>
 			<div class="col-lg-6 text-white">
-				<h2 class="display-4 mb-3 text-white">{ info_wilayah.nama }</h2>
+				<h1 class="display-1 text-white" style="display: inline-block;" id="desa_text">
+					{labelLevel(info_wilayah.kode_wilayah)}
+					<span class="typer text-white" data-words={info_wilayah.nama} data-loop="false"/>
+					<span class="cursor text-white" data-owner="typer" />
+				</h1>
+				
 				<p class="lead fs-lg mb-8 pe-xxl-2">{ deskripsiLabel }</p>
 				<div class="row gx-xl-10 gy-6" data-cues="slideInUp" data-group="services">
 				<div class="col-md-6 col-lg-12 col-xl-6">

@@ -35,6 +35,35 @@ var theme = {
 		theme.textRotator();
 		theme.codeSnippet();
 	},
+	initWoHeader: function () {
+		theme.stickyHeader();
+		theme.subMenu();
+		// theme.offCanvas();
+		theme.isotope();
+		// theme.onepageHeaderOffset();
+		theme.anchorSmoothScroll();
+		theme.svgInject();
+		theme.backgroundImage();
+		theme.backgroundImageMobile();
+		theme.imageHoverOverlay();
+		theme.rellax();
+		theme.scrollCue();
+		theme.swiperSlider();
+		theme.lightbox();
+		theme.plyr();
+		theme.progressBar();
+		theme.pageProgress();
+		theme.counterUp();
+		theme.bsTooltips();
+		theme.bsPopovers();
+		theme.bsModal();
+		theme.iTooltip();
+		theme.forms();
+		theme.passVisibility();
+		theme.pricingSwitcher();
+		theme.textRotator();
+		theme.codeSnippet();
+	},
 	/**
 	 * Sticky Header
 	 * Enables sticky behavior on navbar on page scroll

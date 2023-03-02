@@ -18,7 +18,7 @@
 				<div data-cues="slideInDown"
 				  data-group="page-title" data-delay="600">
 				  <h1 class="text-white mb-4">
-					Provinsi Sumatera Selatan<br />
+					Provinsi <br />
 					<span class="typer text-sky" data-delay="100" data-words="Sumatera Selatan"></span>
 					<span class="cursor text-sky" data-owner="typer"></span>
 				  </h1>
