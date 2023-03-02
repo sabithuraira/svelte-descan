@@ -8,7 +8,7 @@
 
   export let kode = "";
 
-  let chart;
+  let chart = { pendidikanTerakhir: null, jenisPekerjaan: null };
   let kategori = [];
   let penduduk = { data: [], links: [] };
   let listPendidikanTerakhir = { sd: 100, smp: 50, sma: 20 };
@@ -29,7 +29,7 @@
   let show = false;
 
   const createChart = () => {
-    if (!chart) {
+    if (!chart.pendidikanTerakhir)
       chart.pendidikanTerakhir = new Chart(
         document.getElementById("pendidikanTerakhir"),
         {
@@ -83,6 +83,7 @@
         }
       );
 
+    if (!chart.jenisPekerjaan)
       chart.jenisPekerjaan = new Chart(
         document.getElementById("jenisPekerjaan"),
         {
@@ -135,7 +136,6 @@
           },
         }
       );
-    }
   };
 
   const getKategori = async () => {
