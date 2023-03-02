@@ -12,7 +12,6 @@
 
   let map;
   let pointMap = { marker: {}, tooltip: {} };
-  let chart;
   let keluarga = { data: [], links: [] };
   let listStatusKesejahteraanKeluarga = {};
   let listStatusKesejahteraanKeluargaPersentase = {};
@@ -41,60 +40,59 @@
   };
 
   const createChart = () => {
-    if (!chart)
-      chart = new Chart(document.getElementById("persentaseKemiskinan"), {
-        type: "pie",
-        data: {
-          labels: Object.values(statusKesejahteraanLabel),
-          datasets: [{ data: Object.values(listStatusKesejahteraanKeluarga) }],
+    const chart = new Chart(document.getElementById("persentaseKemiskinan"), {
+      type: "pie",
+      data: {
+        labels: Object.values(statusKesejahteraanLabel),
+        datasets: [{ data: Object.values(listStatusKesejahteraanKeluarga) }],
+      },
+      options: {
+        offset: 20,
+        onClick: (e) => {
+          const points = chart.getElementsAtEventForMode(
+            e,
+            "point",
+            { intersect: true },
+            true
+          );
+
+          if (points.length)
+            for (let k in statusKesejahteraanLabel)
+              if (
+                statusKesejahteraanLabel[k] ==
+                chart.data.labels[points[0].index]
+              )
+                statusKesejahteraanSelected = k;
+
+          getKeluarga();
+
+          document.getElementById("tabelKemiskinan").scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+            inline: "start",
+          });
         },
-        options: {
-          offset: 20,
-          onClick: (e) => {
-            const points = chart.getElementsAtEventForMode(
-              e,
-              "point",
-              { intersect: true },
-              true
-            );
+        plugins: {
+          tooltip: {
+            enabled: true,
+            callbacks: {
+              label: (context) => {
+                var index = context.dataset.data.indexOf(context.raw);
 
-            if (points.length)
-              for (let k in statusKesejahteraanLabel)
-                if (
-                  statusKesejahteraanLabel[k] ==
-                  chart.data.labels[points[0].index]
-                )
-                  statusKesejahteraanSelected = k;
-
-            getKeluarga();
-
-            document.getElementById("tabelKemiskinan").scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-              inline: "start",
-            });
-          },
-          plugins: {
-            tooltip: {
-              enabled: true,
-              callbacks: {
-                label: (context) => {
-                  var index = context.dataset.data.indexOf(context.raw);
-
-                  return (
-                    Object.values(listStatusKesejahteraanKeluarga)[index] +
-                    " (" +
-                    Object.values(listStatusKesejahteraanKeluargaPersentase)[
-                      index
-                    ] +
-                    "%)"
-                  );
-                },
+                return (
+                  Object.values(listStatusKesejahteraanKeluarga)[index] +
+                  " (" +
+                  Object.values(listStatusKesejahteraanKeluargaPersentase)[
+                    index
+                  ] +
+                  "%)"
+                );
               },
             },
           },
         },
-      });
+      },
+    });
   };
 
   const getStatusKesejahteraanKeluarga = async () => {
@@ -119,6 +117,8 @@
                 100
             ) / 100;
         }
+
+        setTimeout(() => createMap(), 100);
       });
   };
 
@@ -136,10 +136,7 @@
     if (keluarga.data.length != 0) {
       show = true;
 
-      setTimeout(() => {
-        createMap();
-        createChart();
-      }, 100);
+      setTimeout(() => createMap(), 100);
     }
   };
 
@@ -214,7 +211,9 @@
   };
 
   onMount(() => {
-    getStatusKesejahteraanKeluarga();
+    getStatusKesejahteraanKeluarga().then(() =>
+      setTimeout(() => createChart(), 100)
+    );
     getKeluarga();
     getKategoriBantuan();
   });
