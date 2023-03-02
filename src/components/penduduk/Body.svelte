@@ -8,6 +8,7 @@
 
   export let kode = "";
 
+  let chart;
   let kategori = [];
   let penduduk = { data: [], links: [] };
   let listPendidikanTerakhir = { sd: 100, smp: 50, sma: 20 };
@@ -28,111 +29,113 @@
   let show = false;
 
   const createChart = () => {
-    const chartPendidikanTerakhir = new Chart(
-      document.getElementById("pendidikanTerakhir"),
-      {
-        type: "bar",
-        data: {
-          labels: Object.values(pendidikanTerakhirLabel),
-          datasets: [
-            {
-              label: "Pendidikan Terakhir",
-              data: Object.values(listPendidikanTerakhir),
-            },
-          ],
-        },
-        options: {
-          indexAxis: "y",
-          onClick: (e) => {
-            const points = chartPendidikanTerakhir.getElementsAtEventForMode(
-              e,
-              "point",
-              { intersect: true },
-              true
-            );
-
-            if (points.length) {
-              for (let p in pendidikanTerakhirLabel)
-                if (
-                  pendidikanTerakhirLabel[p] ==
-                  chartPendidikanTerakhir.data.labels[points[0].index]
-                )
-                  pendidikanTerakhirSelected = p;
-
-              getPenduduk();
-
-              document.getElementById("tabelPenduduk").scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-                inline: "start",
-              });
-            }
+    if (!chart) {
+      chart.pendidikanTerakhir = new Chart(
+        document.getElementById("pendidikanTerakhir"),
+        {
+          type: "bar",
+          data: {
+            labels: Object.values(pendidikanTerakhirLabel),
+            datasets: [
+              {
+                label: "Pendidikan Terakhir",
+                data: Object.values(listPendidikanTerakhir),
+              },
+            ],
           },
-          plugins: {
-            title: {
-              display: true,
-              text: "Jumlah Penduduk Berdasarkan Pendidikan Terakhir",
-              font: {
-                size: 18,
+          options: {
+            indexAxis: "y",
+            onClick: (e) => {
+              const points = chartPendidikanTerakhir.getElementsAtEventForMode(
+                e,
+                "point",
+                { intersect: true },
+                true
+              );
+
+              if (points.length) {
+                for (let p in pendidikanTerakhirLabel)
+                  if (
+                    pendidikanTerakhirLabel[p] ==
+                    chartPendidikanTerakhir.data.labels[points[0].index]
+                  )
+                    pendidikanTerakhirSelected = p;
+
+                getPenduduk();
+
+                document.getElementById("tabelPenduduk").scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                  inline: "start",
+                });
+              }
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: "Jumlah Penduduk Berdasarkan Pendidikan Terakhir",
+                font: {
+                  size: 18,
+                },
               },
             },
           },
-        },
-      }
-    );
+        }
+      );
 
-    const chartJenisPekerjaan = new Chart(
-      document.getElementById("jenisPekerjaan"),
-      {
-        type: "bar",
-        data: {
-          labels: Object.values(jenisPekerjaanLabel),
-          datasets: [
-            {
-              label: "Jenis Pekerjaan",
-              data: Object.values(listJenisPekerjaan),
-            },
-          ],
-        },
-        options: {
-          indexAxis: "y",
-          onClick: (e) => {
-            const points = chartJenisPekerjaan.getElementsAtEventForMode(
-              e,
-              "point",
-              { intersect: true },
-              true
-            );
-
-            if (points.length) {
-              for (let p in jenisPekerjaanLabel)
-                if (
-                  jenisPekerjaanLabel[p] ==
-                  chartJenisPekerjaan.data.labels[points[0].index]
-                )
-                  jenisPekerjaanSelected = p;
-
-              getPenduduk();
-
-              document.getElementById("tabelPenduduk").scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-                inline: "start",
-              });
-            }
+      chart.jenisPekerjaan = new Chart(
+        document.getElementById("jenisPekerjaan"),
+        {
+          type: "bar",
+          data: {
+            labels: Object.values(jenisPekerjaanLabel),
+            datasets: [
+              {
+                label: "Jenis Pekerjaan",
+                data: Object.values(listJenisPekerjaan),
+              },
+            ],
           },
-          plugins: {
-            title: {
-              display: true,
-              text: "Jumlah Penduduk Berdasarkan Jenis Pekerjaan",
-              font: {
-                size: 18,
+          options: {
+            indexAxis: "y",
+            onClick: (e) => {
+              const points = chartJenisPekerjaan.getElementsAtEventForMode(
+                e,
+                "point",
+                { intersect: true },
+                true
+              );
+
+              if (points.length) {
+                for (let p in jenisPekerjaanLabel)
+                  if (
+                    jenisPekerjaanLabel[p] ==
+                    chartJenisPekerjaan.data.labels[points[0].index]
+                  )
+                    jenisPekerjaanSelected = p;
+
+                getPenduduk();
+
+                document.getElementById("tabelPenduduk").scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                  inline: "start",
+                });
+              }
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: "Jumlah Penduduk Berdasarkan Jenis Pekerjaan",
+                font: {
+                  size: 18,
+                },
               },
             },
           },
-        },
-      }
-    );
+        }
+      );
+    }
   };
 
   const getKategori = async () => {
@@ -162,14 +165,16 @@
     await axios.get(url).then((d) => {
       penduduk = d.data.datas;
 
-      show = penduduk.data.length != 0 ? true : false;
+      if (penduduk.data.length != 0) {
+        show = true;
+
+        setTimeout(() => createChart(), 100);
+      }
     });
   };
 
   onMount(() => {
-    getKategori()
-      .then(() => getPenduduk())
-      .then(() => setTimeout(() => createChart(), 100));
+    getKategori().then(() => getPenduduk());
   });
 </script>
 
