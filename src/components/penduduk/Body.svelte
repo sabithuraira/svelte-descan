@@ -46,7 +46,7 @@
           options: {
             indexAxis: "y",
             onClick: (e) => {
-              const points = chartPendidikanTerakhir.getElementsAtEventForMode(
+              const points = chart.pendidikanTerakhir.getElementsAtEventForMode(
                 e,
                 "point",
                 { intersect: true },
@@ -57,7 +57,7 @@
                 for (let p in pendidikanTerakhirLabel)
                   if (
                     pendidikanTerakhirLabel[p] ==
-                    chartPendidikanTerakhir.data.labels[points[0].index]
+                    chart.pendidikanTerakhir.data.labels[points[0].index]
                   )
                     pendidikanTerakhirSelected = p;
 
@@ -99,7 +99,7 @@
           options: {
             indexAxis: "y",
             onClick: (e) => {
-              const points = chartJenisPekerjaan.getElementsAtEventForMode(
+              const points = chart.jenisPekerjaan.getElementsAtEventForMode(
                 e,
                 "point",
                 { intersect: true },
@@ -110,7 +110,7 @@
                 for (let p in jenisPekerjaanLabel)
                   if (
                     jenisPekerjaanLabel[p] ==
-                    chartJenisPekerjaan.data.labels[points[0].index]
+                    chart.jenisPekerjaan.data.labels[points[0].index]
                   )
                     jenisPekerjaanSelected = p;
 
