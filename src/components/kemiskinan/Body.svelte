@@ -33,7 +33,7 @@
 
     map = L.map("petaKemiskinan", {
       attributionControl: false,
-    }).setView([-2.990934, 104.756554], 7);
+    }).setView([-2.990934, 104.756554], 15);
 
     L.tileLayer("https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}", {
       subdomains: ["mt0", "mt1", "mt2", "mt3"],
@@ -163,7 +163,7 @@
         inline: "start",
       });
     } else {
-      map.setView([-2.990934, 104.756554], 7);
+      map.setView([-2.990934, 104.756554], 15);
 
       Swal.fire({
         text: "Tidak ada lokasi",
