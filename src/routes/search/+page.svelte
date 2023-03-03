@@ -116,7 +116,7 @@
 							placeholder="Cari wilayah......" 
 							aria-label="Search">
 						<div class="input-group-append">
-							<button on:click={() => search() } class="input-group-text"><i class="fa fa-search"></i></button>
+							<button on:click={() => search() } class="input-group-text"><i class="uil uil-search"></i></button>
 						</div>
 					</div>
 				  </div>
