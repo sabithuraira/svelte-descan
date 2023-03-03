@@ -10,7 +10,7 @@
             class="mb-4"
             src="/images/logo/logo.png"
             srcset="/images/logo/logo.png 8x"
-            alt=""
+            alt="footer-logo"
           />
           <p class="mb-4">
             © 2023 Developer 1600<br class="d-none d-lg-block" />Hak Cipta

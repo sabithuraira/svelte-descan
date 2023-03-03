@@ -61,12 +61,12 @@
         class="navbar-collapse-wrapper d-flex flex-row align-items-center w-100"
       >
         <div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">
-          <div class="navbar-brand  px-2">
+          <div class="navbar-brand px-2">
             <a href="/">
               <img
                 src="/images/logo/logofont.png"
                 srcset="/images/logo/logofont.png 8x"
-                alt=""
+                alt="header-logo"
               />
             </a>
           </div>

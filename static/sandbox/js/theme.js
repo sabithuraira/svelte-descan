@@ -34,6 +34,11 @@ var theme = {
 		theme.pricingSwitcher();
 		theme.textRotator();
 		theme.codeSnippet();
+
+		if (document.querySelector("img[alt='header-logo']").naturalWidth > 1000)
+			location.reload();
+		if (document.querySelector("img[alt='footer-logo']").naturalWidth > 400)
+			location.reload();
 	},
 	initWoHeader: function () {
 		// theme.stickyHeader();
@@ -63,6 +68,9 @@ var theme = {
 		theme.pricingSwitcher();
 		theme.textRotator();
 		theme.codeSnippet();
+
+		if (document.querySelector("img[alt='footer-logo']").naturalWidth > 400)
+      location.reload();
 	},
 	/**
 	 * Sticky Header
