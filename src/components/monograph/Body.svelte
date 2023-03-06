@@ -241,11 +241,13 @@
 			<div class="swiper">
 				<div class="swiper-wrapper">
 				<div class="swiper-slide">
-					<img class="rounded-circle w-20 h-20 mx-auto mb-4" src="{pengurus.foto}"
-					srcset="{pengurus.foto} 2x" alt="" />
-					<h4 class="mb-1">{ pengurus.nama_ketua }</h4>
-					<div class="meta mb-2">Kepala Desa</div>
-					<p class="mb-2">{ pengurus.periode_awal_aktif } s/d {pengurus.periode_akhir_aktif}</p>
+					{#if pengurus }
+						<img class="rounded-circle w-20 h-20 mx-auto mb-4" src="{pengurus.foto}"
+						srcset="{pengurus.foto} 2x" alt="" />
+						<h4 class="mb-1">{ pengurus.nama_ketua }</h4>
+						<div class="meta mb-2">Kepala Desa</div>
+						<p class="mb-2">{ pengurus.periode_awal_aktif } s/d {pengurus.periode_akhir_aktif}</p>
+					{/if}
 					<nav class="nav social justify-content-center text-center mb-0">
 					<a href="https://www.facebook.com/people/Bps-Provinsi-Sumatera-Selatan/100015484759318/"
 						target="_blank" rel="noreferrer"><i class="uil uil-facebook-f"></i></a>
