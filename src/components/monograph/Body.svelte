@@ -9,50 +9,87 @@
 		kode_prov: '',
 		kode_kab: '',
 		kode_kec: '',
-			kode_desa: '',
-			nama_ketua: '',
-			path_foto: '',
-			foto: '',
-			nama_wakil: '',
-			nama_sekretaris: '',
-			pengurus_lainnya: '',
-			periode_awal_aktif: '',
-			periode_akhir_aktif: '',
-			status_aktif: 0,
-			encId: ''
-		};
+		kode_desa: '',
+		nama_ketua: '',
+		path_foto: '',
+		foto: '',
+		nama_wakil: '',
+		nama_sekretaris: '',
+		pengurus_lainnya: '',
+		periode_awal_aktif: '',
+		periode_akhir_aktif: '',
+		status_aktif: 0,
+		encId: ''
+	};
 
-		let infrastruktur_ibadah = [];
-		let sum_infrastruktur_ibadah = '0';
+	const metadataIbadah = (data) => {
+		switch (true) {
+			case data.includes("Balai Basarah"):
+				return { logo: 'gopuram', label: 'Balai Basarah'};
+				break;
+			case data.includes("Lainnya"):
+				return { logo: 'peace', label: 'Tempat Ibadah Lainnya'};
+				break;
+			case data.includes("Masjid"):
+				return { logo: 'mosque', label: 'Masjid'};
+				break;
+			case data.includes("Kapel"):
+				return { logo: 'church', label: 'Kapel'};
+				break;
+			case data.includes("Mushola"):
+				return { logo: 'mosque', label: 'Surau/Langgar/Mushola'};
+				break;
+			case data.includes("Pura"):
+				return { logo: 'gopuram', label: 'Pura'};
+				break;
+			case data.includes("Gereja Kristen"):
+				return { logo: 'church', label: 'Gereja Kristen'};
+				break;
+			case data.includes("Wihara"):
+				return { logo: 'vihara', label: 'Wihara'};
+				break;
+			case data.includes("Gereja Katolik"):
+				return { logo: 'church', label: 'Gereja Katolik'};
+				break;
+			case data.includes("Kelenteng"):
+				return { logo: 'vihara', label: 'Kelenteng'};
+				break;
+			default:
+				return { logo: '', label: ''};
+		}
+	} 
 
-		let infrastruktur_kesehatan = [];
-		let sum_infrastruktur_kesehatan = '0';
+	let infrastruktur_ibadah = [];
+	let sum_infrastruktur_ibadah = '0';
 
-		let penduduk = [];
-		let sum_penduduk = '0';
-		let sum_luas_wilayah = '0';
+	let infrastruktur_kesehatan = [];
+	let sum_infrastruktur_kesehatan = '0';
 
-		infoWilayah.subscribe((value) => {
-			info_wilayah = value;
-		});
+	let penduduk = [];
+	let sum_penduduk = '0';
+	let sum_luas_wilayah = '0';
 
-		monografData.subscribe((value) => {
-			infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.sort((a,b) => { return a.nilai - b.nilai; });
-			sum_infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+	infoWilayah.subscribe((value) => {
+		info_wilayah = value;
+	});
 
-			infrastruktur_kesehatan = value.jumlah_infrastruktur_kesehatan.sort((a,b) => { return a.nilai - b.nilai; });
-			sum_infrastruktur_kesehatan = value.jumlah_infrastruktur_kesehatan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+	monografData.subscribe((value) => {
+		infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.sort((a,b) => { return b.nilai - a.nilai; });
+		sum_infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 
-			penduduk = value.jumlah_penduduk.sort((a,b) => { return a.nilai - b.nilai; });
-			sum_penduduk = value.jumlah_penduduk.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		infrastruktur_kesehatan = value.jumlah_infrastruktur_kesehatan//.sort((a,b) => { return b.nilai - a.nilai; });
+		sum_infrastruktur_kesehatan = value.jumlah_infrastruktur_kesehatan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 
-			sum_luas_wilayah = value.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		});
+		penduduk = value.jumlah_penduduk.sort((a,b) => { return b.nilai - a.nilai; });
+		sum_penduduk = value.jumlah_penduduk.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 
-		pengurusLast.subscribe((value) => {
-			pengurus = value;
-		});
-	</script>
+		sum_luas_wilayah = value.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+	});
+
+	pengurusLast.subscribe((value) => {
+		pengurus = value;
+	});
+</script>
 
 	<section class="wrapper bg-light" id="section_penduduk">
 		<div class="container py-5 py-md-8">
@@ -99,117 +136,74 @@
 	</section>
 
 	<section class="wrapper bg-light" id="section_tempat_ibadah">
-	<div class="container py-5 py-md-8">
-		<div class="row gx-lg-8 gx-xl-12 gy-10 gy-lg-0 ">
-		<div class="col-lg-8 mt-lg-2">
-			<div class="row align-items-center counter-wrapper gy-6 text-center">
-
-				<div class="col-md-4">
-					<button class="btn" data-bs-toggle="modal" data-bs-target="#modal_ibadah">
-						<div>
-							<span class="text-primary">
-							<i class="fa-solid fa-mosque fa-4x" width="70px"></i>
-							</span>
-							<h3 class="counter">10</h3>
-							<p class="text-navy">Masjid</p>
-						</div>
-					</button>
+		<div class="container py-5 py-md-8">
+			<div class="row gx-lg-8 gx-xl-12 gy-10 gy-lg-0 ">
+			<div class="col-lg-8 mt-lg-2">
+				<div class="row align-items-center counter-wrapper gy-6 text-center">
+					{#if infrastruktur_ibadah.length>0}
+						{#each Array(3) as _, i}
+							<div class="col-md-4">
+								<button class="btn" data-bs-toggle="modal" data-bs-target="#modal_ibadah">
+									<div>
+										<span class="text-primary">
+										<i class="fa-solid fa-{metadataIbadah(infrastruktur_ibadah[i].nama_variabel).logo} fa-4x" width="70px"></i>
+										</span>
+										<h3 class="counter">{ infrastruktur_ibadah[i].nilai }</h3>
+										<p class="text-navy">{metadataIbadah(infrastruktur_ibadah[i].nama_variabel).label}</p>
+									</div>
+								</button>
+							</div>
+						{/each}
+					{/if}
 				</div>
-
-			<div class="col-md-4">
-				<button class="btn" data-bs-toggle="modal" data-bs-target="#modal_ibadah">
-				<div>
-					<span class="text-primary">
-					<i class="fa-solid fa-church fa-4x" width="70px"></i>
-					</span>
-					<h3 class="counter">2</h3>
-					<p class="text-navy">Gereja</p>
-				</div>
-				</button>
 			</div>
 
-			<div class="col-md-4">
-				<button class="btn" data-bs-toggle="modal" data-bs-target="#modal_ibadah">
-				<div>
-					<span class="text-primary">
-					<i class="fa-solid fa-vihara fa-4x" width="70px"></i>
-					</span>
-					<h3 class="counter">1</h3>
-					<p class="text-navy">Wihara</p>
+			<div class="col-lg-4">
+				<h3 class="display-4 mb-3 pe-xl-10">Fasilitas Peribadatan</h3>
+				<p class="lead fs-lg mb-0 pe-xxl-10">
+					{#if infrastruktur_ibadah.length>0}
+						{metadataIbadah(infrastruktur_ibadah[0].nama_variabel).label} menjadi fasilitas ibadah terbanyak di { info_wilayah.nama }
+					{/if}
+				</p>
+				<div class="mt-2">
+					<button class=" btn btn-soft-primary" data-bs-toggle="modal" data-bs-target="#modal_ibadah">Selengkapnya</button>
 				</div>
-				</button>
 			</div>
-
-			</div>
-
+			<!-- /.row -->
 		</div>
-		<div class="col-lg-4">
-			<h3 class="display-4 mb-3 pe-xl-10">Fasilitas Peribadatan</h3>
-			<p class="lead fs-lg mb-0 pe-xxl-10">Masjid menjadi fasilitas ibadah terbanyak di { info_wilayah.nama }
-			</p>
-			<div class="mt-2">
-				<button class=" btn btn-soft-primary" data-bs-toggle="modal" data-bs-target="#modal_ibadah">Selengkapnya</button>
-			</div>
-
-		</div>
-		<!-- /.row -->
-	</div>
 	</section>
 
 	<section class="wrapper bg-light" id="section_faskes">
-	<div class="container py-5 py-md-7">
-		<div class="row">
-		<div class="col-lg-12 ">
-			<h2 class="display-4 text-center">Fasilitas Kesehatan</h2>
-			<div class="row my-3">
-			<div class="col-md-9 col-12 ">
-				Fasilitas Kesehatan pada Desa/Kelurahan Bandar Jaya lebih terdepan dari desa/kelurahan lainnya di
-				Kecamatan Sialang
+		<div class="container py-5 py-md-7">
+			<div class="row">
+				<div class="col-lg-12 ">
+					<h2 class="display-4 text-center">Fasilitas Kesehatan</h2>
+					<div class="row my-3">
+						<div class="col-md-9 col-12 ">
+							Berikut adalah daftar ketersediaan fasilitas kesehatan di { info_wilayah.nama }
+						</div>
+						<div class="col-md-3 col-12 text-center p-2">
+							<span class="text-primary">
+								<i class="fa-solid fa-hospital fa-3x"></i>
+							</span>
+						</div>
+					</div>
+
+					<ul class="icon-list mb-0">
+						<div class="row gy-3 gx-xl-8">
+							{#each infrastruktur_kesehatan as item, i}
+								<div class="col-12 col-md-6 col-xl-4">
+									<li class=" icon-list bullet-bg { item.nilai==0 ? 'bullet-soft-red' : 'bullet-soft-green' }">
+										<i class="uil uil-multiply "></i>{ item.nama_variabel.replace("Jumlah", "") }
+									</li>
+								</div>
+							{/each}
+						</div>
+					</ul>
+				</div>
+
 			</div>
-			<div class="col-md-3 col-12 text-center p-2">
-				<span class="text-primary">
-				<i class="fa-solid fa-hospital fa-3x"></i>
-				</span>
-			</div>
-			</div>
-
-			<ul class="icon-list mb-0">
-			<div class="row gy-3 gx-xl-8">
-				<div class="col-12 col-md-6 col-xl-4">
-				<li class=" icon-list bullet-bg bullet-soft-red">
-					<i class="uil uil-multiply "></i>Rumah Sakit
-				</li>
-				</div>
-				<div class="col-12 col-md-6 col-xl-4">
-				<li class=" icon-list bullet-bg bullet-soft-green">
-					<span> <i class="uil uil-check "></i></span><span>Puskesmas</span>
-				</li>
-				</div>
-				<div class="col-12 col-md-6 col-xl-4">
-				<li class=" icon-list bullet-bg bullet-soft-green">
-					<span> <i class="uil uil-check "></i></span><span>Poliklinik</span>
-				</li>
-				</div>
-				<div class="col-12 col-md-6 col-xl-4">
-				<li class=" icon-list bullet-bg bullet-soft-green">
-					<span> <i class="uil uil-check "></i></span><span>Puskesdes</span>
-				</li>
-				</div>
-				<div class="col-12 col-md-6 col-xl-4">
-				<li class=" icon-list bullet-bg bullet-soft-green">
-					<span> <i class="uil uil-check "></i></span><span>Pustu</span>
-				</li>
-				</div>
-			</div>
-			</ul>
-
-
-
-
 		</div>
-
-		</div>
-	</div>
 	</section>
 
 	<section class="wrapper bg-light" id="section_luas_wilayah">
@@ -278,79 +272,39 @@
   <!-- /.container -->
 </section>
 
-<div class="modal fade" id="modal_ibadah" tabindex="-1">
+<div class="modal" id="modal_ibadah" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-md">
-      <div class="modal-content text-center">
-        <div class="modal-body">
-          <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          <div class="col d-flex mb-2">
-            <h2 class="me-2">Fasilitas Ibadah</h2>
-            <div class="icon btn btn-circle disabled btn-primary me-4"> <i class="fa-solid fa-star-and-crescent"></i>
-            </div>
-          </div>
+		<div class="modal-content text-center">
+			<div class="modal-body">
+			<button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			<div class="col d-flex mb-2">
+				<h2 class="me-2">Fasilitas Ibadah</h2>
+				<div class="icon btn btn-circle disabled btn-primary me-4"> <i class="fa-solid fa-peace"></i>
+				</div>
+			</div>
 
-          <table
-            class="table table-bordered table-responsive table-sm table-striped table-hover table-primary text-start"
-            style="border: #00000034;">
-            <thead>
-              <tr>
-                <th class="text-center bg-primary text-white">No</th>
-                <th scope="col" class="bg-primary  text-center  text-white">Fasilitas</th>
-                <th scope="col" class="bg-primary text-center text-white ">Jumlah</th>
-              </tr>
-            </thead>
-            <tbody style="border: #00000034;">
-              <tr>
-                <th scope="row" class="text-center">1</th>
-                <td>Masjid</td>
-                <td class="text-center">13</td>
-              </tr>
-              <tr>
-                <th scope="row" class="text-center">2</th>
-                <td>Surau/Langgar/Mushola</td>
-                <td class="text-center">15</td>
-              </tr>
-              <tr>
-                <th scope="row" class="text-center">3</th>
-                <td>Gereja Kristen</td>
-                <td class="text-center">3</td>
-              </tr>
-              <tr>
-                <th scope="row" class="text-center">4</th>
-                <td>Gereja Katolik</td>
-                <td class="text-center">2</td>
-              </tr>
-              <tr>
-                <th scope="row" class="text-center">5</th>
-                <td>Kapel</td>
-                <td class="text-center">2</td>
-              </tr>
-              <tr>
-                <th scope="row" class="text-center">6</th>
-                <td>Wihara</td>
-                <td class="text-center">1</td>
-              </tr>
-              <tr>
-                <th scope="row" class="text-center">7</th>
-                <td>Pura</td>
-                <td class="text-center">1</td>
-              </tr>
-              <tr>
-                <th scope="row" class="text-center">8</th>
-                <td>Kelenteng</td>
-                <td class="text-center">1</td>
-              </tr>
-              <tr>
-                <th scope="row" class="text-center">9</th>
-                <td>Tempat Ibadah Lainnya</td>
-                <td class="text-center">0</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <!--/.modal-body -->
-      </div>
+			<table class="table table-bordered table-responsive table-sm table-striped table-hover table-primary text-start" style="border: #00000034;">
+				<thead>
+					<tr>
+						<th class="text-center bg-primary text-white">No</th>
+						<th scope="col" class="bg-primary  text-center  text-white">Fasilitas</th>
+						<th scope="col" class="bg-primary text-center text-white ">Jumlah</th>
+					</tr>
+				</thead>
+				<tbody style="border: #00000034;">
+					{#each infrastruktur_ibadah as item, i}
+						<tr>
+							<th scope="row" class="text-center">{i+1}</th>
+							<td>{metadataIbadah(item.nama_variabel).label}</td>
+							<td class="text-center">{item.nilai}</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+			</div>
+			<!--/.modal-body -->
+		</div>
       <!--/.modal-content -->
     </div>
     <!--/.modal-dialog -->
-  </div>
+</div>
