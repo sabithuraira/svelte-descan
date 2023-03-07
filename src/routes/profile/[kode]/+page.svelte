@@ -45,6 +45,14 @@
 				}).catch(({ response })=>{
 					console.error(response)
 				})
+
+			await axios
+				.get(`${$urlApi}pengurus/${data.kode}/last`)
+				.then(({data})=>{
+					pengurusLast.set(data.datas);
+				}).catch(({ response })=>{
+					console.error(response)
+				})
 		}
 	}
 

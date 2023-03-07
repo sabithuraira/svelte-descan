@@ -39,6 +39,14 @@
 				}).catch(({ response })=>{
 					console.error(response)
 				})
+
+			await axios
+				.get(`${$urlApi}pengurus/${data.kode}/last`)
+				.then(({data})=>{
+					pengurusLast.set(data.datas);
+				}).catch(({ response })=>{
+					console.error(response)
+				})
 		}
 
 		await axios
@@ -63,14 +71,6 @@
 					hortikultura_unggulan: tempData.filter(item => item.kategori_variabel=='hortikultura_unggulan'),
 				});
 
-			}).catch(({ response })=>{
-				console.error(response)
-			})
-
-		await axios
-			.get(`${$urlApi}pengurus/${data.kode}/last`)
-			.then(({data})=>{
-				pengurusLast.set(data.datas);
 			}).catch(({ response })=>{
 				console.error(response)
 			})

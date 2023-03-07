@@ -19,6 +19,7 @@
     childWilayah,
     deskripsi,
   } from "../../../stores/wilayahStores";
+	import { pengurusLast } from '../../../stores/pengurusStores';
   import { urlApi } from "../../../stores/generalStores";
 
   let preloader = true;
@@ -61,6 +62,14 @@
         .catch(({ response }) => {
           console.error(response);
         });
+
+			await axios
+				.get(`${$urlApi}pengurus/${data.kode}/last`)
+				.then(({data})=>{
+					pengurusLast.set(data.datas);
+				}).catch(({ response })=>{
+					console.error(response)
+				})
     }
   };
 
