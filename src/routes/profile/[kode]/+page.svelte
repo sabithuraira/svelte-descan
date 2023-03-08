@@ -13,6 +13,7 @@
 
 	import { infoWilayah, parentWilayah, childWilayah, deskripsi } from '../../../stores/wilayahStores';
 	import { urlApi } from '../../../stores/generalStores';
+	import { pengurusLast } from '../../../stores/pengurusStores';
 
 	const labelLevel = (kodeWilayah)  => {
 		switch(kodeWilayah.length){
