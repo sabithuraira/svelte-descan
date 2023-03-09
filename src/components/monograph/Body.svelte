@@ -4,7 +4,18 @@
 	import { monografData } from '../../stores/monografStores';
 	import { pengurusLast } from '../../stores/pengurusStores';
 
-	let info_wilayah = [];
+	let info_wilayah = {
+		kode_prov: "",
+		kode_kab: "",
+		kode_kec: "",
+		kode_desa: "",
+		kode_wilayah: "",
+		nama: "",
+		nama_prov: "",
+		nama_kab: "",
+		nama_kec: "",
+	};
+
 	let pengurus = {
 		kode_prov: '',
 		kode_kab: '',
@@ -79,7 +90,9 @@
 	let sum_luas_wilayah = '0';
 
 	infoWilayah.subscribe((value) => {
-		info_wilayah = value;
+		if (value.kode_wilayah) {
+			info_wilayah = value;
+		}
 	});
 
 	monografData.subscribe((value) => {

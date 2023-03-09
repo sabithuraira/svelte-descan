@@ -98,14 +98,14 @@
 		sum_penyandang_disabilitas = value.penyandang_disabilitas.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 
 		contentProfile = [
-			{ label: "Luas Wilayah", value: `${sum_luas_wilayah} Km<sup>2</sup>`, icon: "map", url:"#"},
+			{ label: "Luas Wilayah", value: `${sum_luas_wilayah} Km<sup>2</sup>`, icon: "map", url:`/topografi/${info_wilayah.kode_wilayah}`},
 			{ label: "Penduduk", value: sum_penduduk, icon: "user", url: `/penduduk/${info_wilayah.kode_wilayah}`},
 			{ label: "Fasilitas Kesehatan", value: sum_infrastruktur_kesehatan, icon: "hospital", url:"#"},
 			{ label: "Keluarga", value: sum_keluarga, icon: "users-alt", url: `/keluarga/${info_wilayah.kode_wilayah}`},
 			{ label: "Tempat Ibadah", value: sum_infrastruktur_ibadah, icon: "moon", url:"#"}, 
 			{ label: "Fasilitas Pendidikan", value: sum_infrastruktur_pendidikan, icon: "book", url:"#"}, 
 			{ label: "Fasilitas Ekonomi", value: sum_infrastruktur_ekonomi, icon: "store", url:"#"}, 
-			{ label: "Industrik Mikro & Kecil", value: sum_industri, icon: "building", url:"#"}, 
+			{ label: "Industrik Mikro & Kecil", value: sum_industri, icon: "building", url:`/umkm/${info_wilayah.kode_wilayah}`}, 
 			{ label: "Penyandang Disabilitas", value: sum_penyandang_disabilitas, icon: "wheelchair", url:"#"}, 
 		];
 	});
