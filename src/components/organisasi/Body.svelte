@@ -3,6 +3,7 @@
 	import { urlApi } from '../../stores/generalStores';
 	import { infoWilayah } from '../../stores/wilayahStores';
  	import axios from 'axios';
+	import { labelLevel, labelKepalaWilayah } from '../../helper/labelWilayah';
 	// import { onMount } from 'svelte';
 
 	let info_wilayah = { kode_wilayah: ''};
@@ -14,25 +15,6 @@
 	});
 	let listPengurus = [];
 
-	const labelKetua = ()  => {
-		switch(info_wilayah.kode_wilayah.length){
-			case 10: return  'Kepala Desa/Lurah'; break;
-			case 7: return  'Camat'; break;
-			case 4: return 'Bupati/Walikota'; break;
-			case 2: return 'Gubernur'; break;
-			default: return "-"; break;
-		}
-	};
-
-	const labelWilayah = ()  => {
-		switch(info_wilayah.kode_wilayah.length){
-			case 10: return  'Desa/Kelurahan'; break;
-			case 7: return  'Kecamatan'; break;
-			case 4: return 'Kabupaten/Kota'; break;
-			case 2: return 'Provinsi'; break;
-			default: return "-"; break;
-		}
-	};
 
 	async function loadPengurus(){
 		await axios
@@ -49,7 +31,7 @@
 	<div class="container px-2 py-6 py-md-6">
 		<div class="row mb-3">
 			<div class="col-md-10 col-xl-9 col-xxl-7 mx-auto text-center">
-				<h2 class="display-4 mb-3 ">Riwayat Keorganisasian <br>{ labelWilayah() } { $infoWilayah.nama }
+				<h2 class="display-4 mb-3 ">Riwayat Keorganisasian <br>{ labelLevel(info_wilayah.kode_wilayah) } { info_wilayah.nama }
 				</h2>
 			</div>
 			<!--/column -->
@@ -68,7 +50,7 @@
 							<div class="col-7 col-lg-8 ">
 								<div class="row mb-3">
 									<div class="col-12 col-lg-4">
-										{ labelKetua() } :
+										{ labelKepalaWilayah(info_wilayah.kode_wilayah) } :
 									</div>
 									<div class="col-12 col-lg-7">
 										<b> { item.nama_ketua } </b>
@@ -76,7 +58,7 @@
 								</div>
 								<div class="row mb-3">
 									<div class="col-12 col-lg-4">
-										Wakil { labelKetua() } :
+										Wakil { labelKepalaWilayah(info_wilayah.kode_wilayah) } :
 									</div>
 									<div class="col-12 col-lg-7">
 										<b> { item.nama_wakil } </b>
@@ -84,7 +66,7 @@
 								</div>
 								<div class="row mb-3">
 									<div class="col-12 col-lg-4">
-										Sekretaris { labelKetua() } :
+										Sekretaris { labelKepalaWilayah(info_wilayah.kode_wilayah) } :
 									</div>
 									<div class="col-12 col-lg-7">
 										<b> { item.nama_sekretaris } </b>

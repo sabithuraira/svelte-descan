@@ -15,5 +15,6 @@ export const monografData = writable({
     jumlah_industri: [],
     keunggulan_wilayah: [],
     pangan_unggulan: [],
-    hortikultura_unggulan: []
+    hortikultura_unggulan: [],
+    penyandang_disabilitas: []
 });

@@ -2,26 +2,27 @@
   // @ts-nocheck
   	import { infoWilayah, deskripsi } from "../../stores/wilayahStores";
 	import { pengurusLast } from '../../stores/pengurusStores';
+	import { labelLevel, labelKepalaWilayah } from '../../helper/labelWilayah';
 
-	const labelLevel = (kodeWilayah) => {
-		switch (kodeWilayah.length) {
-		case 10:
-			return "Desa/Kelurahan";
-			break;
-		case 7:
-			return "Kecamatan";
-			break;
-		case 4:
-			return "Kabupaten/Kota";
-			break;
-		case 2:
-			return "Provinsi";
-			break;
-		default:
-			return "-";
-			break;
-		}
-	};
+	// const labelLevel = (kodeWilayah) => {
+	// 	switch (kodeWilayah.length) {
+	// 	case 10:
+	// 		return "Desa/Kelurahan";
+	// 		break;
+	// 	case 7:
+	// 		return "Kecamatan";
+	// 		break;
+	// 	case 4:
+	// 		return "Kabupaten/Kota";
+	// 		break;
+	// 	case 2:
+	// 		return "Provinsi";
+	// 		break;
+	// 	default:
+	// 		return "-";
+	// 		break;
+	// 	}
+	// };
 
 	let info_wilayah = {
 		kode_prov: "",
@@ -80,7 +81,7 @@
 
 						<div class="card mx-4">
 							<h4 class="mb-0 text-nowrap">
-								Kepala {labelLevel(info_wilayah.kode_wilayah)}
+								{labelKepalaWilayah(info_wilayah.kode_wilayah)}
 							</h4>
 							<p class="fs-14 mb-0">{pengurus.nama_ketua}</p>
 						</div>

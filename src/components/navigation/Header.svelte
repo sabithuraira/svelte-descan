@@ -74,19 +74,16 @@
           <div class="w-100 order-1 order-lg-0 d-lg-flex offcanvas-body">
             <ul class="navbar-nav">
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="/profile/{kode}"
-                  >Profile</a
-                >
+                <a class="nav-link dropdown-toggle" href="#">Informasi Umum</a>
                 <ul class="dropdown-menu">
+					<li class="nav-item">
+					  <a class="dropdown-item" href="/profile/{kode}">Profile</a>
+					</li>
                   <li class="nav-item">
-                    <a class="dropdown-item" href="/monograph/{kode}"
-                      >Monograph</a
-                    >
+                    <a class="dropdown-item" href="/monograph/{kode}">Monograph</a>
                   </li>
                   <li class="nav-item">
-                    <a class="dropdown-item" href="/organisasi/{kode}"
-                      >Organisasi</a
-                    >
+                    <a class="dropdown-item" href="/organisasi/{kode}">Organisasi</a>
                   </li>
                 </ul>
               </li>

@@ -44,7 +44,7 @@
 				.then(({data})=>{
 					deskripsi.set(data.datas.deskripsi);
 				}).catch(({ response })=>{
-					console.error(response)
+					console.error(JSON.stringify(response))
 				})
 
 			await axios

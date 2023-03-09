@@ -69,6 +69,7 @@
 					keunggulan_wilayah: tempData.filter(item => item.kategori_variabel=='keunggulan_wilayah'),
 					pangan_unggulan: tempData.filter(item => item.kategori_variabel=='pangan_unggulan'),
 					hortikultura_unggulan: tempData.filter(item => item.kategori_variabel=='hortikultura_unggulan'),
+					penyandang_disabilitas: tempData.filter(item => item.kategori_variabel=='penyandang_disabilitas'),
 				});
 
 			}).catch(({ response })=>{
