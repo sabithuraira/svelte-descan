@@ -122,7 +122,6 @@
 	});
 </script>
 
-
 	<section class="wrapper bg-light" id="section_penduduk">
 		<div class="container py-5">
 			<div class="row gx-lg-8 gx-xl-12 gy-10 align-items-center">

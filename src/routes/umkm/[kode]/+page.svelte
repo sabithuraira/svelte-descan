@@ -1,67 +1,70 @@
 <script>
-  // @ts-nocheck
-  import PreLoader from "../../../components/navigation/PreLoader.svelte";
-  import Header from "../../../components/navigation/Header.svelte";
-  import TopProfile from "../../../components/navigation/TopProfile.svelte";
-  import Body from "../../../components/umkm/Body.svelte";
-  import Footer from "../../../components/navigation/Footer.svelte";
-  import BackToTop from "../../../components/navigation/BackToTop.svelte";
+	// @ts-nocheck
+	import PreLoader from "../../../components/navigation/PreLoader.svelte";
+	import Header from "../../../components/navigation/Header.svelte";
+	import TopProfile from "../../../components/navigation/TopProfile.svelte";
+	import Body from "../../../components/umkm/Body.svelte";
+	import Footer from "../../../components/navigation/Footer.svelte";
+	import BackToTop from "../../../components/navigation/BackToTop.svelte";
 
-  import { onMount } from "svelte";
-  import axios from "axios";
+	import { onMount } from "svelte";
+	import axios from "axios";
 
-  /** @type {import('./$types').PageData} */
-  export let data;
+	/** @type {import('./$types').PageData} */
+	export let data;
 
-  import {
-    infoWilayah,
-    parentWilayah,
-    childWilayah,
-    deskripsi,
-  } from "../../../stores/wilayahStores";
+	import { infoWilayah, parentWilayah, childWilayah, deskripsi} from "../../../stores/wilayahStores";
 	import { pengurusLast } from '../../../stores/pengurusStores';
-  import { urlApi } from "../../../stores/generalStores";
+	import { urlApi } from "../../../stores/generalStores";
+	import { umkmData } from "../../../stores/umkmStores";
 
-  let preloader = true;
-  let info_wilayah = {
-    kode_prov: "",
-    kode_kab: "",
-    kode_kec: "",
-    kode_desa: "",
-    kode_wilayah: "",
-    nama: "",
-    nama_prov: "",
-    nama_kab: "",
-    nama_kec: "",
-  };
+	let preloader = true;
+	let info_wilayah = {
+		kode_prov: "",
+		kode_kab: "",
+		kode_kec: "",
+		kode_desa: "",
+		kode_wilayah: "",
+		nama: "",
+		nama_prov: "",
+		nama_kab: "",
+		nama_kec: "",
+	};
+	let industri = [];
 
-  infoWilayah.subscribe((value) => {
-    if (value.kode_wilayah) {
-      info_wilayah = value;
-    }
-  });
+	infoWilayah.subscribe((value) => {
+		if (value.kode_wilayah) {
+		info_wilayah = value;
+		}
+	});
 
-  const loadWilayah = async () => {
-    if (data.kode != info_wilayah.kode_wilayah) {
-      await axios
-        .get(`${$urlApi}wilayah/${data.kode}/show`)
-        .then(({ data }) => {
-          infoWilayah.set(data.datas.result);
-          parentWilayah.set(data.datas.info_induk);
-          childWilayah.set(data.datas.info_child);
-        })
-        .catch(({ response }) => {
-          console.error(response);
-        });
+	umkmData.subscribe((value) => {
+		if (value.length>0) {
+			industri = value;
+		}
+	});
 
-      await axios
-        .get(`${$urlApi}wilayah/${data.kode}/deskripsi`)
-        .then(({ data }) => {
-          deskripsi.set(data.datas.deskripsi);
-        })
-        .catch(({ response }) => {
-          console.error(response);
-        });
+	const loadWilayah = async () => {
+		if (data.kode != info_wilayah.kode_wilayah) {
+			await axios
+				.get(`${$urlApi}wilayah/${data.kode}/show`)
+				.then(({ data }) => {
+				infoWilayah.set(data.datas.result);
+				parentWilayah.set(data.datas.info_induk);
+				childWilayah.set(data.datas.info_child);
+				})
+				.catch(({ response }) => {
+				console.error(response);
+				});
+
+			await axios
+				.get(`${$urlApi}wilayah/${data.kode}/deskripsi`)
+				.then(({ data }) => {
+				deskripsi.set(data.datas.deskripsi);
+				})
+				.catch(({ response }) => {
+				console.error(response);
+				});
 
 			await axios
 				.get(`${$urlApi}pengurus/${data.kode}/last`)
@@ -70,29 +73,42 @@
 				}).catch(({ response })=>{
 					console.error(response)
 				})
-    }
-  };
+		}
 
-  const loadJS = () => {
-    const pluginsJS = document.createElement("script");
-    pluginsJS.setAttribute("src", "/sandbox/js/plugins.js");
-    document.head.appendChild(pluginsJS);
+		if(industri.length==0){
+			await axios
+				.get(`${$urlApi}dashboard/${data.kode}/industri`)
+				.then(({data})=>{
+					let tempData = data.datas;
+					umkmData.set({
+						industri: tempData.filter(item => item.kategori_variabel=='jumlah_industri'),
+					});
+				}).catch(({ response })=>{
+					console.error(response)
+				})
+		}
+	};
 
-    const themeJS = document.createElement("script");
-    themeJS.setAttribute("src", "/sandbox/js/theme.js");
-    document.head.appendChild(themeJS);
+	const loadJS = () => {
+		const pluginsJS = document.createElement("script");
+		pluginsJS.setAttribute("src", "/sandbox/js/plugins.js");
+		document.head.appendChild(pluginsJS);
 
-    setTimeout(() => {
-      theme.init();
-      TyperSetup();
-    }, 100);
-  };
+		const themeJS = document.createElement("script");
+		themeJS.setAttribute("src", "/sandbox/js/theme.js");
+		document.head.appendChild(themeJS);
 
-  onMount(() => {
-    loadWilayah()
-      .then(() => setTimeout(() => loadJS(), 100))
-      .then(() => (preloader = false));
-  });
+		setTimeout(() => {
+		theme.init();
+		TyperSetup();
+		}, 100);
+	};
+
+	onMount(() => {
+		loadWilayah()
+		.then(() => setTimeout(() => loadJS(), 100))
+		.then(() => (preloader = false));
+	});
 </script>
 
 <svelte:head>
@@ -118,12 +134,12 @@
 </svelte:head>
 
 <div class="content-wrapper">
-  {#if preloader}
-    <PreLoader />
-  {/if}
-  <Header kode={$infoWilayah.kode_wilayah} />
-  <TopProfile />
-  <Body kode={data.kode} />
+	{#if preloader}
+		<PreLoader />
+	{/if}
+	<Header kode={$infoWilayah.kode_wilayah} />
+	<TopProfile />
+	<Body kode={data.kode} />
 </div>
 <Footer />
 <BackToTop />

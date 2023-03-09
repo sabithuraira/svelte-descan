@@ -3,6 +3,7 @@
 
 	import { infoWilayah, deskripsi } from '../../stores/wilayahStores';
 	import { monografData } from '../../stores/monografStores';
+	import { umkmData } from '../../stores/umkmStores';
 	import { pengurusLast } from '../../stores/pengurusStores';
 	import { labelLevel, labelKepalaWilayah } from '../../helper/labelWilayah';
 	import { goto } from '$app/navigation';
@@ -94,7 +95,6 @@
 		sum_keluarga = value.jumlah_keluarga.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 
 		sum_luas_wilayah = value.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_industri = value.jumlah_industri.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_penyandang_disabilitas = value.penyandang_disabilitas.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 
 		contentProfile = [
@@ -105,9 +105,15 @@
 			{ label: "Tempat Ibadah", value: sum_infrastruktur_ibadah, icon: "moon", url:"#"}, 
 			{ label: "Fasilitas Pendidikan", value: sum_infrastruktur_pendidikan, icon: "book", url:"#"}, 
 			{ label: "Fasilitas Ekonomi", value: sum_infrastruktur_ekonomi, icon: "store", url:"#"}, 
-			{ label: "Industrik Mikro & Kecil", value: sum_industri, icon: "building", url:`/umkm/${info_wilayah.kode_wilayah}`}, 
 			{ label: "Penyandang Disabilitas", value: sum_penyandang_disabilitas, icon: "wheelchair", url:"#"}, 
 		];
+	});
+
+	umkmData.subscribe((value) => {
+		sum_industri = value.industri.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		contentProfile.push(
+			{ label: "Industrik Mikro & Kecil", value: sum_industri, icon: "building", url:`/umkm/${info_wilayah.kode_wilayah}`}, 
+		);
 	});
 </script>
 

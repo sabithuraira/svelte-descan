@@ -12,7 +12,6 @@ export const monografData = writable({
     informasi_internet: [],
     jumlah_lembaga_keuangan: [],
     jumlah_infrastruktur_ekonomi: [],
-    jumlah_industri: [],
     keunggulan_wilayah: [],
     pangan_unggulan: [],
     hortikultura_unggulan: [],

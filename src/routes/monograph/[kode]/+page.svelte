@@ -15,6 +15,7 @@
 
 	import { infoWilayah, parentWilayah, childWilayah, deskripsi } from '../../../stores/wilayahStores';
 	import { monografData } from '../../../stores/monografStores';
+	import { umkmData } from '../../../stores/umkmStores';
 	import { pengurusLast } from '../../../stores/pengurusStores';
 	import { urlApi } from '../../../stores/generalStores';
 
@@ -65,11 +66,14 @@
 					informasi_internet: tempData.filter(item => item.kategori_variabel=='informasi_internet'),
 					jumlah_lembaga_keuangan: tempData.filter(item => item.kategori_variabel=='jumlah_lembaga_keuangan'),
 					jumlah_infrastruktur_ekonomi: tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_ekonomi'),
-					jumlah_industri: tempData.filter(item => item.kategori_variabel=='jumlah_industri'),
 					keunggulan_wilayah: tempData.filter(item => item.kategori_variabel=='keunggulan_wilayah'),
 					pangan_unggulan: tempData.filter(item => item.kategori_variabel=='pangan_unggulan'),
 					hortikultura_unggulan: tempData.filter(item => item.kategori_variabel=='hortikultura_unggulan'),
 					penyandang_disabilitas: tempData.filter(item => item.kategori_variabel=='penyandang_disabilitas'),
+				});
+
+				umkmData.set({
+					industri: tempData.filter(item => item.kategori_variabel=='jumlah_industri'),
 				});
 
 			}).catch(({ response })=>{
