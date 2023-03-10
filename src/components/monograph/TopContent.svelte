@@ -4,28 +4,21 @@
 	import { infoWilayah, deskripsi } from '../../stores/wilayahStores';
 	import { monografData } from '../../stores/monografStores';
 	import { umkmData } from '../../stores/umkmStores';
+	import { infrastrukturKesehatan } from '../../stores/infraKesehatanStores';
 	import { pengurusLast } from '../../stores/pengurusStores';
 	import { labelLevel, labelKepalaWilayah } from '../../helper/labelWilayah';
 	import { goto } from '$app/navigation';
 
 	let deskripsiLabel = '';
 	let sum_infrastruktur_ibadah = '0';
-
-	// let infrastruktur_kesehatan = [];
 	let sum_infrastruktur_kesehatan = '0';
-
-	// let infrastruktur_pendidikan = [];
 	let sum_infrastruktur_pendidikan = '0';
-
-	// let infrastruktur_ekonomi = [];
 	let sum_infrastruktur_ekonomi = '0';
 
-	// let lembaga_keuangan = [];
 	let sum_lembaga_keuangan = '0';
 	let sum_industri = '0';
 	let sum_penyandang_disabilitas = '0';
 
-	// let penduduk = [];
 	let contentProfile = []
 	let sum_penduduk = '0';
 	let sum_keluarga = '0';
@@ -75,32 +68,18 @@
 	});
 
 	monografData.subscribe((value) => {
-		// infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.sort((a,b) => { return a.nilai - b.nilai; });
 		sum_infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-
-		// infrastruktur_kesehatan = value.jumlah_infrastruktur_kesehatan.sort((a,b) => { return a.nilai - b.nilai; });
-		sum_infrastruktur_kesehatan = value.jumlah_infrastruktur_kesehatan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-
-		// infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan//.sort((a,b) => { return b.nilai - a.nilai; });
 		sum_infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-
-		// infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi//.sort((a,b) => { return b.nilai - a.nilai; });
 		sum_infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-
-		// lembaga_keuangan = value.jumlah_lembaga_keuangan.sort((a,b) => { return b.nilai - a.nilai; });
 		sum_lembaga_keuangan = value.jumlah_lembaga_keuangan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-
-		// penduduk = value.jumlah_penduduk.sort((a,b) => { return a.nilai - b.nilai; });
 		sum_penduduk = value.jumlah_penduduk.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_keluarga = value.jumlah_keluarga.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-
 		sum_luas_wilayah = value.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_penyandang_disabilitas = value.penyandang_disabilitas.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 
 		contentProfile = [
 			{ label: "Luas Wilayah", value: `${sum_luas_wilayah} Km<sup>2</sup>`, icon: "map", url:`/topografi/${info_wilayah.kode_wilayah}`},
 			{ label: "Penduduk", value: sum_penduduk, icon: "user", url: `/penduduk/${info_wilayah.kode_wilayah}`},
-			{ label: "Fasilitas Kesehatan", value: sum_infrastruktur_kesehatan, icon: "hospital", url:"#"},
 			{ label: "Keluarga", value: sum_keluarga, icon: "users-alt", url: `/keluarga/${info_wilayah.kode_wilayah}`},
 			{ label: "Tempat Ibadah", value: sum_infrastruktur_ibadah, icon: "moon", url:"#"}, 
 			{ label: "Fasilitas Pendidikan", value: sum_infrastruktur_pendidikan, icon: "book", url:"#"}, 
@@ -112,7 +91,14 @@
 	umkmData.subscribe((value) => {
 		sum_industri = value.industri.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		contentProfile.push(
-			{ label: "Industrik Mikro & Kecil", value: sum_industri, icon: "building", url:`/umkm/${info_wilayah.kode_wilayah}`}, 
+			{ label: "Industri Mikro & Kecil", value: sum_industri, icon: "building", url:`/umkm/${info_wilayah.kode_wilayah}`}, 
+		);
+	});
+
+	infrastrukturKesehatan.subscribe((value) => {
+		sum_infrastruktur_kesehatan = value.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		contentProfile.push(
+			{ label: "Fasilitas Kesehatan", value: sum_infrastruktur_kesehatan, icon: "hospital", url:`/sarana_kesehatan/${info_wilayah.kode_wilayah}`}
 		);
 	});
 </script>

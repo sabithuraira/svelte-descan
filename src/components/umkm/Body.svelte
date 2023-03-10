@@ -78,7 +78,7 @@
 										0
 									{/if}
 								</h3>
-								<p>{ industri[i].nama_variabel.replace("Jumlah", "") }</p>
+								<p>{ industri[i].nama_variabel.replace("Jumlah industri mikro dan kecil:", "") }</p>
 							</div>
 						{/each}
 					{/if}

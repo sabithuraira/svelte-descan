@@ -16,6 +16,7 @@
 	import { infoWilayah, parentWilayah, childWilayah, deskripsi } from '../../../stores/wilayahStores';
 	import { monografData } from '../../../stores/monografStores';
 	import { umkmData } from '../../../stores/umkmStores';
+	import { infrastrukturKesehatan } from "../../../stores/infraKesehatanStores";
 	import { pengurusLast } from '../../../stores/pengurusStores';
 	import { urlApi } from '../../../stores/generalStores';
 
@@ -75,6 +76,8 @@
 				umkmData.set({
 					industri: tempData.filter(item => item.kategori_variabel=='jumlah_industri'),
 				});
+
+				infrastrukturKesehatan.set(tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_kesehatan'));
 
 			}).catch(({ response })=>{
 				console.error(response)

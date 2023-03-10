@@ -7,7 +7,6 @@ export const monografData = writable({
     jumlah_penduduk: [], 
     jumlah_keluarga: [], 
     jumlah_infrastruktur_pendidikan: [],
-    jumlah_infrastruktur_kesehatan: [],
     jumlah_infrastruktur_ibadah: [],
     informasi_internet: [],
     jumlah_lembaga_keuangan: [],

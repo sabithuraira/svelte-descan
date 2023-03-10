@@ -58,52 +58,60 @@
 
 			<div class="w-100 order-1 order-lg-0 d-lg-flex offcanvas-body">
 				<ul class="navbar-nav">
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#">Informasi Umum</a>
-					<ul class="dropdown-menu">
-						<li class="nav-item">
-							<a class="dropdown-item" href="/profile/{kode}">Profile</a>
-						</li>
-						<li class="nav-item">
-							<a class="dropdown-item" href="/topografi/{kode}">Topografi</a>
-						</li>
-						<li class="nav-item">
-							<a class="dropdown-item" href="/monograph/{kode}">Monograph</a>
-						</li>
-						<li class="nav-item">
-							<a class="dropdown-item" href="/organisasi/{kode}">Organisasi</a>
-						</li>
-					</ul>
-				</li>
-				<li class="nav-item dropdown">
-					<a
-					class="nav-link dropdown-toggle"
-					href="#"
-					data-bs-toggle="dropdown">Kependudukan</a
-					>
-					<ul class="dropdown-menu">
-						<li class="nav-item">
-							<a class="dropdown-item" href="/kemiskinan/{kode}">Kemiskinan</a>
-						</li>
-						<li class="nav-item">
-							<a class="dropdown-item" href="/stunting/{kode}">Stunting</a>
-						</li>
-						<li class="nav-item">
-							<a class="dropdown-item" href="/penduduk/{kode}">Penduduk</a>
-						</li>
-					</ul>
-				</li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Ekonomi</a>
-					<ul class="dropdown-menu">
-						<li class="nav-item">
-							<a class="dropdown-item" href="/umkm/{kode}">UMKM</a>
-						</li>
-					</ul>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/tematik/{kode}">Tematik</a>
-				</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#">Informasi Umum</a>
+						<ul class="dropdown-menu">
+							<li class="nav-item">
+								<a class="dropdown-item" href="/profile/{kode}">Profile</a>
+							</li>
+							<li class="nav-item">
+								<a class="dropdown-item" href="/monograph/{kode}">Monograph</a>
+							</li>
+							<li class="nav-item">
+								<a class="dropdown-item" href="/topografi/{kode}">Topografi</a>
+							</li>
+							<li class="nav-item">
+								<a class="dropdown-item" href="/organisasi/{kode}">Organisasi</a>
+							</li>
+						</ul>
+					</li>
+					<li class="nav-item dropdown">
+						<a
+						class="nav-link dropdown-toggle"
+						href="#"
+						data-bs-toggle="dropdown">Kependudukan</a
+						>
+						<ul class="dropdown-menu">
+							<li class="nav-item">
+								<a class="dropdown-item" href="/kemiskinan/{kode}">Kemiskinan</a>
+							</li>
+							<li class="nav-item">
+								<a class="dropdown-item" href="/stunting/{kode}">Stunting</a>
+							</li>
+							<li class="nav-item">
+								<a class="dropdown-item" href="/penduduk/{kode}">Penduduk</a>
+							</li>
+						</ul>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Sarana dan Prasarana</a>
+						<ul class="dropdown-menu">
+							<li class="nav-item">
+								<a class="dropdown-item" href="/sarana_kesehatan/{kode}">Kesehatan</a>
+							</li>
+						</ul>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Ekonomi</a>
+						<ul class="dropdown-menu">
+							<li class="nav-item">
+								<a class="dropdown-item" href="/umkm/{kode}">UMKM</a>
+							</li>
+						</ul>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/tematik/{kode}">Tematik</a>
+					</li>
 				</ul>
 			</div>
 			<div

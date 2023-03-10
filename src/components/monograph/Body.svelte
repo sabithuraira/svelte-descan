@@ -2,6 +2,7 @@
 // @ts-nocheck
 	import { infoWilayah, parentWilayah, childWilayah } from '../../stores/wilayahStores';
 	import { monografData } from '../../stores/monografStores';
+	import { infrastrukturKesehatan } from '../../stores/infraKesehatanStores';
 	import { pengurusLast } from '../../stores/pengurusStores';
 
 	let info_wilayah = {
@@ -71,19 +72,14 @@
 	}
 
 	let infrastruktur_ibadah = [];
-	let sum_infrastruktur_ibadah = '0';
 
 	let infrastruktur_kesehatan = [];
-	let sum_infrastruktur_kesehatan = '0';
 
 	let infrastruktur_pendidikan = [];
-	let sum_infrastruktur_pendidikan = '0';
 
 	let infrastruktur_ekonomi = [];
-	let sum_infrastruktur_ekonomi = '0';
 
 	let lembaga_keuangan = [];
-	let sum_lembaga_keuangan = '0';
 
 	let penduduk = [];
 	let sum_penduduk = '0';
@@ -96,21 +92,11 @@
 	});
 
 	monografData.subscribe((value) => {
-		infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.sort((a,b) => { return b.nilai - a.nilai; });
-		sum_infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-
-		infrastruktur_kesehatan = value.jumlah_infrastruktur_kesehatan//.sort((a,b) => { return b.nilai - a.nilai; });
-		sum_infrastruktur_kesehatan = value.jumlah_infrastruktur_kesehatan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-
+		infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.sort((a,b) => { return b.nilai - a.nilai; });	
 		infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan//.sort((a,b) => { return b.nilai - a.nilai; });
-		sum_infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-
 		infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi//.sort((a,b) => { return b.nilai - a.nilai; });
-		sum_infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-
 		lembaga_keuangan = value.jumlah_lembaga_keuangan.sort((a,b) => { return b.nilai - a.nilai; });
-		sum_lembaga_keuangan = value.jumlah_lembaga_keuangan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-
+	
 		penduduk = value.jumlah_penduduk.sort((a,b) => { return b.nilai - a.nilai; });
 		sum_penduduk = value.jumlah_penduduk.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 
@@ -119,6 +105,10 @@
 
 	pengurusLast.subscribe((value) => {
 		pengurus = value;
+	});
+
+	infrastrukturKesehatan.subscribe((value) => {	
+		infrastruktur_kesehatan = value//.sort((a,b) => { return b.nilai - a.nilai; });
 	});
 </script>
 
