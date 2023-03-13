@@ -105,6 +105,9 @@
 								<a class="dropdown-item" href="/sarana_ekonomi/{kode}">Ekonomi</a>
 							</li>
 							<li class="nav-item">
+								<a class="dropdown-item" href="/sarana_ibadah/{kode}">Ibadah</a>
+							</li>
+							<li class="nav-item">
 								<a class="dropdown-item" href="/sarana_transportasi/{kode}">Tranportasi</a>
 							</li>
 							<li class="nav-item">

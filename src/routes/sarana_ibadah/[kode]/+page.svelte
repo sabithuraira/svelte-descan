@@ -79,7 +79,7 @@
 					klb: tempData.filter(item => item.kategori_variabel=='kesehatan_klb')
 				});
 			}).catch(({ response })=>{
-				console.error(JSON.stringify(response))
+				console.error(response)
 			})
 	};
 
@@ -93,8 +93,8 @@
 		document.head.appendChild(themeJS);
 
 		setTimeout(() => {
-			theme.init();
-			TyperSetup();
+		theme.init();
+		TyperSetup();
 		}, 100);
 	};
 
