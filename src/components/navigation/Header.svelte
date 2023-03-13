@@ -76,11 +76,7 @@
 						</ul>
 					</li>
 					<li class="nav-item dropdown">
-						<a
-						class="nav-link dropdown-toggle"
-						href="#"
-						data-bs-toggle="dropdown">Kependudukan</a
-						>
+						<a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Kependudukan</a>
 						<ul class="dropdown-menu">
 							<li class="nav-item">
 								<a class="dropdown-item" href="/kemiskinan/{kode}">Kemiskinan</a>
@@ -97,7 +93,25 @@
 						<a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Sarana dan Prasarana</a>
 						<ul class="dropdown-menu">
 							<li class="nav-item">
+								<a class="dropdown-item" href="/sarana_pemerintahan/{kode}">Pemerintahan</a>
+							</li>
+							<li class="nav-item">
 								<a class="dropdown-item" href="/sarana_kesehatan/{kode}">Kesehatan</a>
+							</li>
+							<li class="nav-item">
+								<a class="dropdown-item" href="/sarana_pendidikan/{kode}">Pendidikan</a>
+							</li>
+							<li class="nav-item">
+								<a class="dropdown-item" href="/sarana_ekonomi/{kode}">Ekonomi</a>
+							</li>
+							<li class="nav-item">
+								<a class="dropdown-item" href="/sarana_transportasi/{kode}">Tranportasi</a>
+							</li>
+							<li class="nav-item">
+								<a class="dropdown-item" href="/sarana_komunikasi_informasi/{kode}">Komunikasi dan Informasi</a>
+							</li>
+							<li class="nav-item">
+								<a class="dropdown-item" href="/sarana_olahrga/{kode}">Olahraga</a>
 							</li>
 						</ul>
 					</li>
