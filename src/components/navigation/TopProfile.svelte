@@ -4,26 +4,6 @@
 	import { pengurusLast } from '../../stores/pengurusStores';
 	import { labelLevel, labelKepalaWilayah } from '../../helper/labelWilayah';
 
-	// const labelLevel = (kodeWilayah) => {
-	// 	switch (kodeWilayah.length) {
-	// 	case 10:
-	// 		return "Desa/Kelurahan";
-	// 		break;
-	// 	case 7:
-	// 		return "Kecamatan";
-	// 		break;
-	// 	case 4:
-	// 		return "Kabupaten/Kota";
-	// 		break;
-	// 	case 2:
-	// 		return "Provinsi";
-	// 		break;
-	// 	default:
-	// 		return "-";
-	// 		break;
-	// 	}
-	// };
-
 	let info_wilayah = {
 		kode_prov: "",
 		kode_kab: "",

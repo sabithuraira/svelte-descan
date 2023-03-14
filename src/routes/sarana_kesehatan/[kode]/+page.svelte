@@ -109,9 +109,7 @@
   <link rel="stylesheet" href="/sandbox/css/plugins.css" />
   <link rel="stylesheet" href="/sandbox/css/style.css" />
   <link rel="stylesheet" href="/sandbox/css/preloader.css">
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
   />
 </svelte:head>
 
