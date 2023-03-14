@@ -114,7 +114,7 @@
 								<a class="dropdown-item" href="/sarana_komunikasi_informasi/{kode}">Komunikasi dan Informasi</a>
 							</li>
 							<li class="nav-item">
-								<a class="dropdown-item" href="/sarana_olahrga/{kode}">Olahraga</a>
+								<a class="dropdown-item" href="/sarana_olahraga/{kode}">Olahraga</a>
 							</li>
 						</ul>
 					</li>
