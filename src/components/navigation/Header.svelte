@@ -13,13 +13,13 @@
 					<img
 					class="logo-dark"
 					src="/images/logo/logofont.png"
-					srcset="/images/logo/logofont.png 8x"
+					srcset="/images/logo/logofont.png 1x"
 					alt=""
 					/>
 					<img
 					class="logo-light"
 					src="/images/logo/logofont.png"
-					srcset="/images/logo/logofont.png 8x"
+					srcset="/images/logo/logofont.png 1x"
 					alt=""
 					/>
 				</a>
@@ -52,7 +52,7 @@
 			<div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">
 				<div class="navbar-brand px-2">
 					<a href="/">
-						<img src="/images/logo/logofont.png" srcset="/images/logo/logofont.png 8x" alt="header-logo"/>
+						<img src="/images/logo/logofont.png" srcset="/images/logo/logofont.png 1x" alt="header-logo"/>
 					</a>
 				</div>
 

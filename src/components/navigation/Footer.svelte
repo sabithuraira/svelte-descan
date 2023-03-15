@@ -9,7 +9,7 @@
           <img
             class="mb-4"
             src="/images/logo/logo.png"
-            srcset="/images/logo/logo.png 8x"
+            srcset="/images/logo/logo.png 1x"
             alt="footer-logo"
           />
           <p class="mb-4">
