@@ -126,9 +126,6 @@
 							</li>
 						</ul>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="/tematik/{kode}">Tematik</a>
-					</li>
 				</ul>
 			</div>
 			<div

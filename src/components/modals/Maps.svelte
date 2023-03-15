@@ -36,7 +36,7 @@
             await axios
                 .get(`${$urlApi}data_geo/${data_map.variabel_id}/${data_map.kode_prov+data_map.kode_kab+data_map.kode_kec+data_map.kode_desa}`)
                 .then(({ data }) => {
-
+                    
                     if (map) map.remove();
                     map = L.map("peta", {
                         attributionControl: false,
@@ -45,7 +45,7 @@
                     L.tileLayer("https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}", {
                     subdomains: ["mt0", "mt1", "mt2", "mt3"],
                     }).addTo(map);
-                    console.log(data)
+
                     dataKoordinat = data.datas;
 
                     for (let i = 0; i < dataKoordinat.length; i++) {
@@ -63,6 +63,8 @@
                             map.setView([Number(dataKoordinat[i].lat),  Number(dataKoordinat[i].long)], 16);
                         }
                     }
+
+                    if(dataKoordinat.length==0) alert("Tidak ada data koordinat lokasi pada kategori ini")
                 })
                 .catch(({ response }) => {
                     console.error(response);

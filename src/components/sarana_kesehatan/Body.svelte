@@ -1,9 +1,7 @@
 <script>
 	// @ts-nocheck
 	import { infoWilayah } from '../../stores/wilayahStores';
-	import { labelLevel } from '../../helper/labelWilayah';
 	import { setMapData } from '../../helper/mapConfiguration';
-	import { isShowMap, dataMap } from '../../stores/generalStores';
 	import { infrastrukturKesehatan, dataKesehatan } from '../../stores/infraKesehatanStores';
 	import Maps from '../modals/Maps.svelte';
 
