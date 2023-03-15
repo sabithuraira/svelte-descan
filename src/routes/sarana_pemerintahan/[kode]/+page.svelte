@@ -79,9 +79,10 @@
       .then(({ data }) => {
         let tempData = data.datas;
         informasiPemerintahan.set(
-          tempData.filter(
-            (item) => item.kategori_variabel == "keberadaan_kantor"
-          )
+          tempData  
+        // tempData.filter(
+          //   (item) => item.kategori_variabel == "keberadaan_kantor"
+          // )
         );
       })
       .catch(({ response }) => {

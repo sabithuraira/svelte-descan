@@ -11,6 +11,7 @@
 
   informasiPemerintahan.subscribe((value) => {
     if (value) {
+      console.log(value)
       rekapContent = value.map((v) => ({
         label: v.nama_variabel,
         nilai: labelOption(v.deskripsi_variabel, v.nilai),
