@@ -3,7 +3,7 @@
 	import PreLoader from "../../../components/navigation/PreLoader.svelte";
 	import Header from "../../../components/navigation/Header.svelte";
 	import TopProfile from "../../../components/navigation/TopProfile.svelte";
-	import Body from "../../../components/sarana_kesehatan/Body.svelte";
+	import Body from "../../../components/sarana_transportasi/Body.svelte";
 	import Footer from "../../../components/navigation/Footer.svelte";
 	import BackToTop from "../../../components/navigation/BackToTop.svelte";
 
@@ -16,7 +16,7 @@
 	import { infoWilayah, deskripsi, parentWilayah, childWilayah} from "../../../stores/wilayahStores";
 	import { pengurusLast } from '../../../stores/pengurusStores';
 	import { urlApi } from "../../../stores/generalStores";
-	import { infrastrukturKesehatan, dataKesehatan } from "../../../stores/infraKesehatanStores";
+	import { infrastrukturTransportasi } from "../../../stores/infraTransportasiStores";
 
 	let preloader = true;
 	let info_wilayah = {
@@ -69,14 +69,15 @@
 		}
 
 		await axios
-			.get(`${$urlApi}dashboard/${data.kode}/sarana_kesehatan`)
+			.get(`${$urlApi}dashboard/${data.kode}/sarana_transportasi`)
 			.then(({data})=>{
 				let tempData = data.datas;
-				infrastrukturKesehatan.set(tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_kesehatan'));
-				dataKesehatan.set({
-					saranaUkbm: tempData.filter(item => item.kategori_variabel=='kesehatan_ukbm'),
-					tenagaKesehatan: tempData.filter(item => item.kategori_variabel=='tenaga_kesehatan'),
-					klb: tempData.filter(item => item.kategori_variabel=='kesehatan_klb')
+
+				infrastrukturTransportasi.set({
+					saranaTransportasi: tempData.find(item => item.kategori_variabel=='sarana_transportasi'),
+					angkutanUmum: tempData.find(item => item.kategori_variabel=='angkutan_umum'),
+					angkutanUmumRutin: tempData.find(item => item.kategori_variabel=='angkutan_umum_rutin'),
+					angkutanUmumJam: tempData.find(item => item.kategori_variabel=='angkutan_umum_jam'),
 				});
 			}).catch(({ response })=>{
 				console.error(response)
@@ -121,7 +122,7 @@
   {/if}
   <Header kode={$infoWilayah.kode_wilayah} />
   <TopProfile />
-  <Body kode={data.kode} />
+  <Body />
 </div>
 <Footer />
 <BackToTop />

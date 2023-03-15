@@ -1,8 +1,8 @@
 import { writable } from 'svelte/store';
 
-export const infrastrukturEkonomi = writable([]);
-// export const dataKesehatan = writable({
-//     saranaUkbm: [],
-//     tenagaKesehatan: [],
-//     klb: []
-// });
+export const infrastrukturTransportasi = writable({
+    saranaTransportasi: {},
+    angkutanUmum: {},
+    angkutanUmumRutin: {},
+    angkutanUmumJam: {},
+});
