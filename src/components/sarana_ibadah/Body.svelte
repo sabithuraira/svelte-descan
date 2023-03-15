@@ -1,6 +1,8 @@
 <script>
   // @ts-nocheck
   import { infrastrukturIbadah } from "../../stores/infraIbadahStores";
+  import { setMapData } from "../../helper/mapConfiguration";
+  import Maps from "../modals/Maps.svelte";
 
   let infrastruktur_ibadah = [];
   let sum_infrastruktur_ibadah = 0;
@@ -25,6 +27,8 @@
     }
   });
 </script>
+
+<Maps />
 
 <section class="wrapper bg-light">
   <div class="container py-6">
@@ -65,23 +69,31 @@
             <div class="card-body">
               <ul class="icon-list mb-0">
                 <div class="row gy-3 gx-xl-8">
-                  {#each rekap.data as rekap}
+                  {#each rekap.data as data}
                     <div class="col-12 col-md-6 col-xl-4">
                       <li
-                        class="icon-list bullet-bg {!rekap.nilai ||
-                        rekap.nilai == 0
+                        class="icon-list bullet-bg {!data.nilai ||
+                        data.nilai == 0
                           ? 'bullet-soft-red'
                           : 'bullet-soft-green'}"
+                        on:click={setMapData(
+                          data.variabel_id,
+                          data.kode_prov,
+                          data.kode_kab,
+                          data.kode_kec,
+                          data.kode_desa,
+                          data.nilai
+                        )}
                       >
                         <i
-                          class="uil uil-{!rekap.nilai || rekap.nilai == 0
+                          class="uil uil-{!data.nilai || data.nilai == 0
                             ? 'multiply'
                             : 'check'}"
                         />
-                        {#if rekap.nilai > 0}
-                          {rekap.nilai} Unit
+                        {#if data.nilai > 0}
+                          {data.nilai} Unit
                         {/if}
-                        {rekap.nama_variabel.replace("Jumlah", "")}
+                        {data.nama_variabel.replace("Jumlah", "")}
                       </li>
                     </div>
                   {/each}
