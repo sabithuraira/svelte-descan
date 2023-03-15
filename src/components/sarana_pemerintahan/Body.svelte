@@ -16,7 +16,6 @@
         nilai: labelOption(v.deskripsi_variabel, v.nilai),
         data: v,
       }));
-      console.log(rekapContent);
     }
   });
 </script>
