@@ -42,6 +42,7 @@
   lembagaKeuangan.subscribe((value) => {
     if (value) {
       lembaga_keuangan = value;
+      console.log(lembaga_keuangan);
       sum_lembaga_keuangan = value.reduce((acc, item) => {
         return acc + Number(item.nilai);
       }, 0);

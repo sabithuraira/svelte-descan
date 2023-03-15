@@ -1,13 +1,7 @@
 <script>
   // @ts-nocheck
   import { informasiPemerintahan } from "../../stores/infraPemerintahanStores";
-
-  let definisi_variabel = [
-    {
-      nama_variabel: "Keberadaan kantor kepala pengurus wilayah",
-      nilai: { 1: "Ada", 2: "Tidak Ada" },
-    },
-  ];
+  import { labelOption } from "../../helper/labelOption";
 
   const judul = "Sarana Pemerintahan";
 
@@ -15,14 +9,9 @@
 
   informasiPemerintahan.subscribe((value) => {
     if (value) {
-      rekapContent = definisi_variabel.map((v) => ({
+      rekapContent = value.map((v) => ({
         label: v.nama_variabel,
-        nilai:
-          v.nilai[
-            value.find((n) => n.nama_variabel == v.nama_variabel)
-              ? value.find((n) => n.nama_variabel == v.nama_variabel).nilai
-              : ""
-          ],
+        nilai: labelOption(v.deskripsi_variabel, v.nilai),
       }));
     }
   });
