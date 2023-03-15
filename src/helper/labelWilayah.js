@@ -8,7 +8,7 @@ export const labelLevel = (kodeWilayah) => {
             return "Kecamatan";
             break;
         case 4:
-            if(kodeWilayah.substring(3,4)=='7') return 'Kota';
+            if(kodeWilayah.substring(2,3)=='7') return 'Kota';
             else return "Kabupaten";
             break;
         case 2:
@@ -29,7 +29,7 @@ export const labelKepalaWilayah = (kodeWilayah) => {
             return "Camat";
             break;
         case 4:
-            if(kodeWilayah.substring(3,4)=='7') return 'Walikota';
+            if(kodeWilayah.substring(2,3)=='7') return 'Walikota';
             else return "Bupati";
             break;
         case 2:
