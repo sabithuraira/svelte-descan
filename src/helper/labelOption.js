@@ -13,5 +13,7 @@ export const labelOption = (deskripsi, kode) => {
     obj[Object.keys(item)[0]] = Object.values(item)[0];
     return obj;
   }, {});
-  return deskripsiObject[kode];
+  return deskripsiObject[kode] || kode;
 };
+
+labelOption("1=ada; 2=tidak ada;", 3);

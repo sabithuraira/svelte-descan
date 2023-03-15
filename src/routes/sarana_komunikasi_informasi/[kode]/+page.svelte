@@ -21,7 +21,15 @@
   } from "../../../stores/wilayahStores";
   import { pengurusLast } from "../../../stores/pengurusStores";
   import { urlApi } from "../../../stores/generalStores";
-  import { informasiKomunikasiInformasi } from "../../../stores/infraKomunikasiInformasiStores";
+  import {
+    informasiInternet,
+    menaraBTS,
+    operatorSeluler,
+    kantorPos,
+    keberadaanSiaran,
+    keluargaTeleponKabel,
+    sinyalTelepon,
+  } from "../../../stores/infraKomunikasiInformasiStores";
 
   let preloader = true;
   let info_wilayah = {
@@ -78,10 +86,36 @@
       .get(`${$urlApi}dashboard/${data.kode}/sarana_komunikasi_informasi`)
       .then(({ data }) => {
         let tempData = data.datas;
-        informasiKomunikasiInformasi.set(
+        informasiInternet.set(
           tempData.filter(
             (item) => item.kategori_variabel == "informasi_internet"
           )
+        );
+        menaraBTS.set(
+          tempData.filter(
+            (item) => item.kategori_variabel == "jumlah_menara_bts"
+          )
+        );
+        operatorSeluler.set(
+          tempData.filter(
+            (item) => item.kategori_variabel == "jumlah_operator_seluler"
+          )
+        );
+        kantorPos.set(
+          tempData.filter((item) => item.kategori_variabel == "kantor_pos")
+        );
+        keberadaanSiaran.set(
+          tempData.filter(
+            (item) => item.kategori_variabel == "keberadaan_siaran"
+          )
+        );
+        keluargaTeleponKabel.set(
+          tempData.filter(
+            (item) => item.kategori_variabel == "keluarga_telpon_kabel"
+          )
+        );
+        sinyalTelepon.set(
+          tempData.filter((item) => item.kategori_variabel == "sinyal_telepon")
         );
       })
       .catch(({ response }) => {

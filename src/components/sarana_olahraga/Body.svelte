@@ -40,8 +40,8 @@
     </div>
     <div class="row gx-md-5 gy-5 text-center d-flex justify-content-center">
       {#each rekapContent as item}
-        <div class="col-md-6 col-xl-3">
-          <div class="card shadow-lg">
+        <div class="col-md-6 col-xl-3 d-flex align-items-stretch">
+          <div class="card shadow-lg w-100">
             <div class="card-body">
               <span
                 class="icon btn btn-circle btn-lg btn-soft-primary disabled"
