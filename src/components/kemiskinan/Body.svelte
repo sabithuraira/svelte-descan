@@ -8,8 +8,6 @@
 
   import { urlApi } from "../../stores/generalStores";
 
-  export let kode = "";
-
   let map;
   let chart;
   let pointMap = { marker: {}, tooltip: {} };

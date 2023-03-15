@@ -2,7 +2,10 @@
 	// @ts-nocheck
 	import { infoWilayah } from '../../stores/wilayahStores';
 	import { labelLevel } from '../../helper/labelWilayah';
+	import { setMapData } from '../../helper/mapConfiguration';
+	import { isShowMap, dataMap } from '../../stores/generalStores';
 	import { infrastrukturKesehatan, dataKesehatan } from '../../stores/infraKesehatanStores';
+	import Maps from '../modals/Maps.svelte';
 
 	let info_wilayah = {
 		kode_prov: "",
@@ -71,8 +74,9 @@
 			sum_klb = value.klb.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		}
 	});
-
 </script>
+
+<Maps />
 
 <section class="wrapper bg-light" id="section_faskes">
 	<div class="container pt-1 pt-md-6">
@@ -80,10 +84,7 @@
 			<div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
 				<h3 class="display-4 mb-0 px-xl-10">Sarana Kesehatan</h3>
 			</div>
-			<!-- /column -->
 		</div>
-
-
 
 		<div class="row gx-md-5 gy-5 text-center">
 			{#each rekapContent as item}
@@ -118,7 +119,9 @@
 					<div class="row gy-3 gx-xl-8">
 						{#each infrastruktur_kesehatan as item, i}
 							<div class="col-12 col-md-6 col-xl-4">
-								<li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }">
+								<li class=" icon-list bullet-bg 
+									{ (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" 
+									on:click={setMapData(item.variabel_id, item.kode_prov, item.kode_kab, item.kode_kec, item.kode_desa, item.nilai)}>
 									<i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>
 									{#if ((item.nilai!=0 && item.nilai!=null)) }
 										{item.nilai} unit
@@ -197,7 +200,7 @@
 </section>
 
 <section class="wrapper bg-light" id="section_klb">
-	<div class="container py-5">
+	<div class="container py-5 mb-4">
 		<div class="row">
 			<div class="col-lg-12 ">
 				<h2 class="display-5 mb-4">
