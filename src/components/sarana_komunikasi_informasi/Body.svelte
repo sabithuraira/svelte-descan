@@ -10,6 +10,8 @@
     sinyalTelepon,
   } from "../../stores/infraKomunikasiInformasiStores";
   import { labelOption } from "../../helper/labelOption";
+  import { setMapData } from "../../helper/mapConfiguration";
+  import Maps from "../modals/Maps.svelte";
 
   let rekapContent = {
     informasiInternet: {},
@@ -27,6 +29,7 @@
       rekapContent.informasiInternet.data = value.map((v) => ({
         label: v.nama_variabel,
         nilai: labelOption(v.deskripsi_variabel, v.nilai),
+        data: v,
       }));
     }
   });
@@ -39,6 +42,7 @@
           v.nama_variabel.replace("Jumlah ", "").charAt(0).toUpperCase() +
           v.nama_variabel.replace("Jumlah ", "").slice(1),
         nilai: v.nilai == 0 ? "Tidak Ada" : v.nilai + " Unit",
+        data: v,
       }));
     }
   });
@@ -51,6 +55,7 @@
           v.nama_variabel.replace("Jumlah ", "").charAt(0).toUpperCase() +
           v.nama_variabel.replace("Jumlah ", "").slice(1),
         nilai: v.nilai == 0 ? "Tidak Ada" : v.nilai + " Operator",
+        data: v,
       }));
     }
   });
@@ -61,6 +66,7 @@
       rekapContent.kantorPos.data = value.map((v) => ({
         label: v.nama_variabel,
         nilai: labelOption(v.deskripsi_variabel, v.nilai),
+        data: v,
       }));
     }
   });
@@ -76,6 +82,7 @@
             .toUpperCase() +
           v.nama_variabel.replace("Program siaran televisi: ", "").slice(1),
         nilai: labelOption(v.deskripsi_variabel, v.nilai),
+        data: v,
       }));
     }
   });
@@ -88,6 +95,7 @@
           v.nama_variabel.replace("Jumlah ", "").charAt(0).toUpperCase() +
           v.nama_variabel.replace("Jumlah ", "").slice(1),
         nilai: v.nilai == 0 ? "Tidak Ada" : v.nilai + " Keluarga",
+        data: v,
       }));
     }
   });
@@ -98,10 +106,13 @@
       rekapContent.sinyalTelepon.data = value.map((v) => ({
         label: v.nama_variabel,
         nilai: labelOption(v.deskripsi_variabel, v.nilai),
+        data: v,
       }));
     }
   });
 </script>
+
+<Maps />
 
 {#each Object.entries(rekapContent) as [_, rekap]}
   <section class="wrapper bg-light">
@@ -117,7 +128,15 @@
             <div class="card shadow-lg w-100">
               <div class="card-body">
                 <span
-                  class="icon btn rounded-pill btn-lg btn-outline-primary disabled"
+                  class="icon btn rounded-pill btn-lg btn-outline-primary"
+                  on:click={setMapData(
+                    data.data.variabel_id,
+                    data.data.kode_prov,
+                    data.data.kode_kab,
+                    data.data.kode_kec,
+                    data.data.kode_desa,
+                    data.data.nilai
+                  )}
                 >
                   <span class="number">{data.nilai}</span>
                 </span>
