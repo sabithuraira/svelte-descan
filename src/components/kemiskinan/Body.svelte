@@ -1,215 +1,215 @@
 <script>
-  // @ts-nocheck
-  import { onMount } from "svelte";
-  import axios from "axios";
-  import Chart from "chart.js/auto";
-  import L from "leaflet";
-  import Swal from "sweetalert2";
+	// @ts-nocheck
+	import { onMount } from "svelte";
+	import axios from "axios";
+	import Chart from "chart.js/auto";
+	import L from "leaflet";
+	import Swal from "sweetalert2";
 
-  import { urlApi } from "../../stores/generalStores";
-  export let kode;
-  let map;
-  let chart;
-  let pointMap = { marker: {}, tooltip: {} };
-  let keluarga = { data: [], links: [] };
-  let listStatusKesejahteraanKeluarga = {};
-  let listStatusKesejahteraanKeluargaPersentase = {};
-  let statusKesejahteraanSelected = "";
-  const statusKesejahteraanLabel = {
-    1: "Sangat Miskin",
-    2: "Miskin",
-    3: "Tidak Miskin",
-  };
-  let jumlahKeluarga = 0;
-  let kategoriBantuan = {};
-  let bantuan = [];
-  let keyword = "";
-  let show = false;
+	import { urlApi } from "../../stores/generalStores";
+	export let kode;
+	let map;
+	let chart;
+	let pointMap = { marker: {}, tooltip: {} };
+	let keluarga = { data: [], links: [] };
+	let listStatusKesejahteraanKeluarga = {};
+	let listStatusKesejahteraanKeluargaPersentase = {};
+	let statusKesejahteraanSelected = "";
+	const statusKesejahteraanLabel = {
+		1: "<span class='badge bg-danger'>Sangat Miskin</span>",
+		2: "<span class='badge bg-warning'>Miskin</span>",
+		3: "<span class='badge bg-success'>Tidak Miskin</span>",
+	};
+	let jumlahKeluarga = 0;
+	let kategoriBantuan = {};
+	let bantuan = [];
+	let keyword = "";
+	let show = false;
 
-  const createMap = () => {
-    if (map) map.remove();
+	const createMap = () => {
+		if (map) map.remove();
 
-    map = L.map("petaKemiskinan", {
-      attributionControl: false,
-    }).setView([-2.990934, 104.756554], 15);
+		map = L.map("petaKemiskinan", {
+		attributionControl: false,
+		}).setView([-2.990934, 104.756554], 15);
 
-    L.tileLayer("https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}", {
-      subdomains: ["mt0", "mt1", "mt2", "mt3"],
-    }).addTo(map);
-  };
+		L.tileLayer("https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}", {
+		subdomains: ["mt0", "mt1", "mt2", "mt3"],
+		}).addTo(map);
+	};
 
-  const createChart = () => {
-    if (!chart)
-      chart = new Chart(document.getElementById("persentaseKemiskinan"), {
-        type: "pie",
-        data: {
-          labels: Object.values(statusKesejahteraanLabel),
-          datasets: [{ data: Object.values(listStatusKesejahteraanKeluarga) }],
-        },
-        options: {
-          offset: 20,
-          onClick: (e) => {
-            const points = chart.getElementsAtEventForMode(
-              e,
-              "point",
-              { intersect: true },
-              true
-            );
+	const createChart = () => {
+		if (!chart)
+		chart = new Chart(document.getElementById("persentaseKemiskinan"), {
+			type: "pie",
+			data: {
+			labels: Object.values(statusKesejahteraanLabel),
+			datasets: [{ data: Object.values(listStatusKesejahteraanKeluarga) }],
+			},
+			options: {
+			offset: 20,
+			onClick: (e) => {
+				const points = chart.getElementsAtEventForMode(
+				e,
+				"point",
+				{ intersect: true },
+				true
+				);
 
-            if (points.length)
-              for (let k in statusKesejahteraanLabel)
-                if (
-                  statusKesejahteraanLabel[k] ==
-                  chart.data.labels[points[0].index]
-                )
-                  statusKesejahteraanSelected = k;
+				if (points.length)
+				for (let k in statusKesejahteraanLabel)
+					if (
+					statusKesejahteraanLabel[k] ==
+					chart.data.labels[points[0].index]
+					)
+					statusKesejahteraanSelected = k;
 
-            getKeluarga();
+				getKeluarga();
 
-            document.getElementById("tabelKemiskinan").scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-              inline: "start",
-            });
-          },
-          plugins: {
-            tooltip: {
-              enabled: true,
-              callbacks: {
-                label: (context) => {
-                  var index = context.dataset.data.indexOf(context.raw);
+				document.getElementById("tabelKemiskinan").scrollIntoView({
+				behavior: "smooth",
+				block: "start",
+				inline: "start",
+				});
+			},
+			plugins: {
+				tooltip: {
+				enabled: true,
+				callbacks: {
+					label: (context) => {
+					var index = context.dataset.data.indexOf(context.raw);
 
-                  return (
-                    Object.values(listStatusKesejahteraanKeluarga)[index] +
-                    " (" +
-                    Object.values(listStatusKesejahteraanKeluargaPersentase)[
-                      index
-                    ] +
-                    "%)"
-                  );
-                },
-              },
-            },
-          },
-        },
-      });
-  };
+					return (
+						Object.values(listStatusKesejahteraanKeluarga)[index] +
+						" (" +
+						Object.values(listStatusKesejahteraanKeluargaPersentase)[
+						index
+						] +
+						"%)"
+					);
+					},
+				},
+				},
+			},
+			},
+		});
+	};
 
-  const getStatusKesejahteraanKeluarga = async () => {
-    await axios
-      .get(`${$urlApi}keluarga_miskin/${kode}/sum_status_kesejahteraan`)
-      .then((d) => {
-        listStatusKesejahteraanKeluarga = d.data.datas[0];
+	const getStatusKesejahteraanKeluarga = async () => {
+		await axios
+		.get(`${$urlApi}keluarga_miskin/${kode}/sum_status_kesejahteraan`)
+		.then((d) => {
+			listStatusKesejahteraanKeluarga = d.data.datas[0];
 
-        jumlahKeluarga = Object.values(listStatusKesejahteraanKeluarga).reduce(
-          (acc, item) => {
-            return acc + Number(item);
-          },
-          0
-        );
+			jumlahKeluarga = Object.values(listStatusKesejahteraanKeluarga).reduce(
+			(acc, item) => {
+				return acc + Number(item);
+			},
+			0
+			);
 
-        for (let idx in listStatusKesejahteraanKeluarga) {
-          listStatusKesejahteraanKeluargaPersentase[idx] =
-            Math.round(
-              (Number(listStatusKesejahteraanKeluarga[idx]) /
-                Number(jumlahKeluarga)) *
-                100 *
-                100
-            ) / 100;
-        }
-      });
-  };
+			for (let idx in listStatusKesejahteraanKeluarga) {
+			listStatusKesejahteraanKeluargaPersentase[idx] =
+				Math.round(
+				(Number(listStatusKesejahteraanKeluarga[idx]) /
+					Number(jumlahKeluarga)) *
+					100 *
+					100
+				) / 100;
+			}
+		});
+	};
 
-  const getKeluarga = async (suffix) => {
-    let url = "";
+	const getKeluarga = async (suffix) => {
+		let url = "";
 
-    if (suffix) url = $urlApi + suffix;
-    else
-      url = `${$urlApi}keluarga_miskin/${kode}/list?status_kesejahteraan=${statusKesejahteraanSelected}&keyword=${keyword}`;
+		if (suffix) url = $urlApi + suffix;
+		else
+		url = `${$urlApi}keluarga_miskin/${kode}/list?status_kesejahteraan=${statusKesejahteraanSelected}&keyword=${keyword}`;
 
-    await axios.get(url).then((d) => {
-      keluarga = d.data.datas;
-    });
+		await axios.get(url).then((d) => {
+		keluarga = d.data.datas;
+		});
 
-    if (keluarga.data.length != 0) {
-      show = true;
+		if (keluarga.data.length != 0) {
+		show = true;
 
-      setTimeout(() => {
-        createChart();
-        createMap();
-      }, 100);
-    }
-  };
+		setTimeout(() => {
+			createChart();
+			createMap();
+		}, 100);
+		}
+	};
 
-  const getLokasi = (lat, lng, nama) => {
-    if (pointMap.marker) map.removeLayer(pointMap.marker);
+	const getLokasi = (lat, lng, nama) => {
+		if (pointMap.marker) map.removeLayer(pointMap.marker);
 
-    if (pointMap.tooltip) map.removeLayer(pointMap.tooltip);
+		if (pointMap.tooltip) map.removeLayer(pointMap.tooltip);
 
-    if (lat && lng) {
-      pointMap.marker = L.marker([lat, lng]).addTo(map);
-      pointMap.tooltip = L.tooltip([lat, lng], {
-        content: nama,
-        permanent: true,
-      }).addTo(map);
+		if (lat && lng) {
+		pointMap.marker = L.marker([lat, lng]).addTo(map);
+		pointMap.tooltip = L.tooltip([lat, lng], {
+			content: nama,
+			permanent: true,
+		}).addTo(map);
 
-      map.setView([lat, lng], 20);
+		map.setView([lat, lng], 20);
 
-      document.getElementById("petaKemiskinan").scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-        inline: "start",
-      });
-    } else {
-      map.setView([-2.990934, 104.756554], 15);
+		document.getElementById("petaKemiskinan").scrollIntoView({
+			behavior: "smooth",
+			block: "start",
+			inline: "start",
+		});
+		} else {
+		map.setView([-2.990934, 104.756554], 15);
 
-      Swal.fire({
-        text: "Tidak ada lokasi",
-        toast: true,
-        showConfirmButton: false,
-        position: "center",
-        timer: 1000,
-        timerProgressBar: true,
-      });
-    }
-  };
+		Swal.fire({
+			text: "Tidak ada lokasi",
+			toast: true,
+			showConfirmButton: false,
+			position: "center",
+			timer: 1000,
+			timerProgressBar: true,
+		});
+		}
+	};
 
-  const getKategoriBantuan = async () => {
-    await axios.get(`${$urlApi}master_bantuan`).then((d) => {
-      kategoriBantuan = d.data.datas;
-    });
-  };
+	const getKategoriBantuan = async () => {
+		await axios.get(`${$urlApi}master_bantuan`).then((d) => {
+		kategoriBantuan = d.data.datas;
+		});
+	};
 
-  const nameKategoriBantuan = (id, tag) => {
-    const bantuan = kategoriBantuan.find((b) => b.id == id);
-    if (bantuan) return bantuan[tag];
-    else return "";
-  };
+	const nameKategoriBantuan = (id, tag) => {
+		const bantuan = kategoriBantuan.find((b) => b.id == id);
+		if (bantuan) return bantuan[tag];
+		else return "";
+	};
 
-  const getBantuan = (param_bantuan) => {
-    bantuan = param_bantuan;
+	const getBantuan = (param_bantuan) => {
+		bantuan = param_bantuan;
 
-    if (bantuan.length != 0) {
-      setTimeout(
-        () =>
-          document.getElementById("tabelBantuan").scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-            inline: "start",
-          }),
-        100
-      );
-    } else {
-      Swal.fire({
-        text: "Tidak ada bantuan",
-        toast: true,
-        showConfirmButton: false,
-        position: "center",
-        timer: 1000,
-        timerProgressBar: true,
-      });
-    }
-  };
+		if (bantuan.length != 0) {
+		setTimeout(
+			() =>
+			document.getElementById("tabelBantuan").scrollIntoView({
+				behavior: "smooth",
+				block: "start",
+				inline: "start",
+			}),
+			100
+		);
+		} else {
+		Swal.fire({
+			text: "Tidak ada bantuan",
+			toast: true,
+			showConfirmButton: false,
+			position: "center",
+			timer: 1000,
+			timerProgressBar: true,
+		});
+		}
+	};
 
   const getFoto = (data) => {
     const foto = [
@@ -482,58 +482,58 @@
                         </tr>
                       </thead>
 
-                      <tbody>
-                        {#each bantuan as item}
-                          <tr>
-                            <td>{item.no_kk || ""}</td>
-                            <td>{item.nik || ""}</td>
-                            <td>{item.nama_kepala || ""}</td>
-                            <td
-                              >{nameKategoriBantuan(
-                                item.bantuan_id,
-                                "nama_bantuan"
-                              ) || ""}</td
-                            >
-                            <td
-                              >{nameKategoriBantuan(
-                                item.bantuan_id,
-                                "deskripsi_bantuan"
-                              ) || ""}</td
-                            >
-                            <td
-                              >{nameKategoriBantuan(
-                                item.bantuan_id,
-                                "bentuk_bantuan"
-                              ) || ""}</td
-                            >
-                            <td
-                              >{nameKategoriBantuan(
-                                item.bantuan_id,
-                                "instansi_pemberi"
-                              ) || ""}</td
-                            >
-                            <td>{item.waktu_bantuan || ""}</td>
-                            <td>{item.jumlah_bantuan || ""}</td>
-                            <td>{item.satuan_bantuan || ""}</td>
-                          </tr>
-                        {/each}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      {/if}
-    </div>
-  </section>
+						<tbody>
+							{#each bantuan as item}
+							<tr>
+								<td>{item.no_kk || ""}</td>
+								<td>{item.nik || ""}</td>
+								<td>{item.nama_kepala || ""}</td>
+								<td
+								>{nameKategoriBantuan(
+									item.bantuan_id,
+									"nama_bantuan"
+								) || ""}</td
+								>
+								<td
+								>{nameKategoriBantuan(
+									item.bantuan_id,
+									"deskripsi_bantuan"
+								) || ""}</td
+								>
+								<td
+								>{nameKategoriBantuan(
+									item.bantuan_id,
+									"bentuk_bantuan"
+								) || ""}</td
+								>
+								<td
+								>{nameKategoriBantuan(
+									item.bantuan_id,
+									"instansi_pemberi"
+								) || ""}</td
+								>
+								<td>{item.waktu_bantuan || ""}</td>
+								<td>{item.jumlah_bantuan || ""}</td>
+								<td>{item.satuan_bantuan || ""}</td>
+							</tr>
+							{/each}
+						</tbody>
+						</table>
+					</div>
+					</div>
+				</div>
+				</div>
+			</div>
+			</div>
+		{/if}
+		</div>
+	</section>
 {:else}
-  <section class="wrapper bg-light">
-    <div class="container py-6 py-md-8">
-      <h3>Belum Ada Data</h3>
-    </div>
-  </section>
+	<section class="wrapper bg-light">
+		<div class="container py-6 py-md-8">
+		<h3>Belum Ada Data</h3>
+		</div>
+	</section>
 {/if}
 
 <div class="modal fade" id="modalFoto" tabindex="-1">
