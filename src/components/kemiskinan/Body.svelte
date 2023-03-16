@@ -211,6 +211,33 @@
     }
   };
 
+  const getFoto = (data) => {
+    const foto = [
+      "descan_1.jpeg",
+      "descan_2.jpeg",
+      "descan_3.jpeg",
+      "descan_4.jpeg",
+      "descan_5.jpeg",
+      "descan_6.jpeg",
+      "descan_7.JPG",
+      "descan_8.JPG",
+      "descan_9.JPG",
+      "descan_10.JPG",
+      "descan_11.JPG",
+      "descan_12.JPG",
+    ];
+    let foto1 = document.querySelector("#foto1");
+    let foto2 = document.querySelector("#foto2");
+    let random1 = 0;
+    let random2 = 0;
+    while (random1 == random2) {
+      random1 = Math.floor(Math.random() * foto.length);
+      random2 = Math.floor(Math.random() * foto.length);
+    }
+    foto1.src = "/images/landing/" + foto[random1];
+    foto2.src = "/images/landing/" + foto[random2];
+  };
+
   onMount(() => {
     getStatusKesejahteraanKeluarga();
     getKeluarga();
@@ -352,6 +379,7 @@
                             <th>Status Kesejahteraan</th>
                             <th>Lokasi</th>
                             <th>Bantuan</th>
+                            <th>Foto</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -383,6 +411,14 @@
                                   class="btn btn-outline-primary btn-sm rounded-0"
                                   on:click={() => getBantuan(data.bantuan)}
                                   >Bantuan</a
+                                >
+                              </td>
+                              <td>
+                                <a
+                                  class="btn btn-outline-primary btn-sm rounded-0"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#modalFoto"
+                                  on:click={() => getFoto(data)}>Foto</a
                                 >
                               </td>
                             </tr>
@@ -499,3 +535,22 @@
     </div>
   </section>
 {/if}
+
+<div class="modal fade" id="modalFoto" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content text-center">
+      <div class="modal-body">
+        <button class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+        <h3>Foto</h3>
+        <div class="row gx-2 gy-2">
+          <div class="col-12 justify-content-center align-items-center">
+            <img class="img-fluid" src="" alt="Foto Keluarga" id="foto1" />
+          </div>
+          <div class="col-12 justify-content-center align-items-center">
+            <img class="img-fluid" src="" alt="Foto Keluarga" id="foto2" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
