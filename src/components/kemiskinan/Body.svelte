@@ -16,6 +16,11 @@
   let listStatusKesejahteraanKeluargaPersentase = {};
   let statusKesejahteraanSelected = "";
   const statusKesejahteraanLabel = {
+    1: "Sangat Miskin",
+    2: "Miskin",
+    3: "Tidak Miskin",
+  };
+  const statusKesejahteraanLabelHTML = {
     1: "<span class='badge bg-danger'>Sangat Miskin</span>",
     2: "<span class='badge bg-warning'>Miskin</span>",
     3: "<span class='badge bg-success'>Tidak Miskin</span>",
@@ -386,7 +391,7 @@
                               <td>{data.nama_sls || ""}</td>
                               <td>{data.alamat || ""}</td>
                               <td
-                                >{@html statusKesejahteraanLabel[
+                                >{@html statusKesejahteraanLabelHTML[
                                   data.status_kesejahteraan
                                 ] || ""}</td
                               >
