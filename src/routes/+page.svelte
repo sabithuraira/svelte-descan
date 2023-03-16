@@ -136,18 +136,8 @@
 	</div>
 </section>
 
-<div class="row">
-	<div class="col-lg mx-5 justify-content-between">
-		<div class="row gx-md-5 gy-5 mt-n19 mb-14 mb-md-17" style="height: 200px">
-			<div class="col-12 grid-margin stretch-card">
-				<div class="d-sm-flex justify-content-between align-items-start">
-					{#each kabKotas as kabKota}
-						<WilayahLogo kodeWilayah="{ kabKota.kode_wilayah }" name="{ kabKota.nama }" />
-					{/each}
-				</div>
-			</div>
-		</div>
-	<!-- /.tab-content -->
-	</div>
-<!-- /.container -->
+<div class="d-flex flex-wrap justify-content-center alignmx-5 mt-n19 mb-14">
+	{#each kabKotas as kabKota}
+		<WilayahLogo kodeWilayah="{ kabKota.kode_wilayah }" name="{ kabKota.nama }" />
+	{/each}
 </div>

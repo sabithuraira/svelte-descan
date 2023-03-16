@@ -4,8 +4,8 @@
     export let name;
 </script>
 
-<div class="card mx-1">
-    <div class="card-body px-3 py-3">
+<div class="card mx-2 my-2">
+    <div class="card-body p-2">
     <figure
         class="img-responsive overlay overlay-1 hover-scale rounded mb-0"
         data-bs-toggle="tooltip"
