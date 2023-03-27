@@ -74,7 +74,7 @@
 		else{
 			setTimeout(function () {
 				loadJS();
-			}, 100)
+			}, 2000)
 		}
     });
 </script>
