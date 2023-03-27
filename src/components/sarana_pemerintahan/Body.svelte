@@ -13,7 +13,10 @@
     if (value) {
       rekapContent = value.map((v) => ({
         label: v.nama_variabel,
-        nilai: labelOption(v.deskripsi_variabel, v.nilai),
+        nilai:
+          labelOption(v.deskripsi_variabel, v.nilai) == 0 || !v.nilai
+            ? "Tidak Ada"
+            : v.nilai + " Keluarga",
         data: v,
       }));
     }

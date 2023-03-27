@@ -41,7 +41,7 @@
         label:
           v.nama_variabel.replace("Jumlah ", "").charAt(0).toUpperCase() +
           v.nama_variabel.replace("Jumlah ", "").slice(1),
-        nilai: v.nilai == 0 ? "Tidak Ada" : v.nilai + " Unit",
+        nilai: v.nilai == 0 || !v.nilai ? "Tidak Ada" : v.nilai + " Unit",
         data: v,
       }));
     }
@@ -54,7 +54,7 @@
         label:
           v.nama_variabel.replace("Jumlah ", "").charAt(0).toUpperCase() +
           v.nama_variabel.replace("Jumlah ", "").slice(1),
-        nilai: v.nilai == 0 ? "Tidak Ada" : v.nilai + " Operator",
+        nilai: v.nilai == 0 || !v.nilai ? "Tidak Ada" : v.nilai + " Operator",
         data: v,
       }));
     }
@@ -94,7 +94,7 @@
         label:
           v.nama_variabel.replace("Jumlah ", "").charAt(0).toUpperCase() +
           v.nama_variabel.replace("Jumlah ", "").slice(1),
-        nilai: v.nilai == 0 ? "Tidak Ada" : v.nilai + " Keluarga",
+        nilai: v.nilai == 0 || !v.nilai ? "Tidak Ada" : v.nilai + " Keluarga",
         data: v,
       }));
     }
