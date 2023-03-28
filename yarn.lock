@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@esbuild/darwin-x64@0.16.17":
-  "integrity" "sha512-2By45OBHulkd9Svy5IOCZt376Aa2oOkiE9QWUK9fe6Tb+WDr8hXL3dpqi+DeLiMed8tVXspzsTAvd0jUl96wmg=="
-  "resolved" "https://registry.npmjs.org/@esbuild/darwin-x64/-/darwin-x64-0.16.17.tgz"
+"@esbuild/win32-x64@0.16.17":
+  "integrity" "sha512-y+EHuSchhL7FjHgvQL/0fnnFmO4T1bhvWANX6gcnqTjtnKWbTvUMCpGnv2+t+31d7RzyEAYAd4u2fnIhHL6N/Q=="
+  "resolved" "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.16.17.tgz"
   "version" "0.16.17"
 
 "@jridgewell/resolve-uri@3.1.0":
@@ -56,7 +56,7 @@
   "resolved" "https://registry.npmjs.org/@polka/url/-/url-1.0.0-next.21.tgz"
   "version" "1.0.0-next.21"
 
-"@rollup/plugin-commonjs@24.0.1":
+"@rollup/plugin-commonjs@^24.0.0", "@rollup/plugin-commonjs@24.0.1":
   "integrity" "sha512-15LsiWRZk4eOGqvrJyu3z3DaBu5BhXIMeWnijSRvd8irrrg9SHpQ1pH+BUK4H6Z9wL9yOxZJMTLU+Au86XHxow=="
   "resolved" "https://registry.npmjs.org/@rollup/plugin-commonjs/-/plugin-commonjs-24.0.1.tgz"
   "version" "24.0.1"
@@ -68,7 +68,14 @@
     "is-reference" "1.2.1"
     "magic-string" "^0.27.0"
 
-"@rollup/plugin-node-resolve@15.0.1":
+"@rollup/plugin-json@^6.0.0":
+  "integrity" "sha512-i/4C5Jrdr1XUarRhVu27EEwjt4GObltD7c+MkCIpO2QIbojw8MUs+CCTqOphQi3Qtg1FLmYt+l+6YeoIf51J7w=="
+  "resolved" "https://registry.npmjs.org/@rollup/plugin-json/-/plugin-json-6.0.0.tgz"
+  "version" "6.0.0"
+  dependencies:
+    "@rollup/pluginutils" "^5.0.1"
+
+"@rollup/plugin-node-resolve@^15.0.1", "@rollup/plugin-node-resolve@15.0.1":
   "integrity" "sha512-ReY88T7JhJjeRVbfCyNj+NXAG3IIsVMsX9b5/9jC98dRP8/yxlZdz7mHZbHk5zHr24wZZICS5AcXsFZAXYUQEg=="
   "resolved" "https://registry.npmjs.org/@rollup/plugin-node-resolve/-/plugin-node-resolve-15.0.1.tgz"
   "version" "15.0.1"
@@ -111,6 +118,16 @@
   "version" "2.0.0"
   dependencies:
     "import-meta-resolve" "^2.2.0"
+
+"@sveltejs/adapter-node@^1.2.3":
+  "integrity" "sha512-Fv6NyVpVWYA63KRaV6dDjcU8ytcWFiUr0siJOoHl+oWy5WHNEuRiJOUdiZzYbZo8MmvFaCoxHkTgPrVQhpqaRA=="
+  "resolved" "https://registry.npmjs.org/@sveltejs/adapter-node/-/adapter-node-1.2.3.tgz"
+  "version" "1.2.3"
+  dependencies:
+    "@rollup/plugin-commonjs" "^24.0.0"
+    "@rollup/plugin-json" "^6.0.0"
+    "@rollup/plugin-node-resolve" "^15.0.1"
+    "rollup" "^3.7.0"
 
 "@sveltejs/kit@^1.0.0", "@sveltejs/kit@^1.5.0":
   "integrity" "sha512-32tiLy5PPpt2lquK2p53/5wR+ghAXw0HymIBEezmwmwtzx7Xf36xw3RG3fDYQ9gyzon89T+JRweXgAv/qhhvSQ=="
@@ -413,11 +430,6 @@
   "integrity" "sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw=="
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
-
-"fsevents@~2.3.2":
-  "integrity" "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
-  "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
-  "version" "2.3.2"
 
 "function-bind@^1.1.1":
   "integrity" "sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A=="
@@ -771,7 +783,7 @@
     "@rollup/pluginutils" "^4.1.0"
     "resolve.exports" "^2.0.0"
 
-"rollup@^1.20.0||^2.0.0||^3.0.0", "rollup@^2.14.0||^3.0.0", "rollup@^2.68.0||^3.0.0", "rollup@^2.78.0||^3.0.0", "rollup@^3.10.0", "rollup@>=2.0.0", "rollup@3.17.3":
+"rollup@^1.20.0||^2.0.0||^3.0.0", "rollup@^2.14.0||^3.0.0", "rollup@^2.68.0||^3.0.0", "rollup@^2.78.0||^3.0.0", "rollup@^3.10.0", "rollup@^3.7.0", "rollup@>=2.0.0", "rollup@3.17.3":
   "integrity" "sha512-p5LaCXiiOL/wrOkj8djsIDFmyU9ysUxcyW+EKRLHb6TKldJzXpImjcRSR+vgo09DBdofGcOoLOsRyxxG2n5/qQ=="
   "resolved" "https://registry.npmjs.org/rollup/-/rollup-3.17.3.tgz"
   "version" "3.17.3"

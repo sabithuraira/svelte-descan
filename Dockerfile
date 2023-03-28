@@ -4,7 +4,12 @@ WORKDIR /app
 
 COPY . .
 RUN npm install
+RUN mv svelte-docker.config.js svelte.config.js
 RUN npm run build
 
-FROM nginx:stable-alpine
-COPY --from=build /app/public /usr/share/nginx/html
+FROM node:lts-alpine AS deploy
+
+WORKDIR /app
+
+COPY --from=build /app/build .
+CMD [ "node", "index.js" ]
