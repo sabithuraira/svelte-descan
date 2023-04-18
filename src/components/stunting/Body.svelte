@@ -276,7 +276,7 @@
 {:else}
   <section class="wrapper bg-light">
     <div class="container py-6 py-md-8">
-      <h3>Belum Ada Data</h3>
+      <h3>Loading...</h3>
     </div>
   </section>
 {/if}

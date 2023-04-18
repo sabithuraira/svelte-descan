@@ -192,28 +192,36 @@
   };
 
   const getBantuan = (param_bantuan) => {
-    bantuan = param_bantuan;
+    // bantuan = param_bantuan;
 
-    if (bantuan.length != 0) {
-      setTimeout(
-        () =>
-          document.getElementById("tabelBantuan").scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-            inline: "start",
-          }),
-        100
-      );
-    } else {
-      Swal.fire({
-        text: "Tidak ada bantuan",
-        toast: true,
-        showConfirmButton: false,
-        position: "center",
-        timer: 1000,
-        timerProgressBar: true,
-      });
-    }
+    // if (bantuan.length != 0) {
+    //   setTimeout(
+    //     () =>
+    //       document.getElementById("tabelBantuan").scrollIntoView({
+    //         behavior: "smooth",
+    //         block: "start",
+    //         inline: "start",
+    //       }),
+    //     100
+    //   );
+    // } else {
+    //   Swal.fire({
+    //     text: "Tidak ada bantuan",
+    //     toast: true,
+    //     showConfirmButton: false,
+    //     position: "center",
+    //     timer: 1000,
+    //     timerProgressBar: true,
+    //   });
+    // }
+    Swal.fire({
+      text: "Tidak ada bantuan",
+      toast: true,
+      showConfirmButton: false,
+      position: "center",
+      timer: 1000,
+      timerProgressBar: true,
+    });
   };
 
   const getFoto = (data) => {
@@ -409,9 +417,13 @@
                               <td>
                                 <a
                                   class="btn btn-outline-primary btn-sm rounded"
+                                  on:click={() => getBantuan(data)}>Bantuan</a
+                                >
+                                <!-- <a
+                                  class="btn btn-outline-primary btn-sm rounded"
                                   on:click={() => getBantuan(data.bantuan)}
                                   >Bantuan</a
-                                >
+                                > -->
                               </td>
                               <td>
                                 <a
@@ -531,7 +543,7 @@
 {:else}
   <section class="wrapper bg-light">
     <div class="container py-6 py-md-8">
-      <h3>Belum Ada Data</h3>
+      <h3>Loading...</h3>
     </div>
   </section>
 {/if}

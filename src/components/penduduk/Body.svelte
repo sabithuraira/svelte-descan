@@ -164,6 +164,7 @@
 
     await axios.get(url).then((d) => {
       penduduk = d.data.datas;
+      console.log(penduduk);
 
       if (penduduk.data.length != 0) {
         show = true;
@@ -344,7 +345,7 @@
 {:else}
   <section class="wrapper bg-light">
     <div class="container py-6 py-md-8">
-      <h3>Belum Ada Data</h3>
+      <h3>Loading...</h3>
     </div>
   </section>
 {/if}
