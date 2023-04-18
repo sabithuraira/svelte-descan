@@ -143,7 +143,7 @@
       show = true;
 
       setTimeout(() => {
-        createMap();
+        // createMap();
       }, 100);
     }
   };
@@ -258,7 +258,7 @@
   };
 
   onMount(() => {
-    loadLeaflet();
+    // loadLeaflet();
     getStatusKesejahteraanKeluarga();
     getKeluarga();
     getKategoriBantuan();
