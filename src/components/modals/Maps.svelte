@@ -72,7 +72,14 @@
         }
     };
 
+    const loadLeaflet = () => {
+        const leafletJS = document.createElement("script");
+        leafletJS.setAttribute("src", "https://unpkg.com/leaflet@1.9.3/dist/leaflet.js");
+        document.head.appendChild(leafletJS);
+    };
+
 	onMount(async () => {
+        loadLeaflet();
 		setTimeout(() => {
             // createMap();
             loadData();

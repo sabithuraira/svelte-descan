@@ -3,7 +3,6 @@
   import { onMount } from "svelte";
   import axios from "axios";
   import Chart from "chart.js/auto";
-  import L from "leaflet";
   import Swal from "sweetalert2";
 
   import { urlApi } from "../../stores/generalStores";
@@ -249,7 +248,17 @@
     foto2.src = "/images/keluarga/" + foto[random2];
   };
 
+  const loadLeaflet = () => {
+    const leafletJS = document.createElement("script");
+    leafletJS.setAttribute(
+      "src",
+      "https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    );
+    document.head.appendChild(leafletJS);
+  };
+
   onMount(() => {
+    loadLeaflet();
     getStatusKesejahteraanKeluarga();
     getKeluarga();
     getKategoriBantuan();
