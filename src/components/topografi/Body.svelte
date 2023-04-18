@@ -1,7 +1,6 @@
 <script>
 	// @ts-nocheck
 	import Chart, { layouts } from "chart.js/auto";
-	import L from "leaflet";
 	import Swal from "sweetalert2";
 
 	import { infoWilayah } from '../../stores/wilayahStores';

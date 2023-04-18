@@ -2,7 +2,6 @@
     // @ts-nocheck
     import { urlApi } from "../../stores/generalStores";
 	import { onMount } from 'svelte';
-    import L from "leaflet";
     import axios from "axios";
 	import { isShowMap, dataMap } from '../../stores/generalStores';
 
