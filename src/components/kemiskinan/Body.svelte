@@ -123,6 +123,10 @@
             ) / 100;
         }
       });
+
+    setTimeout(() => {
+      createChart();
+    }, 100);
   };
 
   const getKeluarga = async (suffix) => {
@@ -140,7 +144,6 @@
       show = true;
 
       setTimeout(() => {
-        createChart();
         createMap();
       }, 100);
     }

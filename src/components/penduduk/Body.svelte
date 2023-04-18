@@ -164,7 +164,6 @@
 
     await axios.get(url).then((d) => {
       penduduk = d.data.datas;
-      console.log(penduduk);
 
       if (penduduk.data.length != 0) {
         show = true;
