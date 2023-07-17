@@ -4,6 +4,11 @@
 	import { urlApi, keywordSearch } from '../stores/generalStores';
  	import axios from 'axios'
 	import { onMount } from 'svelte';
+
+	import { dev } from '$app/environment';
+	import { inject } from '@vercel/analytics';
+	
+	inject({ mode: dev ? 'development' : 'production' });
 	
 	let kabKotas = []; //as Wilayah[];
 	let keyword = "";
