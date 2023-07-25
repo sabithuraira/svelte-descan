@@ -1,11 +1,11 @@
 <script>
 // @ts-nocheck
-  	import PreLoader from "../../../components/navigation/PreLoader.svelte";
+  import PreLoader from "../../../components/navigation/PreLoader.svelte";
 	import Header from '../../../components/navigation/Header.svelte';
 	import Footer from '../../../components/navigation/Footer.svelte';
 	import TopContent from '../../../components/monograph/TopContent.svelte';
 	import Body from '../../../components/monograph/Body.svelte';
-  	import BackToTop from "../../../components/navigation/BackToTop.svelte";
+  import BackToTop from "../../../components/navigation/BackToTop.svelte";
 
 	import { onMount } from 'svelte';
  	import axios from 'axios';
@@ -19,6 +19,7 @@
 	import { infrastrukturKesehatan } from "../../../stores/infraKesehatanStores";
 	import { pengurusLast } from '../../../stores/pengurusStores';
 	import { urlApi } from '../../../stores/generalStores';
+  import { subscribe } from "svelte/internal";
 
 	let preloader = true;
 
@@ -56,11 +57,11 @@
 			.then(({data})=>{
 				let tempData = data.datas;
 				monografData.set({
-					luas_wilayah: tempData.filter(item => item.kategori_variabel=='luas_wilayah'),  
-					ketinggian_wilayah: tempData.filter(item => item.kategori_variabel=='ketinggian_wilayah'), 
+					luas_wilayah: tempData.filter(item => item.kategori_variabel=='luas_wilayah'),
+					ketinggian_wilayah: tempData.filter(item => item.kategori_variabel=='ketinggian_wilayah'),
 					batas_wilayah: tempData.filter(item => item.kategori_variabel=='batas_wilayah'),
-					jumlah_penduduk: tempData.filter(item => item.kategori_variabel=='jumlah_penduduk'), 
-					jumlah_keluarga: tempData.filter(item => item.kategori_variabel=='jumlah_keluarga'), 
+					jumlah_penduduk: tempData.filter(item => item.kategori_variabel=='jumlah_penduduk'),
+					jumlah_keluarga: tempData.filter(item => item.kategori_variabel=='jumlah_keluarga'),
 					jumlah_infrastruktur_pendidikan: tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_pendidikan'),
 					jumlah_infrastruktur_kesehatan: tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_kesehatan'),
 					jumlah_infrastruktur_ibadah: tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_ibadah'),
@@ -80,6 +81,46 @@
 				infrastrukturKesehatan.set(tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_kesehatan'));
 
 			}).catch(({ response })=>{
+				console.error(response)
+			})
+
+		await axios
+			.get(`${$urlApi}penduduk/${data.kode}/list?jenis_kelamin=1`)
+			.then(({data})=>{
+				let tempData = data.datas.total;
+				monografData.update((value) => {
+					let idx = value.jumlah_penduduk.findIndex(item => item.nama_variabel == 'Jumlah penduduk laki-laki');
+					value.jumlah_penduduk[idx].nilai = tempData;					
+					return value;
+				});
+			}).catch(({response})=>{
+				console.error(response)
+			})
+
+		await axios
+			.get(`${$urlApi}penduduk/${data.kode}/list?jenis_kelamin=2`)
+			.then(({data})=>{
+				let tempData = data.datas.total;
+				monografData.update((value) => {
+					let idx = value.jumlah_penduduk.findIndex(item => item.nama_variabel == 'Jumlah penduduk perempuan');
+					value.jumlah_penduduk[idx].nilai = tempData;					
+					return value;
+				});
+			}).catch(({response})=>{
+				console.error(response)
+			})
+
+		await axios
+			.get(`${$urlApi}keluarga_miskin/${data.kode}/list`)
+			.then(({data})=>{
+				console.log(data)
+				let tempData = data.datas.total;
+				monografData.update((value) => {
+					let idx = value.jumlah_keluarga.findIndex(item => item.nama_variabel == 'Jumlah keluarga');
+					value.jumlah_keluarga[idx].nilai = tempData;					
+					return value;
+				});
+			}).catch(({response})=>{
 				console.error(response)
 			})
 	}
