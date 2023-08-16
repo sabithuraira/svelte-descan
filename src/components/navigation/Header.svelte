@@ -76,20 +76,6 @@
 						</ul>
 					</li>
 					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Kependudukan</a>
-						<ul class="dropdown-menu">
-							<li class="nav-item">
-								<a class="dropdown-item" href="/kemiskinan/{kode}">Kemiskinan</a>
-							</li>
-							<li class="nav-item">
-								<a class="dropdown-item" href="/stunting/{kode}">Stunting</a>
-							</li>
-							<li class="nav-item">
-								<a class="dropdown-item" href="/penduduk/{kode}">Penduduk</a>
-							</li>
-						</ul>
-					</li>
-					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Sarana dan Prasarana</a>
 						<ul class="dropdown-menu">
 							<li class="nav-item">
