@@ -112,6 +112,14 @@
 							</li>
 						</ul>
 					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Penduduk</a>
+						<ul class="dropdown-menu">
+							<li class="nav-item">
+								<a class="dropdown-item" href="/stunting/{kode}">Stunting</a>
+							</li>
+						</ul>
+					</li>
 				</ul>
 			</div>
 			<div

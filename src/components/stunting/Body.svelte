@@ -95,7 +95,7 @@
                   <i class="uil uil-user-minus" />
                 </div>
                 <h4>Stunting</h4>
-                <h1 class="display-1 mb-2 counter">100</h1>
+                <h1 class="display-1 mb-2 counter">999</h1>
                 <a
                   class="more hover link-primary"
                   on:click={() => setStatusStunting(1)}>Lihat</a
@@ -112,7 +112,7 @@
                   <i class="uil uil-user-exclamation" />
                 </div>
                 <h4>Potensi Stunting</h4>
-                <h1 class="display-1 mb-2 counter">50</h1>
+                <h1 class="display-1 mb-2 counter">999</h1>
                 <a
                   class="more hover link-primary"
                   on:click={() => setStatusStunting(2)}>Lihat</a
@@ -129,7 +129,7 @@
                   <i class="uil uil-user-check" />
                 </div>
                 <h4>Tidak Stunting</h4>
-                <h1 class="display-1 mb-2 counter">1500</h1>
+                <h1 class="display-1 mb-2 counter">999</h1>
                 <a
                   class="more hover link-primary"
                   on:click={() => setStatusStunting(0)}>Lihat</a
