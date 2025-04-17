@@ -1,6 +1,7 @@
 <script>
 // @ts-nocheck
 	import WilayahLogo from '../components/landing/WilayahLogo.svelte';
+	import DescanLogo from '../components/landing/DescanLogo.svelte';
 	import { urlApi, keywordSearch } from '../stores/generalStores';
  	import axios from 'axios'
 	import { onMount } from 'svelte';
@@ -11,6 +12,7 @@
 	inject({ mode: dev ? 'development' : 'production' });
 	
 	let kabKotas = []; //as Wilayah[];
+  let descan = [];
 	let keyword = "";
 	let randomNumberFoto = 1;
 	let arrFoto = [
@@ -38,6 +40,20 @@
 			})
 	}
 
+	async function loadDescan(){
+		await axios
+			.get(`${$urlApi}descan/16`)
+			.then(({data})=>{
+        const d = new Date()
+        let year = d.getFullYear()
+				descan = data.datas
+        descan = descan.filter((dc) => dc.tahun == year)
+        console.log(descan)
+			}).catch(({ response })=>{
+				console.error(response)
+			})
+	}
+
 	function getRandomInt(min, max) {
 		min = Math.ceil(min);
 		max = Math.floor(max);
@@ -46,6 +62,7 @@
 
 	onMount(() => {
 		loadWilayah();
+    loadDescan();
 		randomNumberFoto = getRandomInt(1,12);
 	});
 </script>
@@ -58,7 +75,8 @@
 <section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-300"
 	data-image-src="/images/landing/{arrFoto[randomNumberFoto]}"
 	style="background-image: url('/images/landing/{arrFoto[randomNumberFoto]}');" >
-	<div class="container pb-19 pt-md-18 pb-md-17 text-center">
+	<!-- <div class="container pb-19 pt-md-18 pb-md-17 text-center"> -->
+	<div class="container pt-4 text-center">
 		<div class="row">
 			<div class="col-lg-8 col-xl-7 col-xxl-6 mx-auto"
 				data-cues="slideInDown"
@@ -131,6 +149,12 @@
 	<!-- /.row -->
 	</div>
 
+  <div class="d-flex flex-wrap justify-content-center">
+    {#each descan as dc}
+      <DescanLogo kodeWilayah="{ dc.kode_prov+dc.kode_kab+dc.kode_kec+dc.kode_desa }" name="{ dc.nmDesa }" />
+    {/each}
+  </div>
+
 <!-- /.container -->
 	<div class="overflow-hidden">
 		<div class="divider text-light mx-n2">
@@ -141,8 +165,8 @@
 	</div>
 </section>
 
-<div class="d-flex flex-wrap justify-content-center alignmx-5 mt-n19 mb-14">
+<!-- <div class="d-flex flex-wrap justify-content-center alignmx-5 mt-n19 mb-14">
 	{#each kabKotas as kabKota}
 		<WilayahLogo kodeWilayah="{ kabKota.kode_wilayah }" name="{ kabKota.nama }" />
 	{/each}
-</div>
+</div> -->
