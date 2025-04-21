@@ -149,6 +149,10 @@
 	<!-- /.row -->
 	</div>
 
+  <div class="text-center mt-2 mb-4">
+    <h3 class="text-white">Desa Cinta Statistik { new Date().getFullYear() }</h3>
+  </div>
+
   <div class="d-flex flex-wrap justify-content-center">
     {#each descan as dc}
       <DescanLogo kodeWilayah="{ dc.kode_prov+dc.kode_kab+dc.kode_kec+dc.kode_desa }" name="{ dc.nmDesa }" />
