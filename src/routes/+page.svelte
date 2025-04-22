@@ -2,6 +2,7 @@
 // @ts-nocheck
 	import WilayahLogo from '../components/landing/WilayahLogo.svelte';
 	import DescanLogo from '../components/landing/DescanLogo.svelte';
+	import SearchWilayah from '../components/landing/SearchWilayah.svelte';
 	import { urlApi, keywordSearch } from '../stores/generalStores';
  	import axios from 'axios'
 	import { onMount } from 'svelte';
@@ -29,6 +30,7 @@
 		'descan_11.JPG',
 		'descan_12.JPG',
 	];
+  let isSearchShow = false;
 
 	async function loadWilayah(){
 		await axios
@@ -48,7 +50,6 @@
         let year = d.getFullYear()
 				descan = data.datas
         descan = descan.filter((dc) => dc.tahun == year)
-        console.log(descan)
 			}).catch(({ response })=>{
 				console.error(response)
 			})
@@ -153,11 +154,19 @@
     <h3 class="text-white">Desa Cinta Statistik { new Date().getFullYear() }</h3>
   </div>
 
-  <div class="d-flex flex-wrap justify-content-center">
-    {#each descan as dc}
-      <DescanLogo kodeWilayah="{ dc.kode_prov+dc.kode_kab+dc.kode_kec+dc.kode_desa }" name="{ dc.nmDesa }" />
-    {/each}
-  </div>
+  {#if !isSearchShow}
+    <div class="d-flex flex-wrap justify-content-center align-items-center">
+      {#each descan as dc}
+        <DescanLogo kodeWilayah="{ dc.kode_prov+dc.kode_kab+dc.kode_kec+dc.kode_desa }" name="{ dc.nmDesa }" />
+      {/each}
+      <a href="/" class="text-white" on:click={() => isSearchShow = true}>Desa Lainnya...</a>
+    </div>
+  {:else}
+    <SearchWilayah /> 
+    <div class="ml-4 mb-4">
+      <a href="/" class="text-white" on:click={() => isSearchShow = false}>Kembali...</a>
+    </div>
+  {/if}
 
 <!-- /.container -->
 	<div class="overflow-hidden">
