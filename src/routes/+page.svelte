@@ -3,6 +3,7 @@
 	import WilayahLogo from '../components/landing/WilayahLogo.svelte';
 	import DescanLogo from '../components/landing/DescanLogo.svelte';
 	import SearchWilayah from '../components/landing/SearchWilayah.svelte';
+	import Peta from '../components/landing/Peta.svelte';
 	import { urlApi, keywordSearch } from '../stores/generalStores';
  	import axios from 'axios'
 	import { onMount } from 'svelte';
@@ -31,6 +32,7 @@
 		'descan_12.JPG',
 	];
   let isSearchShow = false;
+  let descanLoaded = false;
 
 	async function loadWilayah(){
 		await axios
@@ -50,6 +52,7 @@
         let year = d.getFullYear()
 				descan = data.datas
         descan = descan.filter((dc) => dc.tahun == year)
+        descanLoaded = true;
 			}).catch(({ response })=>{
 				console.error(response)
 			})
@@ -150,21 +153,26 @@
 	<!-- /.row -->
 	</div>
 
-  <div class="text-center mt-2 mb-4">
-    <h3 class="text-white">Desa Cinta Statistik { new Date().getFullYear() }</h3>
-  </div>
-
-  {#if !isSearchShow}
-    <div class="d-flex flex-wrap justify-content-center align-items-center">
-      {#each descan as dc}
-        <DescanLogo kodeWilayah="{ dc.kode_prov+dc.kode_kab+dc.kode_kec+dc.kode_desa }" name="{ dc.nmDesa }" />
-      {/each}
-      <a href="/" class="text-white" on:click={() => isSearchShow = true}>Desa Lainnya...</a>
+  {#if descanLoaded}
+    <div class="text-center mt-2 mb-4">
+      <h3 class="text-white">Desa Cinta Statistik { new Date().getFullYear() }</h3>
     </div>
+    {#if !isSearchShow}
+      <div class="d-flex flex-wrap justify-content-center align-items-center">
+        {#each descan as dc}
+          <DescanLogo kodeWilayah="{ dc.kode_prov+dc.kode_kab+dc.kode_kec+dc.kode_desa }" name="{ dc.nmDesa }" />
+        {/each}
+        <a href="/" class="text-white" on:click={() => isSearchShow = true}>Desa Lainnya...</a>
+      </div>
+    {:else}
+      <SearchWilayah /> 
+      <div class="ml-4 mb-4">
+        <a href="/" class="text-white" on:click={() => isSearchShow = false}>Kembali...</a>
+      </div>
+    {/if}
   {:else}
-    <SearchWilayah /> 
-    <div class="ml-4 mb-4">
-      <a href="/" class="text-white" on:click={() => isSearchShow = false}>Kembali...</a>
+    <div class="text-center mt-2 mb-4">
+      <h3 class="text-white">Loading...</h3>
     </div>
   {/if}
 
@@ -183,3 +191,11 @@
 		<WilayahLogo kodeWilayah="{ kabKota.kode_wilayah }" name="{ kabKota.nama }" />
 	{/each}
 </div> -->
+
+{#if descanLoaded}
+  <div class="text-center mt-4">
+    <h3>Peta Desa Cinta Statistik { new Date().getFullYear() }</h3>
+  </div>
+
+  <Peta desa={descan}/>
+{/if}
