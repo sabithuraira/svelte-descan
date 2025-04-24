@@ -5,6 +5,7 @@
 	import { infrastrukturKesehatan } from '../../stores/infraKesehatanStores';
 	import { pengurusLast } from '../../stores/pengurusStores';
 	import { labelKepalaWilayah } from '../../helper/labelWilayah';
+  import Peta from './Peta.svelte';
 
 	let info_wilayah = {
 		kode_prov: "",
@@ -17,6 +18,7 @@
 		nama_kab: "",
 		nama_kec: "",
 	};
+  let info_wilayah_loaded = false;
 
 	let pengurus = {
 		kode_prov: '',
@@ -89,6 +91,7 @@
 	infoWilayah.subscribe((value) => {
 		if (value.kode_wilayah) {
 			info_wilayah = value;
+      info_wilayah_loaded = true;
 		}
 	});
 
@@ -112,6 +115,14 @@
 		infrastruktur_kesehatan = value//.sort((a,b) => { return b.nilai - a.nilai; });
 	});
 </script>
+
+  {#if info_wilayah_loaded}
+    <section class="wrapper bg-light" id="section_penduduk">
+      <div class="container py-5">
+        <Peta infoWilayah={ info_wilayah } />
+      </div>
+    </section>
+  {/if}
 
 	<section class="wrapper bg-light" id="section_penduduk">
 		<div class="container py-5">
