@@ -113,7 +113,6 @@
 		await axios
 			.get(`${$urlApi}keluarga_miskin/${data.kode}/list`)
 			.then(({data})=>{
-				console.log(data)
 				let tempData = data.datas.total;
 				monografData.update((value) => {
 					let idx = value.jumlah_keluarga.findIndex(item => item.nama_variabel == 'Jumlah keluarga');

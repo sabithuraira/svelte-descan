@@ -6,6 +6,8 @@
 	import { pengurusLast } from '../../stores/pengurusStores';
 	import { labelKepalaWilayah } from '../../helper/labelWilayah';
   import Peta from './Peta.svelte';
+  import html2pdf from 'html2pdf.js';
+  import { utils, writeFile } from 'xlsx';
 
 	let info_wilayah = {
 		kode_prov: "",
@@ -114,8 +116,77 @@
 	infrastrukturKesehatan.subscribe((value) => {	
 		infrastruktur_kesehatan = value//.sort((a,b) => { return b.nilai - a.nilai; });
 	});
+
+  let content = "";
+
+  function downloadPDF(){
+    html2pdf(content, {
+      filename: `${info_wilayah.nama}.pdf`,
+      pagebreak: { mode: "avoid-all" },
+      jsPDF: { format: "legal", orientation: "portrait" },
+    });
+  }
+
+  function downloadExcel() {
+    let rows = [];
+    rows.push({
+      variabel: penduduk[0].nama_variabel,
+      niai: penduduk[0].nilai,
+    });
+    rows.push({
+      variabel: penduduk[1].nama_variabel,
+      niai: penduduk[1].nilai,
+    });
+    infrastruktur_kesehatan.forEach((item) => {
+      rows.push({
+        variabel: item.nama_variabel,
+        niai: item.nilai,
+      });
+    });
+    infrastruktur_ibadah.forEach((item) => {
+      rows.push({
+        variabel: item.nama_variabel,
+        niai: item.nilai,
+      });
+    });
+    infrastruktur_pendidikan.forEach((item) => {
+      rows.push({
+        variabel: item.nama_variabel,
+        niai: item.nilai,
+      });
+    });
+    lembaga_keuangan.forEach((item) => {
+      rows.push({
+        variabel: item.nama_variabel,
+        niai: item.nilai,
+      });
+    });
+    infrastruktur_ekonomi.forEach((item) => {
+      rows.push({
+        variabel: item.nama_variabel,
+        niai: item.nilai,
+      });
+    });
+
+    const worksheet = utils.json_to_sheet(rows);
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    const max_width = rows.reduce((w, r) => Math.max(w, r.variabel.length), 30);
+    worksheet["!cols"] = [ { wch: max_width } ];
+    writeFile(workbook, `${info_wilayah.nama}.xlsx`);
+  } 
 </script>
 
+<section class="wrapper bg-light" id="section_download">
+  <div class="container pt-8">
+    <div class="d-flex flex-row-reverse">
+      <a href="" class="btn btn btn-primary mx-1" on:click={downloadPDF}>Download PDF</a>
+      <a href="" class="btn btn btn-primary mx-1" on:click={downloadExcel}>Download Excel</a>
+    </div>
+  </div>
+</section>
+
+<div bind:this={content}>
   {#if info_wilayah_loaded}
     <section class="wrapper bg-light" id="section_penduduk">
       <div class="container py-5">
@@ -471,3 +542,4 @@
 		</div>
 		<!--/.modal-dialog -->
 	</div>
+</div>
