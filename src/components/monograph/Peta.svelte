@@ -1,7 +1,5 @@
 <script>
 // @ts-nocheck
-  import 'leaflet/dist/leaflet.css';
-  import L from 'leaflet';
  	import axios from 'axios'
 	import { onMount } from 'svelte';
 	import { urlApi } from '../../stores/generalStores';

@@ -1,8 +1,5 @@
 <script>
 // @ts-nocheck
-  import 'leaflet/dist/leaflet.css';
-  import L from 'leaflet';
-
   export let desa;
 
   function createMap(node) {
