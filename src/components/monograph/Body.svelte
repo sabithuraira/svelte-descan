@@ -87,8 +87,22 @@
 	let lembaga_keuangan = [];
 
 	let penduduk = [];
-	let sum_penduduk = '0';
-	let sum_luas_wilayah = '0';
+
+  let sum_infrastruktur_ibadah = 0;
+
+  let sum_infrastruktur_pendidikan = 0;
+
+  let sum_infrastruktur_ekonomi = 0;
+
+  let sum_lembaga_keuangan = 0;
+
+  let sum_penduduk = 0;
+
+  let sum_keluarga = 0;
+
+  let sum_luas_wilayah = 0;
+
+  let sum_penyandang_disabilitas = 0;
 
 	infoWilayah.subscribe((value) => {
 		if (value.kode_wilayah) {
@@ -102,11 +116,15 @@
 		infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan//.sort((a,b) => { return b.nilai - a.nilai; });
 		infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi//.sort((a,b) => { return b.nilai - a.nilai; });
 		lembaga_keuangan = value.jumlah_lembaga_keuangan.sort((a,b) => { return b.nilai - a.nilai; });
-	
 		penduduk = value.jumlah_penduduk.sort((a,b) => { return b.nilai - a.nilai; });
+		sum_infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		sum_infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		sum_infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		sum_lembaga_keuangan = value.jumlah_lembaga_keuangan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_penduduk = value.jumlah_penduduk.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-
+		sum_keluarga = value.jumlah_keluarga.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_luas_wilayah = value.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		sum_penyandang_disabilitas = value.penyandang_disabilitas.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 	});
 
 	pengurusLast.subscribe((value) => {
@@ -129,6 +147,34 @@
 
   function downloadExcel() {
     let rows = [];
+    rows.push({
+      variabel: "Luas Wilayah",
+      niai: sum_luas_wilayah,
+    });
+    rows.push({
+      variabel: "Jumlah Penduduk",
+      niai: sum_penduduk,
+    });
+    rows.push({
+      variabel: "Jumlah Keluarga",
+      niai: sum_keluarga,
+    });
+    rows.push({
+      variabel: "Jumlah Tempat Ibadah",
+      niai: sum_infrastruktur_ibadah,
+    });
+    rows.push({
+      variabel: "Jumlah Fasilitas Pendidikan",
+      niai: sum_infrastruktur_pendidikan,
+    });
+    rows.push({
+      variabel: "Jumlah Fasilitas Ekonomi",
+      niai: sum_infrastruktur_ekonomi,
+    });
+    rows.push({
+      variabel: "Jumlah Penyandang Disabilitas",
+      niai: sum_penyandang_disabilitas,
+    });
     rows.push({
       variabel: penduduk[0].nama_variabel,
       niai: penduduk[0].nilai,
