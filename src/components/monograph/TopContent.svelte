@@ -65,7 +65,6 @@
 
 	pengurusLast.subscribe((value) => {
 		pengurus = value;
-    console.log(pengurus);
 	});
 
 	monografData.subscribe((value) => {

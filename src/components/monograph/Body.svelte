@@ -138,11 +138,13 @@
   let content = "";
 
   function downloadPDF(){
-    html2pdf(content, {
-      filename: `${info_wilayah.nama}.pdf`,
-      pagebreak: { mode: "avoid-all" },
-      jsPDF: { format: "legal", orientation: "portrait" },
-    });
+    setTimeout(() => {
+      html2pdf(content, {
+        filename: `${info_wilayah.nama}.pdf`,
+        pagebreak: { mode: "avoid-all" },
+        jsPDF: { format: "legal", orientation: "portrait" },
+      });
+    }, 500);
   }
 
   function downloadExcel() {
@@ -226,8 +228,7 @@
 <section class="wrapper bg-light" id="section_download">
   <div class="container pt-8">
     <div class="d-flex flex-row-reverse">
-      <a href="" class="btn btn btn-primary mx-1" on:click={downloadPDF}>Download PDF</a>
-      <a href="" class="btn btn btn-primary mx-1" on:click={downloadExcel}>Download Excel</a>
+      <a href="" class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#modalDownload">Download</a>
     </div>
   </div>
 </section>
@@ -526,4 +527,21 @@
 		</div>
 		<!--/.modal-dialog -->
 	</div>
+
+  <div class="modal fade" id="modalDownload" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content text-center">
+        <div class="modal-body">
+          <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <p>Download halaman ini dengan format:</p>
+          <a href="" class="btn btn btn-primary mx-1" data-bs-dismiss="modal" on:click={downloadPDF}>PDF</a>
+          <a href="" class="btn btn btn-primary mx-1" data-bs-dismiss="modal" on:click={downloadExcel}>Excel</a>
+        </div>
+        <!--/.modal-body -->
+      </div>
+      <!--/.modal-content -->
+    </div>
+    <!--/.modal-dialog -->
+  </div>
+  <!--/.modal -->
 </div>
