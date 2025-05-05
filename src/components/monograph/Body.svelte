@@ -280,7 +280,7 @@
 					<p class="lead fs-lg">Jumlah Penduduk di { info_wilayah.nama } sebanyak 
 					<span class="fs-30">{ sum_penduduk }</span> jiwa</p>
 
-					<p class="mb-6">Karakteristik penduduk di Desa/Bandar jaya cenderung <b>didominasi</b> oleh 	
+					<p class="mb-6">Karakteristik penduduk di Desa/Kelurahan { info_wilayah.nama } cenderung <b>didominasi</b> oleh 	
 						laki-laki
 					</p>
 				</div>
