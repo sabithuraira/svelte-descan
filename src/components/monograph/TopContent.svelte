@@ -65,6 +65,7 @@
 
 	pengurusLast.subscribe((value) => {
 		pengurus = value;
+    console.log(pengurus);
 	});
 
 	monografData.subscribe((value) => {
@@ -109,7 +110,7 @@
 		<div class="row gx-lg-8 gy-8 mt-5 mt-md-12 mt-lg-0 mb-8 align-items-center">
 			<div class="col-lg-3 order-lg-2">
 				<div class="row gx-md-5 gy-5 text-center" data-cues="fadeIn" data-group="images">
-					{#if pengurus }
+					{#if pengurus.path_foto != '' && pengurus.path_foto != null && pengurus.path_foto != 'null'}
 						<figure class="rounded mx-4 text-center">
 							<img src="{pengurus.foto}"
 							srcset="{pengurus.foto} 2x" alt=""
