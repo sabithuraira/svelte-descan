@@ -24,7 +24,10 @@
 					keyword: $keywordSearch,
 				}).
 				then(({data}) => {
-					if(data.status=='success') listWilayah = data.datas;
+					if(data.status=='success') {
+            listWilayah = data.datas;
+            listWilayah = listWilayah.filter((item) => item.kode_wilayah.length == 10);
+          }
 					else console.log("Data gagal disimpan, silahkan ulangi lagi")
 				});
 
