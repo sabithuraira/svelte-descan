@@ -31,8 +31,8 @@
 		'descan_11.JPG',
 		'descan_12.JPG',
 	];
-  let isSearchShow = false;
   let descanLoaded = false;
+  let descanShow = false;
 
 	async function loadWilayah(){
 		await axios
@@ -58,6 +58,13 @@
 			})
 	}
 
+  function showDescan(){
+    descanShow = true;
+    setTimeout(() => {
+      window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }, 100);
+  }
+
 	function getRandomInt(min, max) {
 		min = Math.ceil(min);
 		max = Math.floor(max);
@@ -76,17 +83,16 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </svelte:head>
 
-<section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-300"
+<section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-300 h-100"
 	data-image-src="/images/landing/{arrFoto[randomNumberFoto]}"
 	style="background-image: url('/images/landing/{arrFoto[randomNumberFoto]}');" >
-	<!-- <div class="container pb-19 pt-md-18 pb-md-17 text-center"> -->
-	<div class="container pt-4 text-center">
+	<div class="container pb-19 pt-md-18 pb-md-17 text-center">
 		<div class="row">
 			<div class="col-lg-8 col-xl-7 col-xxl-6 mx-auto"
 				data-cues="slideInDown"
 				data-group="page-title"
 				data-disabled="true">
-				<h1 class="display-1 text-white fs-60 px-md-15 px-lg-0"
+				<h1 class="display-7 text-white fs-60 px-md-15 px-lg-0"
 					data-cue="slideInDown"
 					data-group="page-title"
 					data-show="true"
@@ -98,7 +104,7 @@
 						animation-fill-mode: both;" >
 					Desa Bumi <span class="underline-3 style-2 yellow">Sriwijaya</span>
 				</h1>
-				<p class="lead fs-24 text-white lh-sm mx-md-13 mx-lg-10"
+				<p class="lead fs-36 text-white lh-sm mx-md-13 mx-lg-10"
 					data-cue="slideInDown"
 					data-group="page-title"
 					data-show="true"
@@ -137,7 +143,7 @@
 							<input type="text" class="form-control" 
 								bind:value={keyword}
 								on:input={() => keywordSearch.set(keyword) }
-								placeholder="Cari wilayah......" 
+								placeholder="Ketik nama desa......" 
 								aria-label="Search">
 							<div class="input-group-append">
 								<button type="submit" class="input-group-text"><i class="uil uil-search"></i></button>
@@ -145,43 +151,19 @@
 						</div>
 					</form>
 				</div>
+
+        {#if descanLoaded && !descanShow}
+          <div class="col-lg-12 text-center">
+            <button type="button" class="btn btn-outline-light mt-8" on:click={showDescan}>Tampilkan Desa Cinta Statistik</button>
+          </div>
+        {/if}
 			</div>
 			<!-- /column -->
 		</div>
 	<!-- /.row -->
 	</div>
 
-  {#if descanLoaded}
-    <div class="text-center mt-2 mb-4">
-      <h3 class="text-white">Desa Cinta Statistik { new Date().getFullYear() }</h3>
-    </div>
-    {#if !isSearchShow}
-      <div class="d-flex flex-wrap justify-content-center align-items-center">
-        {#each descan as dc}
-          <DescanLogo kodeWilayah="{ dc.kode_prov+dc.kode_kab+dc.kode_kec+dc.kode_desa }" name="{ dc.nmDesa }" />
-        {/each}
-        <a href="/" class="text-white" on:click={() => isSearchShow = true}>Desa Lainnya...</a>
-      </div>
-    {:else}
-      <SearchWilayah /> 
-      <div class="ml-4 mb-4">
-        <a href="/" class="text-white" on:click={() => isSearchShow = false}>Kembali...</a>
-      </div>
-    {/if}
-  {:else}
-    <div class="text-center mt-2 mb-4">
-      <h3 class="text-white">Loading...</h3>
-    </div>
-  {/if}
-
 <!-- /.container -->
-	<div class="overflow-hidden">
-		<div class="divider text-light mx-n2">
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60">
-			<path fill="currentColor" d="M0,0V60H1440V0A5771,5771,0,0,1,0,0Z"></path>
-			</svg>
-		</div>
-	</div>
 </section>
 
 <!-- <div class="d-flex flex-wrap justify-content-center alignmx-5 mt-n19 mb-14">
@@ -190,10 +172,16 @@
 	{/each}
 </div> -->
 
-{#if descanLoaded}
-  <div class="text-center mt-4">
-    <h3>Peta Desa Cinta Statistik { new Date().getFullYear() }</h3>
+{#if descanShow}
+  <div class="text-center mt-8">
+    <p class="display-1 fs-36">
+    Desa Cinta Statistik<br />
+    Provinsi Sumatera Selatan Tahun { new Date().getFullYear() }
+    </p>
   </div>
-
   <Peta desa={descan}/>
+  <div class="text-center text-secondary mt-8">
+    <p class="display-1 fs-30">Cari Desa Lainnya...</p>
+  </div>
+  <SearchWilayah />
 {/if}

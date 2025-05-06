@@ -35,7 +35,9 @@
 			.get(`${$urlApi}wilayah/${kecSelected}`)
 			.then(({data})=>{
 				desa = data.datas;
-        console.log(desa);
+        setTimeout(() => {
+          window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }, 100);
 			}).catch(({ response })=>{
 				console.error(response);
 			});
@@ -46,7 +48,7 @@
   })
 </script>
 
-<div class="card mx-4 my-4">
+<div class="card shadow-none border-light">
   <div class="card-body">
     <div class="row">
       <div class="col-6">
@@ -71,14 +73,15 @@
 </div>
 
 <div class="d-flex flex-wrap justify-content-center align-items-center">
-  {#each desa as d}
-    <div class="card mx-2 my-2 align-items-center">
-      <div class="card-body">
-        <a href="/monograph/{d.kode_wilayah}">
-          <p class="text-center text-dark">{d.nama}</p>
-        </a>
-      </div>
-      <!--/.card-body -->
-    </div>
-  {/each}
+  <ul class="list-group list-group-flush mb-8">
+    {#each desa as d}
+      <li class="list-group-item m-0">
+        <div class="text-center">
+          <a href="/monograph/{d.kode_wilayah}">
+            <p class="text-dark mb-0">{d.nama}</p>
+          </a>
+        </div>
+      </li>
+    {/each}
+  </ul>
 </div>
