@@ -125,7 +125,7 @@
 			  <div class="job-list mb-10">
 
 				{#each listWilayah as item}
-					<a href="/profile/{item.kode_wilayah}" class="card shadow-lg mb-4 lift h-100">
+					<a href="/monograph/{item.kode_wilayah}" class="card shadow-lg mb-4 lift h-100">
 						<div class="card-body px-5 py-2 d-flex flex-row">
 							<div>
 								<span class="badge bg-pale-blue text-blue mb-1">{ labelLevel(item.kode_wilayah) }</span>

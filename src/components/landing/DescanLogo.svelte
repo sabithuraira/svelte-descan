@@ -12,7 +12,7 @@
         data-bs-toggle="tooltip"
         data-bs-placement="top"
         title="" data-bs-original-title="{ name }">
-        <a href="/profile/{kodeWilayah}">
+        <a href="/monograph/{kodeWilayah}">
             <img class="img-responsive"
                 src="{ `/images/kabs-logo/logo${kodeWilayah.substring(0,4)}.png` }"
                 alt=""

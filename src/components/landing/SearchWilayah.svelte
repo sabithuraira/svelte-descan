@@ -74,7 +74,7 @@
   {#each desa as d}
     <div class="card mx-2 my-2 align-items-center">
       <div class="card-body">
-        <a href="/profile/{d.kode_wilayah}">
+        <a href="/monograph/{d.kode_wilayah}">
           <p class="text-center text-dark">{d.nama}</p>
         </a>
       </div>

@@ -15,7 +15,7 @@
     }).addTo(map);
     desa.forEach((d) => {
       let marker = L.marker([-d.lat, d.lon]).addTo(map);
-      marker.bindPopup(`<a href="/profile/${d.kode_prov + d.kode_kab + d.kode_kec + d.kode_desa}">${d.nmDesa}, ${d.nmKec}, ${d.nmKab}</a>`).openPopup();
+      marker.bindPopup(`<a href="/monograph/${d.kode_prov + d.kode_kab + d.kode_kec + d.kode_desa}">${d.nmDesa}, ${d.nmKec}, ${d.nmKab}</a>`).openPopup();
     });
   }
 </script>
