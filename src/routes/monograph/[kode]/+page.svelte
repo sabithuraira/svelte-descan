@@ -154,14 +154,14 @@
 		setTimeout(() => {
 			theme.init();
 			TyperSetup();
-		}, 100);
+		}, 500);
 	}
 
-    onMount(() => {
-		loadWilayah()
-      		.then(() => setTimeout(() => loadJS(), 100))
-      		.then(() => (preloader = false));;
-    });
+  onMount(() => {
+  loadWilayah()
+        .then(() => setTimeout(() => loadJS(), 100))
+        .then(() => (preloader = false));;
+  });
 </script>
 
 <svelte:head>
