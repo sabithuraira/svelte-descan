@@ -56,7 +56,7 @@
 					</a>
 				</div>
 
-			<!-- <div class="w-100 order-1 order-lg-0 d-lg-flex offcanvas-body">
+			<div class="w-100 order-1 order-lg-0 d-lg-flex offcanvas-body">
 				<ul class="navbar-nav">
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#">Informasi Umum</a>
@@ -121,7 +121,7 @@
 						</ul>
 					</li>
 				</ul>
-			</div> -->
+			</div>
 			<div
 				class="w-100 order-3 order-lg-2 d-lg-flex offcanvas-body text-end"
 			>
