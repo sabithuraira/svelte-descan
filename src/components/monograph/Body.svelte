@@ -6,7 +6,6 @@
 	import { pengurusLast } from '../../stores/pengurusStores';
 	import { labelKepalaWilayah } from '../../helper/labelWilayah';
   import Peta from './Peta.svelte';
-  import html2pdf from 'html2pdf.js';
   import { utils, writeFile } from 'xlsx';
 
 	let info_wilayah = {
