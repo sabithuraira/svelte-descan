@@ -6,7 +6,7 @@
 	import { pengurusLast } from '../../stores/pengurusStores';
 	import { labelKepalaWilayah } from '../../helper/labelWilayah';
   import Peta from './Peta.svelte';
-  // import html2pdf from 'html2pdf.js';
+  import html2pdf from 'html2pdf.js';
   import { utils, writeFile } from 'xlsx';
 
 	let info_wilayah = {
@@ -139,11 +139,11 @@
 
   function downloadPDF(){
     setTimeout(() => {
-      // html2pdf(content, {
-      //   filename: `${info_wilayah.nama}.pdf`,
-      //   pagebreak: { mode: "avoid-all" },
-      //   jsPDF: { format: "legal", orientation: "portrait" },
-      // });
+      html2pdf(content, {
+        filename: `${info_wilayah.nama}.pdf`,
+        pagebreak: { mode: "avoid-all" },
+        jsPDF: { format: "legal", orientation: "portrait" },
+      });
     }, 500);
   }
 
