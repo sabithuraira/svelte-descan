@@ -84,44 +84,44 @@
 				console.error(response)
 			})
 
-		await axios
-			.get(`${$urlApi}penduduk/${data.kode}/list?jenis_kelamin=1`)
-			.then(({data})=>{
-				let tempData = data.datas.total;
-				monografData.update((value) => {
-					let idx = value.jumlah_penduduk.findIndex(item => item.nama_variabel == 'Jumlah penduduk laki-laki');
-					value.jumlah_penduduk[idx].nilai = tempData;					
-					return value;
-				});
-			}).catch(({response})=>{
-				console.error(response)
-			})
-
-		await axios
-			.get(`${$urlApi}penduduk/${data.kode}/list?jenis_kelamin=2`)
-			.then(({data})=>{
-				let tempData = data.datas.total;
-				monografData.update((value) => {
-					let idx = value.jumlah_penduduk.findIndex(item => item.nama_variabel == 'Jumlah penduduk perempuan');
-					value.jumlah_penduduk[idx].nilai = tempData;					
-					return value;
-				});
-			}).catch(({response})=>{
-				console.error(response)
-			})
-
-		await axios
-			.get(`${$urlApi}keluarga_miskin/${data.kode}/list`)
-			.then(({data})=>{
-				let tempData = data.datas.total;
-				monografData.update((value) => {
-					let idx = value.jumlah_keluarga.findIndex(item => item.nama_variabel == 'Jumlah keluarga');
-					value.jumlah_keluarga[idx].nilai = tempData;					
-					return value;
-				});
-			}).catch(({response})=>{
-				console.error(response)
-			})
+		// await axios
+		// 	.get(`${$urlApi}penduduk/${data.kode}/list?jenis_kelamin=1`)
+		// 	.then(({data})=>{
+		// 		let tempData = data.datas.total;
+		// 		monografData.update((value) => {
+		// 			let idx = value.jumlah_penduduk.findIndex(item => item.nama_variabel == 'Jumlah penduduk laki-laki');
+		// 			value.jumlah_penduduk[idx].nilai = tempData;					
+		// 			return value;
+		// 		});
+		// 	}).catch(({response})=>{
+		// 		console.error(response)
+		// 	})
+		//
+		// await axios
+		// 	.get(`${$urlApi}penduduk/${data.kode}/list?jenis_kelamin=2`)
+		// 	.then(({data})=>{
+		// 		let tempData = data.datas.total;
+		// 		monografData.update((value) => {
+		// 			let idx = value.jumlah_penduduk.findIndex(item => item.nama_variabel == 'Jumlah penduduk perempuan');
+		// 			value.jumlah_penduduk[idx].nilai = tempData;					
+		// 			return value;
+		// 		});
+		// 	}).catch(({response})=>{
+		// 		console.error(response)
+		// 	})
+		//
+		// await axios
+		// 	.get(`${$urlApi}keluarga_miskin/${data.kode}/list`)
+		// 	.then(({data})=>{
+		// 		let tempData = data.datas.total;
+		// 		monografData.update((value) => {
+		// 			let idx = value.jumlah_keluarga.findIndex(item => item.nama_variabel == 'Jumlah keluarga');
+		// 			value.jumlah_keluarga[idx].nilai = tempData;					
+		// 			return value;
+		// 		});
+		// 	}).catch(({response})=>{
+		// 		console.error(response)
+		// 	})
 	}
 
     let info_wilayah = {
