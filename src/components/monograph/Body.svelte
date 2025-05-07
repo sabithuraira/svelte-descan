@@ -1,10 +1,43 @@
 <script>
 // @ts-nocheck
+	import { infoWilayah, parentWilayah, childWilayah } from '../../stores/wilayahStores';
+	import { monografData } from '../../stores/monografStores';
+	import { infrastrukturKesehatan } from '../../stores/infraKesehatanStores';
+	import { pengurusLast } from '../../stores/pengurusStores';
+	import { labelKepalaWilayah } from '../../helper/labelWilayah';
   import Peta from './Peta.svelte';
   import html2pdf from 'html2pdf.js';
   import { utils, writeFile } from 'xlsx';
 
-  export let infoWilayah, monografData, infrastrukturKesehatan, pengurus;
+	let info_wilayah = {
+		kode_prov: "",
+		kode_kab: "",
+		kode_kec: "",
+		kode_desa: "",
+		kode_wilayah: "",
+		nama: "",
+		nama_prov: "",
+		nama_kab: "",
+		nama_kec: "",
+	};
+  let info_wilayah_loaded = false;
+
+	let pengurus = {
+		kode_prov: '',
+		kode_kab: '',
+		kode_kec: '',
+		kode_desa: '',
+		nama_ketua: '',
+		path_foto: '',
+		foto: '',
+		nama_wakil: '',
+		nama_sekretaris: '',
+		pengurus_lainnya: '',
+		periode_awal_aktif: '',
+		periode_akhir_aktif: '',
+		status_aktif: 0,
+		encId: ''
+	};
 
 	const metadataIbadah = (data) => {
 		switch (true) {
@@ -43,28 +76,71 @@
 		}
 	}
 
-  let infrastruktur_ibadah = monografData.jumlah_infrastruktur_ibadah.sort((a,b) => { return b.nilai - a.nilai; });	
-  let infrastruktur_pendidikan = monografData.jumlah_infrastruktur_pendidikan//.sort((a,b) => { return b.nilai - a.nilai; });
-  let infrastruktur_ekonomi = monografData.jumlah_infrastruktur_ekonomi//.sort((a,b) => { return b.nilai - a.nilai; });
-  let lembaga_keuangan = monografData.jumlah_lembaga_keuangan.sort((a,b) => { return b.nilai - a.nilai; });
-  let penduduk = monografData.jumlah_penduduk.sort((a,b) => { return b.nilai - a.nilai; });
-  let sum_infrastruktur_ibadah = monografData.jumlah_infrastruktur_ibadah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-  let sum_infrastruktur_pendidikan = monografData.jumlah_infrastruktur_pendidikan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-  let sum_infrastruktur_ekonomi = monografData.jumlah_infrastruktur_ekonomi.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-  let sum_lembaga_keuangan = monografData.jumlah_lembaga_keuangan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-  let sum_penduduk = monografData.jumlah_penduduk.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-  let sum_keluarga = monografData.jumlah_keluarga.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-  let sum_luas_wilayah = monografData.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-  let sum_penyandang_disabilitas = monografData.penyandang_disabilitas.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+	let infrastruktur_ibadah = [];
 
-  let infrastruktur_kesehatan = infrastrukturKesehatan//.sort((a,b) => { return b.nilai - a.nilai; });
+	let infrastruktur_kesehatan = [];
+
+	let infrastruktur_pendidikan = [];
+
+	let infrastruktur_ekonomi = [];
+
+	let lembaga_keuangan = [];
+
+	let penduduk = [];
+
+  let sum_infrastruktur_ibadah = 0;
+
+  let sum_infrastruktur_pendidikan = 0;
+
+  let sum_infrastruktur_ekonomi = 0;
+
+  let sum_lembaga_keuangan = 0;
+
+  let sum_penduduk = 0;
+
+  let sum_keluarga = 0;
+
+  let sum_luas_wilayah = 0;
+
+  let sum_penyandang_disabilitas = 0;
+
+	infoWilayah.subscribe((value) => {
+		if (value.kode_wilayah) {
+			info_wilayah = value;
+      info_wilayah_loaded = true;
+		}
+	});
+
+	monografData.subscribe((value) => {
+		infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.sort((a,b) => { return b.nilai - a.nilai; });	
+		infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan//.sort((a,b) => { return b.nilai - a.nilai; });
+		infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi//.sort((a,b) => { return b.nilai - a.nilai; });
+		lembaga_keuangan = value.jumlah_lembaga_keuangan.sort((a,b) => { return b.nilai - a.nilai; });
+		penduduk = value.jumlah_penduduk.sort((a,b) => { return b.nilai - a.nilai; });
+		sum_infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		sum_infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		sum_infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		sum_lembaga_keuangan = value.jumlah_lembaga_keuangan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		sum_penduduk = value.jumlah_penduduk.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		sum_keluarga = value.jumlah_keluarga.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		sum_luas_wilayah = value.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		sum_penyandang_disabilitas = value.penyandang_disabilitas.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+	});
+
+	pengurusLast.subscribe((value) => {
+		pengurus = value;
+	});
+
+	infrastrukturKesehatan.subscribe((value) => {	
+		infrastruktur_kesehatan = value//.sort((a,b) => { return b.nilai - a.nilai; });
+	});
 
   let content = "";
 
   function downloadPDF(){
     setTimeout(() => {
       html2pdf(content, {
-        filename: `${infoWilayah.nama}.pdf`,
+        filename: `${info_wilayah.nama}.pdf`,
         pagebreak: { mode: "avoid-all" },
         jsPDF: { format: "legal", orientation: "portrait" },
       });
@@ -145,7 +221,7 @@
     utils.book_append_sheet(workbook, worksheet, "Sheet1");
     const max_width = rows.reduce((w, r) => Math.max(w, r.variabel.length), 30);
     worksheet["!cols"] = [ { wch: max_width } ];
-    writeFile(workbook, `${infoWilayah.nama}.xlsx`);
+    writeFile(workbook, `${info_wilayah.nama}.xlsx`);
   } 
 </script>
 
@@ -158,11 +234,13 @@
 </section>
 
 <div bind:this={content}>
-  <section class="wrapper bg-light" id="section_penduduk">
-    <div class="container py-5">
-      <Peta infoWilayah={ infoWilayah } />
-    </div>
-  </section>
+  {#if info_wilayah_loaded}
+    <section class="wrapper bg-light" id="section_penduduk">
+      <div class="container py-5">
+        <Peta infoWilayah={ info_wilayah } />
+      </div>
+    </section>
+  {/if}
 
 	<section class="wrapper bg-light" id="section_penduduk">
 		<div class="container py-5">
@@ -199,10 +277,10 @@
 				
 				<div class="col-lg-6">
 					<h2 class="display-4 mb-3">Penduduk</h2>
-					<p class="lead fs-lg">Jumlah Penduduk di { infoWilayah.nama } sebanyak 
+					<p class="lead fs-lg">Jumlah Penduduk di { info_wilayah.nama } sebanyak 
 					<span class="fs-30">{ sum_penduduk }</span> jiwa</p>
 
-					<p class="mb-6">Karakteristik penduduk di Desa/Kelurahan { infoWilayah.nama } cenderung <b>didominasi</b> oleh 	
+					<p class="mb-6">Karakteristik penduduk di Desa/Kelurahan { info_wilayah.nama } cenderung <b>didominasi</b> oleh 	
 						laki-laki
 					</p>
 				</div>
@@ -228,7 +306,7 @@
 					</div>
 
 					<p class="lead fs-lg mb-5 text-center">
-						Berikut adalah daftar ketersediaan fasilitas kesehatan di { infoWilayah.nama }
+						Berikut adalah daftar ketersediaan fasilitas kesehatan di { info_wilayah.nama }
 					</p>
 
 					<ul class="icon-list mb-0">
@@ -255,7 +333,7 @@
 					<h3 class="display-4 mb-3 pe-xl-10">Fasilitas Peribadatan</h3>
 					<p class="mb-0 pe-xxl-10">
 						{#if infrastruktur_ibadah.length>0}
-							{metadataIbadah(infrastruktur_ibadah[0].nama_variabel).label} menjadi fasilitas ibadah terbanyak di { infoWilayah.nama }
+							{metadataIbadah(infrastruktur_ibadah[0].nama_variabel).label} menjadi fasilitas ibadah terbanyak di { info_wilayah.nama }
 						{/if}
 					</p>
 					<div class="mt-2">
@@ -303,7 +381,7 @@
 					</div>
 
 					<p class="lead fs-lg mb-5 text-center"> 
-						Berikut adalah daftar ketersediaan fasilitas pendidikan di { infoWilayah.nama }
+						Berikut adalah daftar ketersediaan fasilitas pendidikan di { info_wilayah.nama }
 					</p>
 
 					<ul class="icon-list mb-0">

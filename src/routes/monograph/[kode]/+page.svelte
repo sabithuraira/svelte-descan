@@ -13,44 +13,50 @@
 	/** @type {import('./$types').PageData} */
 	export let data;
 
+	import { infoWilayah, parentWilayah, childWilayah, deskripsi } from '../../../stores/wilayahStores';
+	import { monografData } from '../../../stores/monografStores';
+	import { umkmData } from '../../../stores/umkmStores';
+	import { infrastrukturKesehatan } from "../../../stores/infraKesehatanStores";
+	import { pengurusLast } from '../../../stores/pengurusStores';
+	import { urlApi } from '../../../stores/generalStores';
+  import { subscribe } from "svelte/internal";
+
 	let preloader = true;
-  let dataLoaded = false;
-  let urlApi = 'https://descan.bpssumsel.com/api/';
-  let infoWilayah, parentWilayah, childWilayah, deskripsi;
-  let monografData, umkmData, infrastrukturKesehatan, pengurusLast;
 
 	async function loadWilayah(){
-    await axios
-      .get(`${urlApi}wilayah/${data.kode}/show`)
-      .then(({data})=>{
-        infoWilayah = data.datas.result;
-        parentWilayah = data.datas.info_induk;
-        childWilayah = data.datas.info_child;
-      }).catch(({ response })=>{
-        console.error(response)
-      })
+		if(data.kode!=info_wilayah.kode_wilayah){
+			await axios
+				.get(`${$urlApi}wilayah/${data.kode}/show`)
+				.then(({data})=>{
+					infoWilayah.set(data.datas.result);
+					parentWilayah.set(data.datas.info_induk);
+					childWilayah.set(data.datas.info_child);
+				}).catch(({ response })=>{
+					console.error(response)
+				})
 
-    await axios
-      .get(`${urlApi}wilayah/${data.kode}/deskripsi`)
-      .then(({data})=>{
-        deskripsi = data.datas.deskripsi;
-      }).catch(({ response })=>{
-        console.error(response)
-      })
+			await axios
+				.get(`${$urlApi}wilayah/${data.kode}/deskripsi`)
+				.then(({data})=>{
+					deskripsi.set(data.datas.deskripsi);
+				}).catch(({ response })=>{
+					console.error(response)
+				})
 
-    await axios
-      .get(`${urlApi}pengurus/${data.kode}/last`)
-      .then(({data})=>{
-        pengurusLast = data.datas;
-      }).catch(({ response })=>{
-        console.error(response)
-      })
+			await axios
+				.get(`${$urlApi}pengurus/${data.kode}/last`)
+				.then(({data})=>{
+					pengurusLast.set(data.datas);
+				}).catch(({ response })=>{
+					console.error(response)
+				})
+		}
 
 		await axios
-			.get(`${urlApi}dashboard/${data.kode}/monograph`)
+			.get(`${$urlApi}dashboard/${data.kode}/monograph`)
 			.then(({data})=>{
 				let tempData = data.datas;
-				monografData = {
+				monografData.set({
 					luas_wilayah: tempData.filter(item => item.kategori_variabel=='luas_wilayah'),
 					ketinggian_wilayah: tempData.filter(item => item.kategori_variabel=='ketinggian_wilayah'),
 					batas_wilayah: tempData.filter(item => item.kategori_variabel=='batas_wilayah'),
@@ -66,18 +72,75 @@
 					pangan_unggulan: tempData.filter(item => item.kategori_variabel=='pangan_unggulan'),
 					hortikultura_unggulan: tempData.filter(item => item.kategori_variabel=='hortikultura_unggulan'),
 					penyandang_disabilitas: tempData.filter(item => item.kategori_variabel=='penyandang_disabilitas'),
-				};
+				});
 
-				umkmData = {
+				umkmData.set({
 					industri: tempData.filter(item => item.kategori_variabel=='jumlah_industri'),
-				};
+				});
 
-				infrastrukturKesehatan = tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_kesehatan');
+				infrastrukturKesehatan.set(tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_kesehatan'));
 
 			}).catch(({ response })=>{
 				console.error(response)
 			})
+
+		await axios
+			.get(`${$urlApi}penduduk/${data.kode}/list?jenis_kelamin=1`)
+			.then(({data})=>{
+				let tempData = data.datas.total;
+				monografData.update((value) => {
+					let idx = value.jumlah_penduduk.findIndex(item => item.nama_variabel == 'Jumlah penduduk laki-laki');
+					value.jumlah_penduduk[idx].nilai = tempData;					
+					return value;
+				});
+			}).catch(({response})=>{
+				console.error(response)
+			})
+
+		await axios
+			.get(`${$urlApi}penduduk/${data.kode}/list?jenis_kelamin=2`)
+			.then(({data})=>{
+				let tempData = data.datas.total;
+				monografData.update((value) => {
+					let idx = value.jumlah_penduduk.findIndex(item => item.nama_variabel == 'Jumlah penduduk perempuan');
+					value.jumlah_penduduk[idx].nilai = tempData;					
+					return value;
+				});
+			}).catch(({response})=>{
+				console.error(response)
+			})
+
+		await axios
+			.get(`${$urlApi}keluarga_miskin/${data.kode}/list`)
+			.then(({data})=>{
+				let tempData = data.datas.total;
+				monografData.update((value) => {
+					let idx = value.jumlah_keluarga.findIndex(item => item.nama_variabel == 'Jumlah keluarga');
+					value.jumlah_keluarga[idx].nilai = tempData;					
+					return value;
+				});
+			}).catch(({response})=>{
+				console.error(response)
+			})
 	}
+
+    let info_wilayah = {
+        kode_prov: '',
+        kode_kab: '',
+        kode_kec: '',
+        kode_desa: '',
+        kode_wilayah: '',
+        nama: '',
+        nama_prov: '',
+        nama_kab: '',
+        nama_kec: ''
+    };
+
+	infoWilayah.subscribe((value) => {
+        if(value.kode_wilayah){
+            info_wilayah = value;
+        }
+	});
 
 	function loadJS(){
 		const pluginsJS = document.createElement("script");
@@ -95,10 +158,9 @@
 	}
 
   onMount(() => {
-    loadWilayah()
-          .then(() => setTimeout(() => loadJS(), 100))
-          .then(() => (dataLoaded = true))
-          .then(() => (preloader = false));
+  loadWilayah()
+        .then(() => setTimeout(() => loadJS(), 100))
+        .then(() => (preloader = false));;
   });
 </script>
 
@@ -115,23 +177,9 @@
 	{#if preloader}
 		<PreLoader />
 	{/if}
-    <Header kode="{data.kode}"></Header>
-    {#if dataLoaded}
-    <TopContent
-      infoWilayah={infoWilayah}
-      deskripsi={deskripsi}
-      monografData={monografData}
-      umkmData={umkmData}
-      infrastrukturKesehatan={infrastrukturKesehatan}
-      pengurus={pengurusLast}>
-    </TopContent>
-    <Body
-      infoWilayah={infoWilayah}
-      monografData={monografData}
-      infrastrukturKesehatan={infrastrukturKesehatan}
-      pengurus={pengurusLast}>
-    </Body>
-    {/if}
+    <Header kode="{$infoWilayah.kode_wilayah}"></Header>
+    <TopContent></TopContent>
+    <Body></Body>
 </div>
 
 <Footer></Footer>
