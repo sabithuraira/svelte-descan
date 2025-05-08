@@ -33,6 +33,7 @@
 	];
   let descanLoaded = false;
   let descanShow = false;
+  let bigScreen = false;
 
 	async function loadWilayah(){
 		await axios
@@ -75,6 +76,7 @@
 		loadWilayah();
     loadDescan();
 		randomNumberFoto = getRandomInt(1,12);
+    bigScreen = window.innerHeight > 700;
 	});
 </script>
 
@@ -83,10 +85,10 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </svelte:head>
 
-<section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-300 h-100"
+<section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-300 {bigScreen ? 'h-100' : ''}"
 	data-image-src="/images/landing/{arrFoto[randomNumberFoto]}"
 	style="background-image: url('/images/landing/{arrFoto[randomNumberFoto]}');" >
-	<div class="container pb-19 pt-md-18 pb-md-17 text-center">
+	<div class="container pb-8 pt-md-7 pb-md-6 text-center">
 		<div class="row">
 			<div class="col-lg-8 col-xl-7 col-xxl-6 mx-auto"
 				data-cues="slideInDown"
