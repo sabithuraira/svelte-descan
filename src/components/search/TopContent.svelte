@@ -1,5 +1,5 @@
 <section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-900 bg-overlay-900 "
-	data-image-src="/images/landing/descan_11.JPG">
+	data-image-src="/images/landing/songket.png">
 	<div class="container pt-2 pt-md-15 pb-2">
 		<div class="row gx-lg-8 gy-8 mt-1 mt-md-12 mt-lg-0 mb-3 align-items-center">
 			<div class="col-lg-6 order-lg-2">

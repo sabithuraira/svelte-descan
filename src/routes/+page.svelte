@@ -86,8 +86,8 @@
 </svelte:head>
 
 <section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-300 {bigScreen ? 'h-100' : ''}"
-	data-image-src="/images/landing/{arrFoto[randomNumberFoto]}"
-	style="background-image: url('/images/landing/{arrFoto[randomNumberFoto]}');" >
+	data-image-src="/images/landing/songket.png"
+	style="background-image: url('/images/landing/songket.png');" >
 	<div class="container pb-8 pt-md-7 pb-md-6 text-center">
 		<div class="row">
 			<div class="col-lg-8 col-xl-7 col-xxl-6 mx-auto"
