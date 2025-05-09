@@ -128,14 +128,11 @@
 					animation-delay: 600ms;
 					animation-direction: normal;
 					animation-fill-mode: both;">
-					<figure class="img-responsive overlay overlay-1 hover-scale rounded mb-0">
+					<figure class="img-responsive hover-scale rounded mb-8">
             <img class="img-responsive"
               src="/images/prov-logo/logo1600.png"
               alt="" style="max-height:200px; width: auto" />
             <span class="bg"></span>
-						<figcaption>
-							<h6 class="from-top mb-0">Sumatera Selatan</h6>
-						</figcaption>
 					</figure>
 				</div>
 
