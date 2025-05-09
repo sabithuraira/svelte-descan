@@ -85,7 +85,7 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </svelte:head>
 
-<section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-300 {bigScreen ? 'h-100' : ''}"
+<section class="wrapper image-wrapper bg-image {bigScreen ? 'h-100' : ''}"
 	data-image-src="/images/landing/songket.png"
 	style="background-image: url('/images/landing/songket.png');" >
 	<div class="container pb-8 pt-md-7 pb-md-6 text-center">
