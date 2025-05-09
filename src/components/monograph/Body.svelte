@@ -313,7 +313,7 @@
 							{#each infrastruktur_kesehatan as item, i}
 								<div class="col-12 col-md-6 col-xl-4">
 									<li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }">
-										<i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ item.nama_variabel.replace("Jumlah", "") }
+										<i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==0 || item.nilai==null) ? item.nama_variabel.replace("Jumlah", "") : `${item.nilai} ${item.nama_variabel.replace("Jumlah", "")}` }
 									</li>
 								</div>
 							{/each}
@@ -388,7 +388,7 @@
 							{#each infrastruktur_pendidikan as item}
 								<div class="col-12 col-md-6 col-xl-4">
 									<li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }">
-										<i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ item.nama_variabel.replace("Jumlah", "") }
+										<i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==0 || item.nilai==null) ? item.nama_variabel.replace("Jumlah", "") : `${item.nilai} ${item.nama_variabel.replace("Jumlah", "")}` }
 									</li>
 								</div>
 							{/each}
@@ -443,7 +443,7 @@
 							{#each infrastruktur_ekonomi as item}
 								<div class="col-12 col-md-6 col-xl-4">
 									<li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }">
-										<i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ item.nama_variabel.replace("Jumlah", "") }
+										<i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==0 || item.nilai==null) ? item.nama_variabel.replace("Jumlah", "") : `${item.nilai} ${item.nama_variabel.replace("Jumlah", "")}` }
 									</li>
 								</div>
 							{/each}
