@@ -141,7 +141,7 @@
       html2pdf(content, {
         filename: `${info_wilayah.nama}.pdf`,
         pagebreak: { mode: "avoid-all" },
-        jsPDF: { format: "legal", orientation: "portrait" },
+        jsPDF: { format: "legal", orientation: "landscape" },
       });
     }, 500);
   }
