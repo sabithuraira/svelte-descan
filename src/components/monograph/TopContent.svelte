@@ -1,7 +1,7 @@
 <script>
 // @ts-nocheck
 
-	import { infoWilayah, deskripsi } from '../../stores/wilayahStores';
+	import { infoWilayah, deskripsi, descanStatus } from '../../stores/wilayahStores';
 	import { monografData } from '../../stores/monografStores';
 	import { umkmData } from '../../stores/umkmStores';
 	import { infrastrukturKesehatan } from '../../stores/infraKesehatanStores';
@@ -10,6 +10,7 @@
 	import { goto } from '$app/navigation';
 
 	let deskripsiLabel = '';
+  let descanStatusBadge = false;
 	let sum_infrastruktur_ibadah = '0';
 	let sum_infrastruktur_kesehatan = '0';
 	let sum_infrastruktur_pendidikan = '0';
@@ -40,6 +41,10 @@
 
 	deskripsi.subscribe((value) => {
 		deskripsiLabel = value;
+	});
+
+	descanStatus.subscribe((value) => {
+    descanStatusBadge = value;
 	});
 
 	let pengurus = {
@@ -108,7 +113,6 @@
       contentProfileLoaded = true;
 		}
 	});
-      console.log(contentProfile);
 </script>
 
 <section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-900 bg-overlay-900 "
@@ -144,6 +148,10 @@
 			</div>
 
 			<div class="col-lg-9 text-white">
+        {#if descanStatusBadge}
+          <span class="badge gradient-3 rounded-pill">Desa Cinta Statistik</span>
+          <br>
+        {/if}
 				<h1 class="display-1 text-white" style="display: inline-block;" id="desa_text">
 					{labelLevel(info_wilayah.kode_wilayah)}
 					<span class="typer text-white" data-words={info_wilayah.nama} data-loop="false"/>

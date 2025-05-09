@@ -13,7 +13,7 @@
 	/** @type {import('./$types').PageData} */
 	export let data;
 
-	import { infoWilayah, parentWilayah, childWilayah, deskripsi } from '../../../stores/wilayahStores';
+	import { infoWilayah, parentWilayah, childWilayah, deskripsi, descanStatus } from '../../../stores/wilayahStores';
 	import { monografData } from '../../../stores/monografStores';
 	import { umkmData } from '../../../stores/umkmStores';
 	import { infrastrukturKesehatan } from "../../../stores/infraKesehatanStores";
@@ -31,6 +31,20 @@
 					infoWilayah.set(data.datas.result);
 					parentWilayah.set(data.datas.info_induk);
 					childWilayah.set(data.datas.info_child);
+				}).catch(({ response })=>{
+					console.error(response)
+				})
+
+			await axios
+				.get(`${$urlApi}descan/${data.kode}`)
+				.then(({data})=>{
+          if(data.datas.length > 0)
+            if (data.datas[0].tahun == new Date().getFullYear())
+              descanStatus.set(true);
+            else
+              descanStatus.set(false);
+          else
+					  descanStatus.set(false);
 				}).catch(({ response })=>{
 					console.error(response)
 				})
