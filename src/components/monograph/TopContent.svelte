@@ -19,7 +19,8 @@
 	let sum_industri = '0';
 	let sum_penyandang_disabilitas = '0';
 
-	let contentProfile = []
+	let contentProfile = [];
+	let contentProfileLoaded = false;
 	let sum_penduduk = '0';
 	let sum_keluarga = '0';
 	let sum_luas_wilayah = '0';
@@ -34,13 +35,8 @@
 		nama_prov: "",
 		nama_kab: "",
 		nama_kec: "",
+    url: "",
 	};
-
-	infoWilayah.subscribe((value) => {
-		if (value.kode_wilayah) {
-			info_wilayah = value;
-		}
-	});
 
 	deskripsi.subscribe((value) => {
 		deskripsiLabel = value;
@@ -77,7 +73,7 @@
 		sum_luas_wilayah = value.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_penyandang_disabilitas = value.penyandang_disabilitas.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 
-		contentProfile = [
+		contentProfile.push(
 			{ label: "Luas Wilayah", value: `${sum_luas_wilayah} Km<sup>2</sup>`, icon: "map", url:`/topografi/${info_wilayah.kode_wilayah}`},
 			{ label: "Penduduk", value: sum_penduduk, icon: "user", url: `/penduduk/${info_wilayah.kode_wilayah}`},
 			{ label: "Keluarga", value: sum_keluarga, icon: "users-alt", url: `/keluarga/${info_wilayah.kode_wilayah}`},
@@ -85,7 +81,7 @@
 			{ label: "Fasilitas Pendidikan", value: sum_infrastruktur_pendidikan, icon: "book", url:"#"}, 
 			{ label: "Fasilitas Ekonomi", value: sum_infrastruktur_ekonomi, icon: "store", url:"#"}, 
 			{ label: "Penyandang Disabilitas", value: sum_penyandang_disabilitas, icon: "wheelchair", url:"#"}, 
-		];
+    );
 	});
 
 	umkmData.subscribe((value) => {
@@ -101,6 +97,18 @@
 			{ label: "Fasilitas Kesehatan", value: sum_infrastruktur_kesehatan, icon: "hospital", url:`/sarana_kesehatan/${info_wilayah.kode_wilayah}`}
 		);
 	});
+
+	infoWilayah.subscribe((value) => {
+		if (value.kode_wilayah) {
+			info_wilayah = value;
+      if (info_wilayah.url != '')
+        contentProfile.push(
+          { label: "Website", value: info_wilayah.url, icon: "globe", url:"#"} 
+        );
+      contentProfileLoaded = true;
+		}
+	});
+      console.log(contentProfile);
 </script>
 
 <section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-900 bg-overlay-900 "
@@ -144,21 +152,23 @@
 				
 				<p class="lead fs-lg mb-8 pe-xxl-2">{ deskripsiLabel }</p>
 				<div class="row gx-xl-10 gy-6" data-cues="slideInUp" data-group="services">
-					{#each contentProfile as item}
-						<div class="col-md-4 col-lg-12 col-xl-4 text-left">
-							<button class="d-flex flex-row btn text-start p-0" on:click={() => goto(item.url)}>
-								<div>
-									<div class="icon btn btn-circle btn-lg btn-soft-primary disabled me-5">
-									<i class="uil uil-{item.icon}"></i>
-									</div>
-								</div>
-								<div>
-									<h4 class="mb-1 text-white">{item.label}</h4>
-									<h2 class="mb-0  text-white">{@html item.value}</h2>
-								</div>
-							</button>
-						</div>
-					{/each}
+          {#if contentProfileLoaded}
+            {#each contentProfile as item}
+              <div class="col-md-4 col-lg-12 col-xl-4 text-left">
+                <button class="d-flex flex-row btn text-start p-0" on:click={() => goto(item.url)}>
+                  <div>
+                    <div class="icon btn btn-circle btn-lg btn-soft-primary disabled me-5">
+                    <i class="uil uil-{item.icon}"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 class="mb-1 text-white">{item.label}</h4>
+                    <h2 class="mb-0  text-white">{@html item.value}</h2>
+                  </div>
+                </button>
+              </div>
+            {/each}
+          {/if}
 				</div>
 			</div>
 		</div>
