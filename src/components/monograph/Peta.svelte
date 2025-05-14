@@ -7,6 +7,7 @@
   export let infoWilayah;
   let peta = []; 
   let map = [];
+  let infrastruktur = [];
 
   function createMap(node) {
     map = L.map(node).setView([-3.27786, 103.19248], 8);
@@ -37,8 +38,27 @@
     map.setView(polygon.getBounds().getCenter(), 13);
 	}
 
+	async function loadPoint() {
+		await axios
+			.get(`${$urlApi}data_variabel/${infoWilayah.kode_prov}${infoWilayah.kode_kab}${infoWilayah.kode_kec}${infoWilayah.kode_desa}/monograf`)
+			.then(({ data }) => {
+				infrastruktur = data.datas.filter((item) => item.dataGeo.length > 0);
+        infrastruktur.forEach((i) => {
+          i.dataGeo.forEach((d) => {
+            if (d.lat != null && d.long != null) {
+              let marker = L.marker([d.lat, d.long]).addTo(map);
+              marker.bindPopup(d.nama);
+            }
+          });
+        });
+			}).catch(({ response }) => {
+				console.error(response);
+			});
+	}
+
   onMount(() => {
     loadGeoJson();
+    loadPoint();
   });
 </script>
 
