@@ -190,10 +190,11 @@
 <div class="content-wrapper">
 	{#if preloader}
 		<PreLoader />
-	{/if}
+	{:else}
     <Header kode="{$infoWilayah.kode_wilayah}"></Header>
     <TopContent></TopContent>
     <Body></Body>
+  {/if}
 </div>
 
 <Footer></Footer>
