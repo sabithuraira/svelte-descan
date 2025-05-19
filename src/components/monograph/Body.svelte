@@ -111,7 +111,6 @@
 	});
 
 	monografData.subscribe((value) => {
-    console.log(value);
 		infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.sort((a,b) => { return b.nilai - a.nilai; });	
 		infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan//.sort((a,b) => { return b.nilai - a.nilai; });
 		infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi//.sort((a,b) => { return b.nilai - a.nilai; });
@@ -313,7 +312,7 @@
 						<div class="row gy-3 gx-xl-8">
 							{#each infrastruktur_kesehatan as item, i}
 								<div class="col-12 col-md-6 col-xl-4">
-									<li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }">
+									<li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
 										<i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==0 || item.nilai==null) ? item.nama_variabel.replace("Jumlah", "") : `${item.nilai} ${item.nama_variabel.replace("Jumlah", "")}` }
 									</li>
 								</div>
@@ -347,7 +346,7 @@
 							{#each Array(3) as _, i}
 								<div class="col-md-4">
 									<button class="btn" data-bs-toggle="modal" data-bs-target="#modal_ibadah">
-										<div>
+										<div data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (infrastruktur_ibadah[i].sumber=='' || infrastruktur_ibadah[i].sumber==null) ? '-' : infrastruktur_ibadah[i].sumber }">
 											<span class="text-primary">
 											<i class="fa-solid fa-{metadataIbadah(infrastruktur_ibadah[i].nama_variabel).logo} fa-4x" width="70px"></i>
 											</span>
@@ -388,7 +387,7 @@
 						<div class="row gy-4 gx-xl-12">
 							{#each infrastruktur_pendidikan as item}
 								<div class="col-12 col-md-6 col-xl-4">
-									<li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }">
+									<li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
 										<i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==0 || item.nilai==null) ? item.nama_variabel.replace("Jumlah", "") : `${item.nilai} ${item.nama_variabel.replace("Jumlah", "")}` }
 									</li>
 								</div>
@@ -416,7 +415,7 @@
 
 						{#if lembaga_keuangan.length>0}
 							{#each Array(3) as _, i}
-								<div class="col-md-4">
+								<div class="col-md-4" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (lembaga_keuangan[i].sumber=='' || lembaga_keuangan[i].sumber==null) ? '-' : lembaga_keuangan[i].sumber }">
 									<h3 class="counter counter-lg">
 										{#if lembaga_keuangan[i].nilai!='' && lembaga_keuangan[i].nilai!=null}
 											{lembaga_keuangan[i].nilai}
@@ -443,7 +442,7 @@
 						<div class="row gy-4 gx-xl-12">
 							{#each infrastruktur_ekonomi as item}
 								<div class="col-12 col-md-6 col-xl-4">
-									<li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }">
+									<li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
 										<i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==0 || item.nilai==null) ? item.nama_variabel.replace("Jumlah", "") : `${item.nilai} ${item.nama_variabel.replace("Jumlah", "")}` }
 									</li>
 								</div>
@@ -477,7 +476,7 @@
 					</thead>
 					<tbody style="border: #00000034;">
 						{#each infrastruktur_ibadah as item, i}
-							<tr>
+							<tr data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
 								<th scope="row" class="text-center">{i+1}</th>
 								<td>{metadataIbadah(item.nama_variabel).label}</td>
                 {#if item.nilai=="" || item.nilai==null}
@@ -516,7 +515,7 @@
 					</thead>
 					<tbody style="border: #00000034;">
 						{#each lembaga_keuangan as item, i}
-							<tr>
+							<tr data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
 								<th scope="row" class="text-center">{i+1}</th>
 								<td>{ item.nama_variabel.replace("Jumlah", "") }</td>
                 {#if item.nilai=="" || item.nilai==null}
