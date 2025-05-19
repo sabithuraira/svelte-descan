@@ -111,6 +111,7 @@
 	});
 
 	monografData.subscribe((value) => {
+    console.log(value);
 		infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.sort((a,b) => { return b.nilai - a.nilai; });	
 		infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan//.sort((a,b) => { return b.nilai - a.nilai; });
 		infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi//.sort((a,b) => { return b.nilai - a.nilai; });
@@ -479,7 +480,11 @@
 							<tr>
 								<th scope="row" class="text-center">{i+1}</th>
 								<td>{metadataIbadah(item.nama_variabel).label}</td>
-								<td class="text-center">{item.nilai}</td>
+                {#if item.nilai=="" || item.nilai==null}
+								  <td class="text-center">0</td>
+                {:else}
+                  <td class="text-center">{item.nilai}</td>
+                {/if}
 							</tr>
 						{/each}
 					</tbody>
@@ -514,7 +519,11 @@
 							<tr>
 								<th scope="row" class="text-center">{i+1}</th>
 								<td>{ item.nama_variabel.replace("Jumlah", "") }</td>
-								<td class="text-center">{item.nilai}</td>
+                {#if item.nilai=="" || item.nilai==null}
+								  <td class="text-center">0</td>
+                {:else}
+                  <td class="text-center">{item.nilai}</td>
+                {/if}
 							</tr>
 						{/each}
 					</tbody>
