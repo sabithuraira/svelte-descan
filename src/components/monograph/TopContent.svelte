@@ -1,7 +1,7 @@
 <script>
 // @ts-nocheck
 
-	import { infoWilayah, deskripsi, descanStatus } from '../../stores/wilayahStores';
+	import { infoWilayah, descanStatus } from '../../stores/wilayahStores';
 	import { monografData } from '../../stores/monografStores';
 	import { umkmData } from '../../stores/umkmStores';
 	import { infrastrukturKesehatan } from '../../stores/infraKesehatanStores';
@@ -38,10 +38,6 @@
 		nama_kec: "",
     url: "",
 	};
-
-	deskripsi.subscribe((value) => {
-		deskripsiLabel = value;
-	});
 
 	descanStatus.subscribe((value) => {
     descanStatusBadge = value;
@@ -110,6 +106,7 @@
         contentProfile.push(
           { label: "Website", value: info_wilayah.url, icon: "globe", url:"#"} 
         );
+      deskripsiLabel = info_wilayah.deskripsi;
       contentProfileLoaded = true;
 		}
 	});
@@ -158,7 +155,7 @@
 					<span class="cursor text-white" data-owner="typer" />
 				</h1>
 				
-				<p class="lead fs-lg mb-8 pe-xxl-2">{ deskripsiLabel }</p>
+				<p class="lead fs-lg mb-8 pe-xxl-2">{@html deskripsiLabel }</p>
 				<div class="row gx-xl-10 gy-6" data-cues="slideInUp" data-group="services">
           {#if contentProfileLoaded}
             {#each contentProfile as item}
