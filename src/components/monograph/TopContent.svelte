@@ -7,7 +7,6 @@
 	import { infrastrukturKesehatan } from '../../stores/infraKesehatanStores';
 	import { pengurusLast } from '../../stores/pengurusStores';
 	import { labelLevel, labelKepalaWilayah } from '../../helper/labelWilayah';
-	import { goto } from '$app/navigation';
 
 	let deskripsiLabel = '';
   let descanStatusBadge = false;
@@ -75,41 +74,44 @@
 		sum_penyandang_disabilitas = value.penyandang_disabilitas.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 
 		contentProfile.push(
-			{ label: "Luas Wilayah", value: `${sum_luas_wilayah} Km<sup>2</sup>`, icon: "map", url:`/topografi/${info_wilayah.kode_wilayah}`},
-			{ label: "Penduduk", value: sum_penduduk, icon: "user", url: `/penduduk/${info_wilayah.kode_wilayah}`},
-			{ label: "Keluarga", value: sum_keluarga, icon: "users-alt", url: `/keluarga/${info_wilayah.kode_wilayah}`},
-			{ label: "Tempat Ibadah", value: sum_infrastruktur_ibadah, icon: "moon", url:"#"}, 
-			{ label: "Fasilitas Pendidikan", value: sum_infrastruktur_pendidikan, icon: "book", url:"#"}, 
-			{ label: "Fasilitas Ekonomi", value: sum_infrastruktur_ekonomi, icon: "store", url:"#"}, 
-			{ label: "Penyandang Disabilitas", value: sum_penyandang_disabilitas, icon: "wheelchair", url:"#"}, 
+			{ label: "Luas Wilayah", value: `${sum_luas_wilayah} Km<sup>2</sup>`, icon: "map", url: ""},
+			{ label: "Penduduk", value: sum_penduduk, icon: "user", url: ""},
+			{ label: "Keluarga", value: sum_keluarga, icon: "users-alt", url: ""},
+			{ label: "Tempat Ibadah", value: sum_infrastruktur_ibadah, icon: "moon", url: ""}, 
+			{ label: "Fasilitas Pendidikan", value: sum_infrastruktur_pendidikan, icon: "book", url: ""}, 
+			{ label: "Fasilitas Ekonomi", value: sum_infrastruktur_ekonomi, icon: "store", url: ""}, 
+			{ label: "Penyandang Disabilitas", value: sum_penyandang_disabilitas, icon: "wheelchair", url: ""}, 
     );
 	});
 
 	umkmData.subscribe((value) => {
 		sum_industri = value.industri.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		contentProfile.push(
-			{ label: "Industri Mikro & Kecil", value: sum_industri, icon: "building", url:`/umkm/${info_wilayah.kode_wilayah}`}, 
+			{ label: "Industri Mikro & Kecil", value: sum_industri, icon: "building", url: ""}, 
 		);
 	});
 
 	infrastrukturKesehatan.subscribe((value) => {
 		sum_infrastruktur_kesehatan = value.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		contentProfile.push(
-			{ label: "Fasilitas Kesehatan", value: sum_infrastruktur_kesehatan, icon: "hospital", url:`/sarana_kesehatan/${info_wilayah.kode_wilayah}`}
+			{ label: "Fasilitas Kesehatan", value: sum_infrastruktur_kesehatan, icon: "hospital", url: ""}
 		);
 	});
 
 	infoWilayah.subscribe((value) => {
 		if (value.kode_wilayah) {
 			info_wilayah = value;
-      if (info_wilayah.url != '')
+      if (info_wilayah.url != '') {
+        let url = (info_wilayah.url.includes('http://') || info_wilayah.url.includes('https://')) ? info_wilayah.url : 'https://' + info_wilayah.url;
         contentProfile.push(
-          { label: "Website", value: info_wilayah.url, icon: "globe", url:"#"} 
+          { label: "Website", value: info_wilayah.url, icon: "globe", url: url} 
         );
+      }
       deskripsiLabel = info_wilayah.deskripsi;
       contentProfileLoaded = true;
 		}
 	});
+  console.log(contentProfile);
 </script>
 
 <section class="wrapper image-wrapper bg-image"
@@ -160,7 +162,7 @@
           {#if contentProfileLoaded}
             {#each contentProfile as item}
               <div class="col-md-4 col-lg-12 col-xl-4 text-left">
-                <button class="d-flex flex-row btn text-start p-0" on:click={() => goto(item.url)}>
+                <button class="d-flex flex-row btn text-start p-0">
                   <div>
                     <div class="icon btn btn-circle btn-lg btn-soft-primary disabled me-5">
                     <i class="uil uil-{item.icon}"></i>
@@ -168,7 +170,13 @@
                   </div>
                   <div>
                     <h4 class="mb-1 text-white">{item.label}</h4>
-                    <h2 class="mb-0  text-white">{@html item.value}</h2>
+                    {#if item.url == '' || item.url == null}
+                      <h2 class="mb-0 text-white">{@html item.value}</h2>
+                    {:else}
+                      <a href="{item.url}" target="_blank" rel="noopener noreferrer" class="link-light">
+                        <h2 class="mb-0 text-white">{@html item.value}</h2>
+                      </a>
+                    {/if}
                   </div>
                 </button>
               </div>
