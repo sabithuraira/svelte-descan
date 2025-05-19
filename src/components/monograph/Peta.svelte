@@ -62,9 +62,4 @@
   });
 </script>
 
-<div class="card m-4">
-  <div class="card-body">
-    <div style="height: 400px; width: 100%;" use:createMap></div>
-  </div>
-  <!--/.card-body -->
-</div>
+<div style="height: 400px; width: 100%;" use:createMap></div>
