@@ -152,7 +152,7 @@
 				<h1 class="display-1 text-white" style="display: inline-block;" id="desa_text">
 					{labelLevel(info_wilayah.kode_wilayah)}
 					<span class="typer text-white" data-words={info_wilayah.nama} data-loop="false"/>
-					<span class="cursor text-white" data-owner="typer" />
+					<span class="cursor text-white" data-owner="typer" data-cursor-display="_"/>
 				</h1>
 				
 				<p class="lead fs-lg mb-8 pe-xxl-2">{@html deskripsiLabel }</p>
