@@ -215,11 +215,13 @@
     <div class="container">
       <div class="card shadow-none bg-pale-yellow card-border-bottom border-soft-yellow">
         <div class="card-body">
-          <p class="text-justify">Program Desa Cinta Statistik (Desa Cantik) dilatarbelakangi kondisi dimana saat ini desa/kelurahan tidak lagi dianggap sebagai obyek pembangunan, melainkan ditempatkan sebagai subyek dan ujung tombak pembangunan dalam peningkatan kesejahteraan masyarakat. Badan Pusat Statistik (BPS) sebagai leading sector dalam pengembangan statistik membuat Program Desa Cantik yang merupakan program pembinaan statistik sektoral di tingkat desa/kelurahan secara berkesinambungan dan komprehensif. Provinsi Sumatera Selatan telah mencanangkan 100 persen Desa di Sumatera Selatan sebagai Desa Cinta Statistik.</p>
+          <p class="text-justify">Untuk membangun data dari level desa, BPS telah melakukan pembinaan kepada Desa/Kelurahan Cinta Statistik secara mandiri. BPS telah berupaya menjangkau desa dengan status Tertinggal, sangat tertinggal, berkembang hingga maju dan mandiri. Agar upaya ini dapat menjangkau seluruh desa kelurahan, maka BPS perlu melakukan kolaborasi dengan membuat program Satu Data Desa Indonesia (SDDI). SDDI bertujuan untuk Pembinaan statistik sektoral di tingkat kabupaten/kota untuk memenuhi data desa secara top down dengan memenuhi prinsip Satu Data Indonesia (SDI). Pelaksanaan SDDI dilaksanakan melalui kegiatan Pembinaan Statistik Sektoral ke seluruh desa/kelurahan dalam satu kabupaten/kota.</p>
         </div>
       </div>
     </div>
     <p class="display-1 fs-24 mt-4 mb-0">Cari Desa...</p>
   </div>
-  <SearchWilayah />
+  <div class="container">
+    <SearchWilayah />
+  </div>
 {/if}
