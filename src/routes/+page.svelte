@@ -129,10 +129,12 @@
 					animation-direction: normal;
 					animation-fill-mode: both;">
 					<figure class="img-responsive hover-scale rounded mb-8">
-            <img class="img-responsive"
+            <img class="img-responsive mr-2"
               src="/images/prov-logo/logo1600.png"
               alt="" style="max-height:200px; width: auto" />
-            <span class="bg"></span>
+            <img class="img-responsive ml-2"
+              src="/images/bps-logo/logo_bps.png"
+              alt="" style="max-height:150px; width: auto" />
 					</figure>
 				</div>
 
