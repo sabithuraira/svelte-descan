@@ -116,7 +116,7 @@
 
 	monografData.subscribe((value) => {
 		infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.sort((a,b) => { return b.nilai - a.nilai; });	
-		infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan//.sort((a,b) => { return b.nilai - a.nilai; });
+		infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan.sort((a,b) => { return Number(a.variabel_id) - Number(b.variabel_id); });
 		infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi//.sort((a,b) => { return b.nilai - a.nilai; });
 		lembaga_keuangan = value.jumlah_lembaga_keuangan.sort((a,b) => { return b.nilai - a.nilai; });
 		infrastruktur_olahraga = value.jumlah_infrastruktur_olahraga.map((item) => {
