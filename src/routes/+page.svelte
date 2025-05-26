@@ -209,7 +209,7 @@
 {#if sddiShow}
   <div class="text-center text-secondary mt-8">
     <p class="display-1 fs-36">
-    Satu Desa Data Indonesia (SDDI)<br />
+    Satu Data Desa Indonesia (SDDI)<br />
     Provinsi Sumatera Selatan Tahun { new Date().getFullYear() }
     </p>
     <div class="container">
