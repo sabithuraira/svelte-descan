@@ -5,6 +5,7 @@
 	import { monografData } from '../../stores/monografStores';
 	import { umkmData } from '../../stores/umkmStores';
 	import { infrastrukturKesehatan } from '../../stores/infraKesehatanStores';
+	import { infrastrukturOlahraga } from '../../stores/infraOlahragaStores';
 	import { pengurusLast } from '../../stores/pengurusStores';
 	import { labelLevel, labelKepalaWilayah } from '../../helper/labelWilayah';
 
@@ -18,6 +19,8 @@
 	let sum_lembaga_keuangan = '0';
 	let sum_industri = '0';
 	let sum_penyandang_disabilitas = '0';
+
+  let sum_infrastruktur_olahraga = '0';
 
 	let contentProfile = [];
 	let contentProfileLoaded = false;
@@ -98,6 +101,13 @@
 		);
 	});
 
+  infrastrukturOlahraga.subscribe((value) => {
+		sum_infrastruktur_olahraga = value.reduce((acc,item) => { return acc + (Number(item.nilai) == 4 || item.nilai == null ? 0 : 1); }, 0);
+		contentProfile.push(
+			{ label: "Fasilitas Olahraga", value: sum_infrastruktur_olahraga, icon: "table-tennis", url: ""}
+		);
+	});
+
 	infoWilayah.subscribe((value) => {
 		if (value.kode_wilayah) {
 			info_wilayah = value;
@@ -111,7 +121,6 @@
       contentProfileLoaded = true;
 		}
 	});
-  console.log(contentProfile);
 </script>
 
 <section class="wrapper image-wrapper bg-image"

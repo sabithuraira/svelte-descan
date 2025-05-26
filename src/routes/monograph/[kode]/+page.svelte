@@ -96,6 +96,8 @@
 
 				infrastrukturKesehatan.set(tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_kesehatan'));
 
+				infrastrukturOlahraga.set(tempData.filter(item => item.kategori_variabel=='lapangan_olahraga'));
+
 			}).catch(({ response })=>{
 				console.error(response)
 			})
