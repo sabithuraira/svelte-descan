@@ -85,6 +85,8 @@
 
 	let lembaga_keuangan = [];
 
+	let infrastruktur_olahraga = [];
+
 	let penduduk = [];
 
   let sum_infrastruktur_ibadah = 0;
@@ -94,6 +96,8 @@
   let sum_infrastruktur_ekonomi = 0;
 
   let sum_lembaga_keuangan = 0;
+
+	let sum_infrastruktur_olahraga = 0;
 
   let sum_penduduk = 0;
 
@@ -115,11 +119,25 @@
 		infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan//.sort((a,b) => { return b.nilai - a.nilai; });
 		infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi//.sort((a,b) => { return b.nilai - a.nilai; });
 		lembaga_keuangan = value.jumlah_lembaga_keuangan.sort((a,b) => { return b.nilai - a.nilai; });
+		infrastruktur_olahraga = value.jumlah_infrastruktur_olahraga.map((item) => {
+      let kondisi = '';
+      if (Number(item.nilai) == 1) {
+        kondisi = 'baik';
+      } else if (Number(item.nilai) == 2) {
+        kondisi = 'rusak sedang';
+      } else if (Number(item.nilai) == 3) {
+        kondisi = 'rusak parah';
+      } else {
+        kondisi = '';
+      }
+      return { ...item, kondisi: kondisi }; 
+    });
 		penduduk = value.jumlah_penduduk.sort((a,b) => { return b.nilai - a.nilai; });
 		sum_infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_lembaga_keuangan = value.jumlah_lembaga_keuangan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		sum_infrastruktur_olahraga = value.jumlah_infrastruktur_olahraga.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_penduduk = value.jumlah_penduduk.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_keluarga = value.jumlah_keluarga.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_luas_wilayah = value.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
@@ -399,7 +417,7 @@
 		</div>
 	</section>
 
-    <section class="wrapper bg-soft-primary" id="section_keuangan">
+  <section class="wrapper bg-soft-primary" id="section_keuangan">
 		<div class="container pt-5 my-3">
 			<div class="row gx-lg-8 gx-xl-12 gy-10 gy-lg-0 align-items-center">
 				<div class="col-lg-4 text-center text-lg-start">
@@ -453,6 +471,42 @@
 			</div>
 		</div>
 		<!-- /.container -->
+	</section>
+
+	<section class="wrapper bg-light" id="section_olahraga">
+		<div class="container py-5">
+			<div class="row">
+				<div class="col-lg-12 ">
+					<h2 class="display-4 text-center">
+						<span class="text-primary m-2">
+							<i class="fa-solid fa-running"></i>
+						</span>
+						Fasilitas Olahraga
+					</h2>
+
+					<div class="p-2 text-center mx-5">
+						<i class="fa fa-quote-left text-black"></i>
+						<i class="font-italic ml-2">Kita tidak berhenti berolahraga karena menjadi renta. Kita menjadi renta karena berhenti berolahraga - <b>Kenneth Cooper</b></i>
+					</div>
+
+					<p class="lead fs-lg mb-5 text-center"> 
+						Berikut adalah daftar ketersediaan fasilitas olahraga di { info_wilayah.nama }
+					</p>
+
+					<ul class="icon-list mb-0">
+						<div class="row gy-4 gx-xl-12">
+							{#each infrastruktur_olahraga as item}
+								<div class="col-12 col-md-6 col-xl-4">
+									<li class=" icon-list bullet-bg { (item.nilai==4 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
+										<i class="uil uil-{ (item.nilai==4 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==4 || item.nilai==null) ? item.nama_variabel.replace("Jumlah Ketersediaan fasilitas lapangan: ", "") : `${item.nama_variabel.replace("Jumlah Ketersediaan fasilitas lapangan: ", "")} dengan kondisi ${item.kondisi}` }
+									</li>
+								</div>
+							{/each}
+						</div>
+					</ul>
+				</div>
+			</div>
+		</div>
 	</section>
 
 	<div class="modal" id="modal_ibadah" tabindex="-1">
