@@ -498,7 +498,7 @@
 							{#each infrastruktur_olahraga as item}
 								<div class="col-12 col-md-6 col-xl-4">
 									<li class=" icon-list bullet-bg { (item.nilai==4 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
-										<i class="uil uil-{ (item.nilai==4 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==4 || item.nilai==null) ? item.nama_variabel.replace("Jumlah Ketersediaan fasilitas lapangan: ", "") : `${item.nama_variabel.replace("Jumlah Ketersediaan fasilitas lapangan: ", "")} dengan kondisi ${item.kondisi}` }
+										<i class="uil uil-{ (item.nilai==4 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==4 || item.nilai==null) ? item.nama_variabel.replace("Ketersediaan fasilitas lapangan: ", "") : `${item.nama_variabel.replace("Ketersediaan fasilitas lapangan: ", "")} (kondisi ${item.kondisi})` }
 									</li>
 								</div>
 							{/each}
