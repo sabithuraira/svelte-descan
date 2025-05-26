@@ -33,6 +33,7 @@
 	];
   let descanLoaded = false;
   let descanShow = false;
+  let sddiShow = false;
   let bigScreen = false;
 
 	async function loadWilayah(){
@@ -61,6 +62,15 @@
 
   function showDescan(){
     descanShow = true;
+    sddiShow = false;
+    setTimeout(() => {
+      window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }, 100);
+  }
+
+  function showSddi(){
+    sddiShow = true;
+    descanShow = false;
     setTimeout(() => {
       window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
     }, 100);
@@ -153,10 +163,17 @@
 					</form>
 				</div>
 
-        {#if descanLoaded && !descanShow}
+        {#if descanLoaded}
+          {#if !descanShow}
+            <div class="col-lg-12 text-center">
+              <button type="button" class="btn btn-outline-light mt-4" on:click={showDescan}>Tampilkan Desa Cinta Statistik</button>
+            </div>
+          {/if}
+          {#if !sddiShow}
           <div class="col-lg-12 text-center">
-            <button type="button" class="btn btn-outline-light mt-8" on:click={showDescan}>Tampilkan Desa Cinta Statistik</button>
+            <button type="button" class="btn btn-outline-light mt-4" on:click={showSddi}>Tampilkan Satu Desa Data Indonesia (SDDI)</button>
           </div>
+          {/if}
         {/if}
 			</div>
 			<!-- /column -->
@@ -188,8 +205,21 @@
     </div>
   </div>
   <Peta desa={descan}/>
+{/if}
+{#if sddiShow}
   <div class="text-center text-secondary mt-8">
-    <p class="display-1 fs-30">Cari Desa Lainnya...</p>
+    <p class="display-1 fs-36">
+    Satu Desa Data Indonesia (SDDI)<br />
+    Provinsi Sumatera Selatan Tahun { new Date().getFullYear() }
+    </p>
+    <div class="container">
+      <div class="card shadow-none bg-pale-yellow card-border-bottom border-soft-yellow">
+        <div class="card-body">
+          <p class="text-justify">Program Desa Cinta Statistik (Desa Cantik) dilatarbelakangi kondisi dimana saat ini desa/kelurahan tidak lagi dianggap sebagai obyek pembangunan, melainkan ditempatkan sebagai subyek dan ujung tombak pembangunan dalam peningkatan kesejahteraan masyarakat. Badan Pusat Statistik (BPS) sebagai leading sector dalam pengembangan statistik membuat Program Desa Cantik yang merupakan program pembinaan statistik sektoral di tingkat desa/kelurahan secara berkesinambungan dan komprehensif. Provinsi Sumatera Selatan telah mencanangkan 100 persen Desa di Sumatera Selatan sebagai Desa Cinta Statistik.</p>
+        </div>
+      </div>
+    </div>
+    <p class="display-1 fs-24 mt-4 mb-0">Cari Desa...</p>
   </div>
   <SearchWilayah />
 {/if}
