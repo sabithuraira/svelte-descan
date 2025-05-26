@@ -166,12 +166,12 @@
         {#if descanLoaded}
           {#if !descanShow}
             <div class="col-lg-12 text-center">
-              <button type="button" class="btn btn-outline-light mt-4" on:click={showDescan}>Tampilkan Desa Cinta Statistik</button>
+              <button type="button" class="btn btn-outline-light mt-4" on:click={showDescan}>Desa Cinta Statistik</button>
             </div>
           {/if}
           {#if !sddiShow}
           <div class="col-lg-12 text-center">
-            <button type="button" class="btn btn-outline-light mt-4" on:click={showSddi}>Tampilkan Satu Data Desa Indonesia (SDDI)</button>
+            <button type="button" class="btn btn-outline-light mt-4" on:click={showSddi}>Satu Data Desa Indonesia (SDDI)</button>
           </div>
           {/if}
         {/if}
