@@ -116,7 +116,7 @@
 					animation-delay: 300ms;
 					animation-direction: normal;
 					animation-fill-mode: both;">
-					Pusat Informasi dan Data Desa<br />
+					Satu Data Desa Indonesia (SDDI)<br />
 					Provinsi Sumatera Selatan.
 				</p>
 				<div data-cue="slideInDown"
