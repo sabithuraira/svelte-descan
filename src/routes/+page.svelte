@@ -171,7 +171,7 @@
           {/if}
           {#if !sddiShow}
           <div class="col-lg-12 text-center">
-            <button type="button" class="btn btn-outline-light mt-4" on:click={showSddi}>Tampilkan Satu Desa Data Indonesia (SDDI)</button>
+            <button type="button" class="btn btn-outline-light mt-4" on:click={showSddi}>Tampilkan Satu Data Desa Indonesia (SDDI)</button>
           </div>
           {/if}
         {/if}
