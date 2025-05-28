@@ -13,7 +13,7 @@
       accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw'
     }).addTo(map);
     desa.forEach((d) => {
-      let marker = L.marker([-d.lat, d.lon]).addTo(map);
+      let marker = L.marker([d.lat, d.lon]).addTo(map);
       marker.bindPopup(`<a href="/monograph/${d.kode_prov + d.kode_kab + d.kode_kec + d.kode_desa}">${d.nmDesa}, ${d.nmKec}, ${d.nmKab}</a>`);
     });
   }
