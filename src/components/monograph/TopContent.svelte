@@ -138,9 +138,9 @@
 
 						<div class="card mx-4">
 							<h4 class="mb-0 text-nowrap">
-								{labelKepalaWilayah(info_wilayah.kode_wilayah)}
+								{pengurus.nama_ketua}
 							</h4>
-							<p class="fs-14 mb-0">{pengurus.nama_ketua}</p>
+							<p class="fs-14 mb-0">{labelKepalaWilayah(info_wilayah.kode_wilayah)}</p>
 						</div>
 						  <!-- /section -->
 					{:else}
