@@ -34,6 +34,7 @@
   let descanLoaded = false;
   let descanShow = false;
   let sddiShow = false;
+  let programUnggulanShow = false;
   let bigScreen = false;
 
 	async function loadWilayah(){
@@ -71,6 +72,15 @@
   function showSddi(){
     sddiShow = true;
     descanShow = false;
+    setTimeout(() => {
+      window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }, 100);
+  }
+
+  function showProgramUnggulan(){
+    programUnggulanShow = true;
+    descanShow = false;
+    sddiShow = false;
     setTimeout(() => {
       window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
     }, 100);
@@ -150,20 +160,12 @@
             </div>
           </div>
         </div>
-
 			</div>
 			<!-- /column -->
       {#if descanLoaded}
-        {#if !descanShow}
-          <div class="col-lg-12 text-center">
-            <button type="button" class="btn btn-outline-light mt-4" on:click={showDescan}>Desa Cinta Statistik { new Date().getFullYear() }</button>
-          </div>
-        {/if}
-        {#if !sddiShow}
         <div class="col-lg-12 text-center">
-          <button type="button" class="btn btn-outline-light mt-4" on:click={showSddi}>Satu Data Desa Indonesia (SDDI)</button>
+          <button type="button" class="btn btn-outline-light mt-4" on:click={showProgramUnggulan}>Program Unggulan</button>
         </div>
-        {/if}
       {/if}
 		</div>
 	<!-- /.row -->
@@ -178,6 +180,56 @@
 	{/each}
 </div> -->
 
+{#if programUnggulanShow}
+  <div class="container text-center mt-4">
+    <h2 class="fw-bold" style="color:#943126;">Program Unggulan</h2>
+    <p class="mb-4">Pilih program pembangunan desa yang menjadi fokus utama dalam<br>pengembangan potensi desa di Sumatera Selatan</p>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card shadow-none mb-4" style="border-color:#943126;">
+          <div class="card-body">
+            <div class="text-start">
+              <button class="d-flex flex-row btn text-start disabled" style="opacity:1;">
+                <div class="icon btn btn-circle btn-lg disabled me-2" style="background-color:#943126;">
+                  <i class="uil uil-analytics text-white"></i>
+                </div>
+                <h5 style="color:#943126;">Desa Cinta Statistik { new Date().getFullYear() }</h5>
+              </button>
+              <p>Program peningkatan kapasitas desa dalam pengumpulan, pengolahan, dan pemanfaatan data statistik untuk pembangunan desa yang berkelanjutan.</p>
+              <ul class="list-unstyled">
+                <li>✔️ Pelatihan perangkat desa</li>
+                <li>✔️ Pendampingan pengumpulan data</li>
+                <li>✔️ Visualisasi data desa</li>
+              </ul>
+            </div>
+            <button type="button" class="btn text-white" style="background-color:#943126;" on:click={showDescan}>Pelajari Lebih Lanjut</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card shadow-none mb-4" style="border-color:#943126;">
+          <div class="card-body">
+            <div class="text-start">
+              <button class="d-flex flex-row btn text-start disabled" style="opacity:1;">
+                <div class="icon btn btn-circle btn-lg disabled me-2" style="background-color:#943126;">
+                  <i class="uil uil-cloud text-white"></i>
+                </div>
+                <h5 style="color:#943126;">Satu Data Desa Indonesia (SDDI)</h5>
+              </button>
+              <p>Integrasi data desa dalam satu platform nasional untuk mendukung perencanaan pembangunan desa yang tepat sasaran dan berbasis bukti.</p>
+              <ul class="list-unstyled">
+                <li>✔️ Integrasi data lintas sektor</li>
+                <li>✔️ Dashboard monitoring desa</li>
+                <li>✔️ Akses data terbuka</li>
+              </ul>
+            </div>
+          <button type="button" class="btn text-white" style="background-color:#943126;" on:click={showSddi}>Pelajari Lebih Lanjut</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> 
+{/if}
 {#if descanShow}
   <div class="text-center mt-8">
     <p class="display-1 fs-36">
