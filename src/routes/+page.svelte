@@ -146,7 +146,7 @@
         <div class="card shadow-none" style="background-color:#943126;">
           <div class="card-body">
             <div class="col-lg-12 text-center">
-              <p class="lead fs-24 text-white font-weight-bold mb-2">Cari Desa di Provinsi Sumatera Selatan</p>
+              <p class="lead fs-24 text-white fw-bold mb-2">Cari Desa di Provinsi Sumatera Selatan</p>
               <form action="search">
                 <div class="input-group mb-3">
                   <input type="text" class="form-control" 
