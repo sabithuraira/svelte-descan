@@ -151,20 +151,20 @@
           </div>
         </div>
 
-        {#if descanLoaded}
-          {#if !descanShow}
-            <div class="col-lg-12 text-center">
-              <button type="button" class="btn btn-outline-light mt-4" on:click={showDescan}>Desa Cinta Statistik { new Date().getFullYear() }</button>
-            </div>
-          {/if}
-          {#if !sddiShow}
-          <div class="col-lg-12 text-center">
-            <button type="button" class="btn btn-outline-light mt-4" on:click={showSddi}>Satu Data Desa Indonesia (SDDI)</button>
-          </div>
-          {/if}
-        {/if}
 			</div>
 			<!-- /column -->
+      {#if descanLoaded}
+        {#if !descanShow}
+          <div class="col-lg-12 text-center">
+            <button type="button" class="btn btn-outline-light mt-4" on:click={showDescan}>Desa Cinta Statistik { new Date().getFullYear() }</button>
+          </div>
+        {/if}
+        {#if !sddiShow}
+        <div class="col-lg-12 text-center">
+          <button type="button" class="btn btn-outline-light mt-4" on:click={showSddi}>Satu Data Desa Indonesia (SDDI)</button>
+        </div>
+        {/if}
+      {/if}
 		</div>
 	<!-- /.row -->
 	</div>
