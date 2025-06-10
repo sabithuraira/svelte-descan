@@ -98,6 +98,19 @@
 <section class="wrapper image-wrapper bg-image {bigScreen ? 'h-100' : ''}"
 	data-image-src="/images/landing/songket.png"
 	style="background-image: url('/images/landing/songket.png');" >
+  <div class="m-2">
+    <img
+      class="img-responsive ml-2"
+      src="/images/prov-logo/logo1600.png"
+      alt=""
+      style="max-height:60px; width: auto"
+    />
+    <img
+      class="img-responsive ml-2"
+      src="/images/bps-logo/logo_bps_sumsel.png"
+      alt=""
+    />
+  </div>
 	<div class="container pb-8 pt-md-7 pb-md-6 text-center">
 		<div class="row">
 			<div class="col-lg-8 col-xl-7 col-xxl-6 mx-auto"
@@ -127,41 +140,28 @@
 					animation-direction: normal;
 					animation-fill-mode: both;">
 					Satu Data Desa Indonesia (SDDI)<br />
-					Provinsi Sumatera Selatan.
+					Provinsi Sumatera Selatan
 				</p>
-				<div data-cue="slideInDown"
-					data-group="page-title"
-					data-show="true"
-					style="animation-name: slideInDown;
-					animation-duration: 700ms;
-					animation-timing-function: ease;
-					animation-delay: 600ms;
-					animation-direction: normal;
-					animation-fill-mode: both;">
-					<figure class="img-responsive hover-scale rounded mb-8">
-            <img class="img-responsive mr-2"
-              src="/images/prov-logo/logo1600.png"
-              alt="" style="max-height:200px; width: auto" />
-            <img class="img-responsive ml-2"
-              src="/images/bps-logo/logo_bps.png"
-              alt="" style="max-height:150px; width: auto" />
-					</figure>
-				</div>
 
-				<div class="col-lg-12 text-center">
-					<form action="search">
-						<div class="input-group mb-3">
-							<input type="text" class="form-control" 
-								bind:value={keyword}
-								on:input={() => keywordSearch.set(keyword) }
-								placeholder="Ketik nama desa..." 
-								aria-label="Search">
-							<div class="input-group-append">
-								<button type="submit" class="input-group-text"><i class="uil uil-search"></i></button>
-							</div>
-						</div>
-					</form>
-				</div>
+        <div class="card shadow-none" style="background-color:#943126;">
+          <div class="card-body">
+            <div class="col-lg-12 text-center">
+              <p class="lead fs-24 text-white font-weight-bold mb-2">Cari Desa di Provinsi Sumatera Selatan</p>
+              <form action="search">
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" 
+                    bind:value={keyword}
+                    on:input={() => keywordSearch.set(keyword) }
+                    placeholder="Nama desa..." 
+                    aria-label="Search">
+                  <div class="input-group-append">
+                    <button type="submit" class="input-group-text"><i class="uil uil-search"></i>&nbsp;<span>Cari</span></button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
 
         {#if descanLoaded}
           {#if !descanShow}
