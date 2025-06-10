@@ -131,7 +131,7 @@
         kondisi = '';
       }
       return { ...item, kondisi: kondisi }; 
-    });
+    }).sort((a,b) => { return a.nilai - b.nilai; });
 		penduduk = value.jumlah_penduduk.sort((a,b) => { return b.nilai - a.nilai; });
 		sum_infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
