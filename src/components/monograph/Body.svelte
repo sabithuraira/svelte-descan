@@ -388,7 +388,7 @@
             </div>
 
             <div class="col-12">
-              <div class="row align-items-center counter-wrapper gy-6 text-center">
+              <div class="row align-items-center justify-content-center counter-wrapper gy-6 text-center">
                 {#each infrastruktur_ibadah as item}
                   <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
                       <div data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
@@ -455,7 +455,7 @@
             </div>
             <!-- /column -->
             <div class="col-lg-8 mt-lg-2">
-              <div class="row align-items-center counter-wrapper gy-6 text-center">
+              <div class="row align-items-start justify-content-center counter-wrapper gy-6 text-center">
 
                 {#each lembaga_keuangan as item}
                   <div class="col-md-4" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
