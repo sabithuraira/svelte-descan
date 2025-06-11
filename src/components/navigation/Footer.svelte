@@ -60,11 +60,6 @@
                 >SDG's For Sumsel</a
               >
             </li>
-            <li>
-              <a href="https://zi.bpssumsel.com" target="_blank"
-                >Zona Integritas</a
-              >
-            </li>
           </ul>
         </div>
       </div>
