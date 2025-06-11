@@ -231,8 +231,8 @@
     <div class="container">
       <div class="card shadow-none bg-pale-yellow card-border-bottom border-soft-yellow">
         <div class="card-body">
-          <p class="text-justify">DESA DAN POTENSINYA HARUS TERSAJI DENGAN BAIK SEBAGAI INFORMASI KEWILAYAHAN, GUNA MENDUKUNG PEMBANGUNAN PADA TINGKAT PEMERINTAHAN TERKECIL, PEMERINTAH PROVINSI SUMATERA SELATAN DAN BADAN PUSAT STATISTIK PROVINSI SUMATERA SELATAN HADIR BERSAMA BERKOLABORASI MEWUJUDKAN ”SATU DATA DESA INDONESIA” DALAM WUJUD “DESA BUMI SRIWIJAYA”.</p>
-          <p class="text-justify">“DESA BUMI SRIWIJAYA” MENYAJIKAN INFORMASI LENGKAP TENTANG POTENSI EKONOMI DAN KONDISI INFRASTRUKTUR DESA DAN KELURAHAN DI SELURUH WILAYAH SUMATERA SELATAN SEBAGAI UPAYA MENINGKATKAN LITERASI MASYARAKAT DESA UNTUK MENGERTI, MEMAHAMI DAN MEMANFAATKAN DATA UNTUK MEMBANGUN DESANYA. DENGAN “DESA BUMI SRIWIJAYA” MEWUJUDKAN KEBIJAKAN BERBASIS DATA UNTUK DESA YANG LEBIH MAJU MENUJU SUMSEL TERUS MAJU UNTUK SEMUA.</p>
+          <p class="text-justify">Desa dan potensinya harus tersaji dengan baik sebagai informasi kewilayahan, guna mendukung pembangunan pada tingkat pemerintahan terkecil. Pemerintah Provinsi Sumatera Selatan dan Badan Pusat Statistik Provinsi Sumatera Selatan hadir bersama berkolaborasi mewujudkan ”Satu Data Desa Indonesia” dalam wujud “Desa Bumi Sriwijaya”.</p>
+          <p class="text-justify">“Desa Bumi Sriwijaya” menyajikan informasi lengkap tentang potensi ekonomi dan kondisi infrastruktur desa dan kelurahan di seluruh wilayah Sumatera Selatan sebagai upaya meningkatkan literasi masyarakat desa untuk mengerti, memahami, dan memanfaatkan data untuk membangun desanya. Dengan “Desa Bumi Sriwijaya”, mewujudkan kebijakan berbasis data untuk desa yang lebih maju menuju Sumsel terus maju untuk semua.</p>
         </div>
       </div>
     </div>
