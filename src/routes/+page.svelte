@@ -34,7 +34,6 @@
   let descanLoaded = false;
   let descanShow = false;
   let sddiShow = false;
-  let programUnggulanShow = false;
   let bigScreen = false;
 
 	async function loadWilayah(){
@@ -72,15 +71,6 @@
   function showSddi(){
     sddiShow = true;
     descanShow = false;
-    setTimeout(() => {
-      window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
-    }, 100);
-  }
-
-  function showProgramUnggulan(){
-    programUnggulanShow = true;
-    descanShow = false;
-    sddiShow = false;
     setTimeout(() => {
       window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
     }, 100);
@@ -162,11 +152,6 @@
         </div>
 			</div>
 			<!-- /column -->
-      {#if descanLoaded}
-        <div class="col-lg-12 text-center">
-          <button type="button" class="btn btn-outline-light mt-4" on:click={showProgramUnggulan}>Program Unggulan</button>
-        </div>
-      {/if}
 		</div>
 	<!-- /.row -->
 	</div>
@@ -180,7 +165,7 @@
 	{/each}
 </div> -->
 
-{#if programUnggulanShow}
+{#if descanLoaded}
   <div class="container text-center mt-4">
     <h2 class="fw-bold" style="color:#943126;">Program Unggulan</h2>
     <p class="mb-4">Pilih program pembangunan desa yang menjadi fokus utama dalam<br>pengembangan potensi desa di Sumatera Selatan</p>
