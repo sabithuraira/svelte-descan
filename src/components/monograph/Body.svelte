@@ -319,7 +319,8 @@
 
 					<div class="p-2 text-center mx-5">
 						<i class="fa fa-quote-left text-black"></i>
-						<i class="font-italic ml-2">Kita kembalikan lagi kepada pola hidup sehat masyarakat kita. Entah pola makan, entah pola olahraga, itu yang digerakkan kesana. Entah lingkungannya, sanitasi, air bersih - <b>Joko Widodo</b></i>
+						<i class="font-italic ml-2">Mens Sana In Corpore Sano – Didalam Tubuh Yang Sehat Terdapat Jiwa Yang Kuat</i>
+						<i class="fa fa-quote-right text-black"></i>
 					</div>
 
 					<p class="lead fs-lg mb-5 text-center">
@@ -394,7 +395,8 @@
 
 					<div class="p-2 text-center mx-5">
 						<i class="fa fa-quote-left text-black"></i>
-						<i class="font-italic ml-2">Pendidikan mempunyai akar yang pahit, tapi buahnya manis - <b>Aristoteles</b></i>
+						<i class="font-italic ml-2">Pendidikan mempunyai akar yang pahit, tapi buahnya manis</i>
+						<i class="fa fa-quote-right text-black"></i>
 					</div>
 
 					<p class="lead fs-lg mb-5 text-center"> 
@@ -486,7 +488,8 @@
 
 					<div class="p-2 text-center mx-5">
 						<i class="fa fa-quote-left text-black"></i>
-						<i class="font-italic ml-2">Kita tidak berhenti berolahraga karena menjadi renta. Kita menjadi renta karena berhenti berolahraga - <b>Kenneth Cooper</b></i>
+						<i class="font-italic ml-2">Kita tidak berhenti berolahraga karena menjadi renta. Kita menjadi renta karena berhenti berolahraga</i>
+						<i class="fa fa-quote-right text-black"></i>
 					</div>
 
 					<p class="lead fs-lg mb-5 text-center"> 
