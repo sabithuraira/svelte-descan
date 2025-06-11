@@ -13,7 +13,7 @@
             alt="footer-logo"
           />
           <p class="mb-4">
-            © 2023 Developer 1600<br class="d-none d-lg-block" />Hak Cipta
+            © { new Date().getFullYear() } Developer 1600<br class="d-none d-lg-block" />Hak Cipta
           </p>
           <nav class="nav social social-white">
             <a
