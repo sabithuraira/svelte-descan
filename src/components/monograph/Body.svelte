@@ -284,7 +284,7 @@
     </div>
   </section>
 
-  <div class="tab-content" id="dataTabContent">
+  <div class="tab-content mb-8" id="dataTabContent">
     <div class="tab-pane fade show active" id="penduduk" role="tabpanel" aria-labelledby="penduduk-tab">
       <section class="wrapper bg-light" id="section_penduduk">
         <div class="container py-5">
@@ -378,7 +378,7 @@
         <div class="container py-5">
           <div class="row gx-lg-8 gx-xl-12 gy-10 gy-lg-0 ">
 
-            <div class="col-lg-4">
+            <div class="col-12 text-center mb-8">
               <h3 class="display-4 mb-3 pe-xl-10">Fasilitas Peribadatan</h3>
               <p class="mb-0 pe-xxl-10">
                 {#if infrastruktur_ibadah.length>0}
@@ -387,10 +387,10 @@
               </p>
             </div>
 
-            <div class="col-lg-8 mt-lg-2">
+            <div class="col-12">
               <div class="row align-items-center counter-wrapper gy-6 text-center">
                 {#each infrastruktur_ibadah as item}
-                  <div class="col-md-4">
+                  <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
                       <div data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
                         <span class="text-primary">
                         <i class="fa-solid fa-{metadataIbadah(item.nama_variabel).logo} fa-4x mb-2" width="70px"></i>
@@ -447,7 +447,7 @@
     </div>
 
     <div class="tab-pane fade" id="keuangan_ekonomi" role="tabpanel" aria-labelledby="keuangan_ekonomi-tab">
-      <section class="wrapper bg-soft-primary" id="section_keuangan_ekonomi">
+      <section class="wrapper bg-light" id="section_keuangan_ekonomi">
         <div class="container pt-5 my-3">
           <div class="row gx-lg-8 gx-xl-12 gy-10 gy-lg-0 align-items-center">
             <div class="col-lg-4 text-center text-lg-start">
