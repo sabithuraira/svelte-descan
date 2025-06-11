@@ -114,24 +114,15 @@
 	<div class="container pb-8 pt-md-7 pb-md-6 text-center">
 		<div class="row">
 			<div class="col-lg-8 col-xl-7 col-xxl-6 mx-auto">
-				<h1 class="display-7 text-white fs-60 px-md-15 px-lg-0">
+				<h1 class="display-7 text-white fs-60 px-md-15 px-lg-0 mb-4">
 					Desa Bumi <span class="underline-3 style-2 yellow">Sriwijaya</span>
 				</h1>
-				<p class="lead fs-36 text-white lh-sm mx-md-13 mx-lg-10"
-					data-cue="slideInDown"
-					data-group="page-title"
-					data-show="true"
-					style="animation-name: slideInDown;
-					animation-duration: 700ms;
-					animation-timing-function: ease;
-					animation-delay: 300ms;
-					animation-direction: normal;
-					animation-fill-mode: both;">
+				<p class="lead fs-36 text-white lh-sm mx-md-13 mx-lg-10 mb-4">
 					Satu Data Desa Indonesia (SDDI)<br />
 					Provinsi Sumatera Selatan
 				</p>
 
-        <div class="card shadow-none" style="background-color:#943126;">
+        <div class="card shadow-none mb-4" style="background-color:#943126;">
           <div class="card-body">
             <div class="col-lg-12 text-center">
               <p class="lead fs-24 text-white fw-bold mb-2">Cari Desa di Provinsi Sumatera Selatan</p>
