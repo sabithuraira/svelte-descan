@@ -1,5 +1,7 @@
 <script>
 // @ts-nocheck
+ 	import axios from 'axios'
+	import { urlApi } from '../../stores/generalStores';
 	import { infoWilayah, parentWilayah, childWilayah } from '../../stores/wilayahStores';
 	import { monografData } from '../../stores/monografStores';
 	import { infrastrukturKesehatan } from '../../stores/infraKesehatanStores';
@@ -7,6 +9,8 @@
 	import { labelKepalaWilayah } from '../../helper/labelWilayah';
   import Peta from './Peta.svelte';
   import { utils, writeFile } from 'xlsx';
+
+  let desa = [];
 
 	let info_wilayah = {
 		kode_prov: "",
@@ -111,6 +115,7 @@
 		if (value.kode_wilayah) {
 			info_wilayah = value;
       info_wilayah_loaded = true;
+      loadOtherDesa();
 		}
 	});
 
@@ -240,6 +245,17 @@
     worksheet["!cols"] = [ { wch: max_width } ];
     writeFile(workbook, `${info_wilayah.nama}.xlsx`);
   } 
+
+	async function loadOtherDesa(){
+		await axios
+			.get(`${$urlApi}wilayah/${info_wilayah.kode_prov}${info_wilayah.kode_kab}${info_wilayah.kode_kec}`)
+			.then(({data})=>{
+				desa = data.datas;
+        desa = desa.filter((item) => item.kode_wilayah != info_wilayah.kode_wilayah);
+			}).catch(({ response })=>{
+				console.error(response);
+			});
+	}
 </script>
 
 <section class="wrapper bg-light" id="section_download">
@@ -554,4 +570,57 @@
     <!--/.modal-dialog -->
   </div>
   <!--/.modal -->
+  
+  <section class="wrapper bg-light">
+    <div class="container pb-14 pb-md-16">
+      <div class="row mb-3">
+        <div class="col-md-10 col-xl-9 col-xxl-7 mx-auto text-center">
+          <h1 class="display-7 fs-40 fw-bold" style="color:#943126;">Jelajahi Desa Lainnya</h1>
+          <p class="mb-4">Temukan keunikan dan potensi desa-desa di Sumatera Selatan</p>
+        </div>
+        <!--/column -->
+      </div>
+      <!--/.row -->
+      <div class="position-relative">
+        <div class="shape rounded-circle bg-soft-yellow rellax w-16 h-16" data-rellax-speed="1" style="bottom: 0.5rem; right: -1.7rem;"></div>
+        <div class="shape rounded-circle bg-line red rellax w-16 h-16" data-rellax-speed="1" style="top: 0.5rem; left: -1.7rem;"></div>
+        <div class="swiper-container dots-closer mb-6" data-margin="0" data-dots="true" data-items-xxl="4" data-items-lg="3" data-items-md="2" data-items-xs="1">
+          <div class="swiper">
+            <div class="swiper-wrapper align-items-center">
+              {#each desa as item}
+                <div class="swiper-slide">
+                  <div class="item-inner">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="mb-2" style="color:#943126;">{item.nama}</h4>
+                        <p class="mb-4">{item.deskripsi.slice(0, 200).split(' ').slice(0, -1).join(' ')} ...</p>
+                        <a href="/monograph/{item.kode_wilayah}" class="btn btn-sm text-white" style="background-color:#943126;" on:click={() => goto(`/desa/${item.slug}`)}>Selengkapnya</a>
+                      </div>
+                      <!--/.card-body -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+                  <!-- /.item-inner -->
+                </div>
+                <!--/.swiper-slide -->
+              {/each}
+              <div class="swiper-slide">
+                <div class="item-inner">
+                  <a href="/search"><h2 class="mb-2" style="color:#943126;">Desa/Kelurahan Lainnya...</h2></a>
+                </div>
+                <!-- /.item-inner -->
+              </div>
+              <!--/.swiper-slide -->
+            </div>
+            <!--/.swiper-wrapper -->
+          </div>
+          <!-- /.swiper -->
+        </div>
+        <!-- /.swiper-container -->
+      </div>
+      <!-- /.position-relative -->
+    </div>
+    <!-- /.container -->
+  </section>
+  <!-- /section -->
 </div>
