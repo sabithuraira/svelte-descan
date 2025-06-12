@@ -277,7 +277,7 @@
 
   <section class="wrapper bg-light" id="section_data">
     <div class="container py-5">
-      <ul class="nav nav-tabs" id="dataTab" role="tablist">
+      <ul class="nav nav-tabs nav-pills" id="dataTab" role="tablist">
         <li class="nav-item" role="presentation">
           <button class="nav-link active" id="penduduk-tab" data-bs-toggle="tab" data-bs-target="#penduduk" type="button" role="tab" aria-controls="penduduk" aria-selected="true">Penduduk</button>
         </li>
