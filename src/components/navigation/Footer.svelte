@@ -13,7 +13,7 @@
             alt="footer-logo"
           />
           <p class="mb-4">
-            © { new Date().getFullYear() } Developer 1600<br class="d-none d-lg-block" />Hak Cipta
+            © { new Date().getFullYear() } Developer 1600<br class="d-none d-lg-block" />
           </p>
           <nav class="nav social social-white">
             <a
