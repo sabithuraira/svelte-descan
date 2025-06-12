@@ -46,34 +46,24 @@
 		switch (true) {
 			case data.includes("Balai Basarah"):
 				return { logo: 'gopuram', label: 'Balai Basarah'};
-				break;
 			case data.includes("Lainnya"):
 				return { logo: 'peace', label: 'Tempat Ibadah Lainnya'};
-				break;
 			case data.includes("Masjid"):
 				return { logo: 'mosque', label: 'Masjid'};
-				break;
 			case data.includes("Kapel"):
 				return { logo: 'church', label: 'Kapel'};
-				break;
 			case data.includes("Mushola"):
 				return { logo: 'mosque', label: 'Surau/Langgar/Mushola'};
-				break;
 			case data.includes("Pura"):
 				return { logo: 'gopuram', label: 'Pura'};
-				break;
 			case data.includes("Gereja Kristen"):
 				return { logo: 'church', label: 'Gereja Kristen'};
-				break;
 			case data.includes("Wihara"):
 				return { logo: 'vihara', label: 'Wihara'};
-				break;
 			case data.includes("Gereja Katolik"):
 				return { logo: 'church', label: 'Gereja Katolik'};
-				break;
 			case data.includes("Kelenteng"):
 				return { logo: 'vihara', label: 'Kelenteng'};
-				break;
 			default:
 				return { logo: '', label: ''};
 		}
@@ -95,6 +85,8 @@
 
   let sum_infrastruktur_ibadah = 0;
 
+  let sum_infrastruktur_kesehatan = 0;
+
   let sum_infrastruktur_pendidikan = 0;
 
   let sum_infrastruktur_ekonomi = 0;
@@ -108,8 +100,6 @@
   let sum_keluarga = 0;
 
   let sum_luas_wilayah = 0;
-
-  let sum_penyandang_disabilitas = 0;
 
 	infoWilayah.subscribe((value) => {
 		if (value.kode_wilayah) {
@@ -142,11 +132,10 @@
 		sum_infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_lembaga_keuangan = value.jumlah_lembaga_keuangan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_infrastruktur_olahraga = value.jumlah_infrastruktur_olahraga.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		sum_infrastruktur_olahraga = value.jumlah_infrastruktur_olahraga.reduce((acc,item) => { return item.kondisi != '' ? acc + 1 : acc + 0; }, 0);
 		sum_penduduk = value.jumlah_penduduk.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_keluarga = value.jumlah_keluarga.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_luas_wilayah = value.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_penyandang_disabilitas = value.penyandang_disabilitas.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 	});
 
 	pengurusLast.subscribe((value) => {
@@ -155,6 +144,7 @@
 
 	infrastrukturKesehatan.subscribe((value) => {	
 		infrastruktur_kesehatan = value.sort((a,b) => { return b.nilai - a.nilai; });
+    sum_infrastruktur_kesehatan = value.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 	});
 
   let content = "";
@@ -184,6 +174,10 @@
       niai: sum_keluarga,
     });
     rows.push({
+      variabel: "Jumlah Fasilitas Kesehatan",
+      niai: sum_infrastruktur_kesehatan,
+    });
+    rows.push({
       variabel: "Jumlah Tempat Ibadah",
       niai: sum_infrastruktur_ibadah,
     });
@@ -196,8 +190,12 @@
       niai: sum_infrastruktur_ekonomi,
     });
     rows.push({
-      variabel: "Jumlah Penyandang Disabilitas",
-      niai: sum_penyandang_disabilitas,
+      variabel: "Jumlah Lembaga Keuangan",
+      niai: sum_lembaga_keuangan,
+    });
+    rows.push({
+      variabel: "Jumlah Infrastruktur Olahraga",
+      niai: sum_infrastruktur_olahraga,
     });
     rows.push({
       variabel: penduduk[0].nama_variabel,
@@ -225,13 +223,19 @@
         niai: item.nilai,
       });
     });
+    infrastruktur_ekonomi.forEach((item) => {
+      rows.push({
+        variabel: item.nama_variabel,
+        niai: item.nilai,
+      });
+    });
     lembaga_keuangan.forEach((item) => {
       rows.push({
         variabel: item.nama_variabel,
         niai: item.nilai,
       });
     });
-    infrastruktur_ekonomi.forEach((item) => {
+    infrastruktur_olahraga.forEach((item) => {
       rows.push({
         variabel: item.nama_variabel,
         niai: item.nilai,
@@ -277,7 +281,7 @@
 
   <section class="wrapper bg-light" id="section_data">
     <div class="container py-5">
-      <ul class="nav nav-tabs nav-pills" id="dataTab" role="tablist">
+      <ul class="nav nav-tabs nav-pills justify-content-center" id="dataTab" role="tablist">
         <li class="nav-item" role="presentation">
           <button class="nav-link active" id="penduduk-tab" data-bs-toggle="tab" data-bs-target="#penduduk" type="button" role="tab" aria-controls="penduduk" aria-selected="true">Penduduk</button>
         </li>
@@ -358,9 +362,9 @@
       <section class="wrapper bg-light" id="section_kesehatan">
         <div class="container py-5">
           <div class="row">
-            <div class="col-lg-12 ">
-              <h2 class="display-4 text-center">
-                <span class="text-primary m-2">
+            <div class="col-lg-12">
+              <h2 class="display-4 text-center" style="color:#943126;">
+                <span class="m-2">
                   <i class="fa-solid fa-hospital"></i>
                 </span>
                 Fasilitas Kesehatan
@@ -372,18 +376,40 @@
                 <i class="fa fa-quote-right text-black"></i>
               </div>
 
-              <p class="lead fs-lg mb-5 text-center">
-                Berikut adalah daftar ketersediaan fasilitas kesehatan di { info_wilayah.nama }
+              {#if sum_infrastruktur_kesehatan!=0}
+                <p class="lead fs-lg text-center mt-8" style="color:#943126;">
+                  Daftar ketersediaan fasilitas kesehatan di { info_wilayah.nama }
+                </p>
+
+                <ul class="icon-list mb-0">
+                  <div class="row gy-3 gx-xl-8 mb-4">
+                      {#each infrastruktur_kesehatan as item}
+                        {#if item.nilai!=0 && item.nilai!=null}
+                          <div class="col-12 col-md-6 col-xl-4">
+                            <li class="icon-list bullet-bg bullet-soft-green" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
+                              <i class="uil uil-check"></i>{item.nilai} {item.nama_variabel.replace("Jumlah", "")}
+                            </li>
+                          </div>
+                        {/if}
+                      {/each}
+                  </div>
+                </ul>
+              {/if}
+
+              <p class="lead fs-lg text-center mt-8" style="color:#943126;">
+                Fasilitas kesehatan yang belum tersedia di { info_wilayah.nama }
               </p>
 
               <ul class="icon-list mb-0">
                 <div class="row gy-3 gx-xl-8">
-                  {#each infrastruktur_kesehatan as item, i}
-                    <div class="col-12 col-md-6 col-xl-4">
-                      <li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
-                        <i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==0 || item.nilai==null) ? item.nama_variabel.replace("Jumlah", "") : `${item.nilai} ${item.nama_variabel.replace("Jumlah", "")}` }
-                      </li>
-                    </div>
+                  {#each infrastruktur_kesehatan as item}
+                    {#if item.nilai==0 || item.nilai==null}
+                      <div class="col-12 col-md-6 col-xl-4">
+                        <li class="icon-list bullet-bg bullet-soft-red" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
+                          <i class="uil uil-multiply"></i>{item.nama_variabel.replace("Jumlah", "")}
+                        </li>
+                      </div>
+                    {/if}
                   {/each}
                 </div>
               </ul>
@@ -396,23 +422,27 @@
     <div class="tab-pane fade" id="peribadatan" role="tabpanel" aria-labelledby="peribadatan-tab">
       <section class="wrapper bg-light" id="section_peribadatan">
         <div class="container py-5">
-          <div class="row gx-lg-8 gx-xl-12 gy-10 gy-lg-0 ">
-
-            <div class="col-12 text-center mb-8">
-              <h3 class="display-4 mb-3 pe-xl-10">Fasilitas Peribadatan</h3>
-              <p class="mb-0 pe-xxl-10">
+          <div class="row">
+            <div class="col-lg-12">
+              <h2 class="display-4 text-center" style="color:#943126;">
+                <span class="m-2">
+                  <i class="fa-solid fa-book"></i>
+                </span>
+                Fasilitas Peribadatan
+              </h2>
+              <p class="p-2 text-center mx-5">
                 {#if infrastruktur_ibadah.length>0}
-                  {metadataIbadah(infrastruktur_ibadah[0].nama_variabel).label} menjadi fasilitas ibadah terbanyak di { info_wilayah.nama }
+                  <span style="color:#943126;">{metadataIbadah(infrastruktur_ibadah[0].nama_variabel).label}</span> menjadi fasilitas ibadah terbanyak di { info_wilayah.nama }
                 {/if}
               </p>
             </div>
 
-            <div class="col-12">
+            <div class="col-12 mt-8">
               <div class="row align-items-center justify-content-center counter-wrapper gy-6 text-center">
                 {#each infrastruktur_ibadah as item}
                   <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
                       <div data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
-                        <span class="text-primary">
+                        <span style="color:#943126;">
                         <i class="fa-solid fa-{metadataIbadah(item.nama_variabel).logo} fa-4x mb-2" width="70px"></i>
                         </span>
                         <h3 class="counter">{ item.nilai }</h3>
@@ -431,9 +461,9 @@
       <section class="wrapper bg-light" id="section_pendidikan">
         <div class="container py-5">
           <div class="row">
-            <div class="col-lg-12 ">
-              <h2 class="display-4 text-center">
-                <span class="text-primary m-2">
+            <div class="col-lg-12">
+              <h2 class="display-4 text-center" style="color:#943126;">
+                <span class="m-2">
                   <i class="fa-solid fa-book"></i>
                 </span>
                 Fasilitas Pendidikan
@@ -445,18 +475,40 @@
                 <i class="fa fa-quote-right text-black"></i>
               </div>
 
-              <p class="lead fs-lg mb-5 text-center"> 
-                Berikut adalah daftar ketersediaan fasilitas pendidikan di { info_wilayah.nama }
+              {#if sum_infrastruktur_pendidikan!=0}
+                <p class="lead fs-lg text-center mt-8" style="color:#943126;">
+                  Daftar ketersediaan fasilitas pendidikan di { info_wilayah.nama }
+                </p>
+
+                <ul class="icon-list mb-0">
+                  <div class="row gy-3 gx-xl-8 mb-4">
+                      {#each infrastruktur_pendidikan as item}
+                        {#if item.nilai!=0 && item.nilai!=null}
+                          <div class="col-12 col-md-6 col-xl-4">
+                            <li class="icon-list bullet-bg bullet-soft-green" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
+                              <i class="uil uil-check"></i>{item.nilai} {item.nama_variabel.replace("Jumlah", "")}
+                            </li>
+                          </div>
+                        {/if}
+                      {/each}
+                  </div>
+                </ul>
+              {/if}
+
+              <p class="lead fs-lg text-center mt-8" style="color:#943126;">
+                Fasilitas pendidikan yang belum tersedia di { info_wilayah.nama }
               </p>
 
               <ul class="icon-list mb-0">
-                <div class="row gy-4 gx-xl-12">
+                <div class="row gy-3 gx-xl-8">
                   {#each infrastruktur_pendidikan as item}
-                    <div class="col-12 col-md-6 col-xl-4">
-                      <li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
-                        <i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==0 || item.nilai==null) ? item.nama_variabel.replace("Jumlah", "") : `${item.nilai} ${item.nama_variabel.replace("Jumlah", "")}` }
-                      </li>
-                    </div>
+                    {#if item.nilai==0 || item.nilai==null}
+                      <div class="col-12 col-md-6 col-xl-4">
+                        <li class="icon-list bullet-bg bullet-soft-red" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
+                          <i class="uil uil-multiply"></i>{item.nama_variabel.replace("Jumlah", "")}
+                        </li>
+                      </div>
+                    {/if}
                   {/each}
                 </div>
               </ul>
@@ -468,42 +520,76 @@
 
     <div class="tab-pane fade" id="keuangan_ekonomi" role="tabpanel" aria-labelledby="keuangan_ekonomi-tab">
       <section class="wrapper bg-light" id="section_keuangan_ekonomi">
-        <div class="container pt-5 my-3">
-          <div class="row gx-lg-8 gx-xl-12 gy-10 gy-lg-0 align-items-center">
-            <div class="col-lg-4 text-center text-lg-start">
-              <h3 class="display-4 mb-3 pe-xxl-15">Infrastruktur Keuangan & Ekonomi</h3>
-            </div>
-            <!-- /column -->
-            <div class="col-lg-8 mt-lg-2">
-              <div class="row align-items-start justify-content-center counter-wrapper gy-6 text-center">
-
-                {#each lembaga_keuangan as item}
-                  <div class="col-md-4" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
-                    <h3 class="counter counter-lg">
-                      {#if item.nilai!='' && item.nilai!=null}
-                        {item.nilai}
-                      {:else}
-                        0
-                      {/if}
-                    </h3>
-                    <p>{ item.nama_variabel.replace("Jumlah", "") }</p>
-                  </div>
-                {/each}
-              </div>
-              <!--/.row -->
-            </div>
-            <!-- /column -->
-          </div>
-          <!-- /.row -->
-        </div>
-
-        <div class="container pb-5 pt-3">
+        <div class="container py-5">
           <div class="row">
-            <div class="col-lg-12 ">
+            <div class="col-lg-12">
+              <h2 class="display-4 text-center" style="color:#943126;">
+                <span class="m-2">
+                  <i class="fa-solid fa-shop"></i>
+                </span>
+                Infrastruktur Keuangan dan Ekonomi
+              </h2>
+            </div>
+
+            <div class="col-lg-6 ms-2 mt-4">
+              <div class="row">
+                <div class="col-lg-12 py-4" style="border:1px solid #943126; border-radius: 25px;">
+                  <p class="lead fs-lg" style="color:#943126;">
+                    <span class="m-2">
+                      <i class="fa-solid fa-bank"></i>
+                    </span>
+                    Bank di { info_wilayah.nama }
+                  </p>
+                  <ul class="icon-list mb-0">
+                    <div class="row gy-4 gx-xl-12">
+                      {#each lembaga_keuangan as item}
+                        {#if item.nama_variabel.includes("Bank")}
+                          <div class="col-12">
+                            <li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
+                              <i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==0 || item.nilai==null) ? item.nama_variabel.replace("Jumlah", "") : `${item.nilai} ${item.nama_variabel.replace("Jumlah", "")}` }
+                            </li>
+                          </div>
+                        {/if}
+                      {/each}
+                    </div>
+                  </ul>
+                </div>
+
+                <div class="col-lg-12 py-4 mt-4 mt-lg-12" style="border:1px solid #943126; border-radius: 25px;">
+                  <p class="lead fs-lg" style="color:#943126;">
+                    <span class="m-2">
+                      <i class="fa-solid fa-building"></i>
+                    </span>
+                    Koperasi di { info_wilayah.nama }
+                  </p>
+                  <ul class="icon-list mb-0">
+                    <div class="row gy-4 gx-xl-12">
+                      {#each lembaga_keuangan as item}
+                        {#if item.nama_variabel.includes("Koperasi")}
+                          <div class="col-12">
+                            <li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
+                              <i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==0 || item.nilai==null) ? item.nama_variabel.replace("Jumlah", "") : `${item.nilai} ${item.nama_variabel.replace("Jumlah", "")}` }
+                            </li>
+                          </div>
+                        {/if}
+                      {/each}
+                    </div>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-5 py-4 ms-2 mt-4 ms-lg-4" style="border:1px solid #943126; border-radius: 25px;">
+              <p class="lead fs-lg" style="color:#943126;">
+                <span class="m-2">
+                  <i class="fa-solid fa-cart-shopping"></i>
+                </span>
+                Fasilitas Ekonomi di { info_wilayah.nama }
+              </p>
               <ul class="icon-list mb-0">
                 <div class="row gy-4 gx-xl-12">
                   {#each infrastruktur_ekonomi as item}
-                    <div class="col-12 col-md-6 col-xl-4">
+                    <div class="col-12">
                       <li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
                         <i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==0 || item.nilai==null) ? item.nama_variabel.replace("Jumlah", "") : `${item.nilai} ${item.nama_variabel.replace("Jumlah", "")}` }
                       </li>
@@ -514,7 +600,6 @@
             </div>
           </div>
         </div>
-        <!-- /.container -->
       </section>
     </div>
 
@@ -522,9 +607,9 @@
       <section class="wrapper bg-light" id="section_olahraga">
         <div class="container py-5">
           <div class="row">
-            <div class="col-lg-12 ">
-              <h2 class="display-4 text-center">
-                <span class="text-primary m-2">
+            <div class="col-lg-12">
+              <h2 class="display-4 text-center" style="color:#943126;">
+                <span class="m-2">
                   <i class="fa-solid fa-running"></i>
                 </span>
                 Fasilitas Olahraga
@@ -536,18 +621,40 @@
                 <i class="fa fa-quote-right text-black"></i>
               </div>
 
-              <p class="lead fs-lg mb-5 text-center"> 
-                Berikut adalah daftar ketersediaan fasilitas olahraga di { info_wilayah.nama }
+              {#if sum_infrastruktur_olahraga!=0}
+                <p class="lead fs-lg text-center mt-8" style="color:#943126;">
+                  Daftar ketersediaan fasilitas olahraga di { info_wilayah.nama }
+                </p>
+
+                <ul class="icon-list mb-0">
+                  <div class="row gy-3 gx-xl-8 mb-4">
+                      {#each infrastruktur_olahraga as item}
+                        {#if item.kondisi!=''}
+                          <div class="col-12 col-md-6 col-xl-4">
+                            <li class="icon-list bullet-bg bullet-soft-green" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
+                              <i class="uil uil-check"></i>{item.nama_variabel.replace("Ketersediaan fasilitas lapangan: ", "")} (kondisi {item.kondisi})
+                            </li>
+                          </div>
+                        {/if}
+                      {/each}
+                  </div>
+                </ul>
+              {/if}
+
+              <p class="lead fs-lg text-center mt-8" style="color:#943126;">
+                Fasilitas olahraga yang belum tersedia di { info_wilayah.nama }
               </p>
 
               <ul class="icon-list mb-0">
-                <div class="row gy-4 gx-xl-12">
+                <div class="row gy-3 gx-xl-8">
                   {#each infrastruktur_olahraga as item}
-                    <div class="col-12 col-md-6 col-xl-4">
-                      <li class=" icon-list bullet-bg { (item.nilai==4 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
-                        <i class="uil uil-{ (item.nilai==4 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==4 || item.nilai==null) ? item.nama_variabel.replace("Ketersediaan fasilitas lapangan: ", "") : `${item.nama_variabel.replace("Ketersediaan fasilitas lapangan: ", "")} (kondisi ${item.kondisi})` }
-                      </li>
-                    </div>
+                    {#if item.kondisi==''}
+                      <div class="col-12 col-md-6 col-xl-4">
+                        <li class="icon-list bullet-bg bullet-soft-red" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
+                          <i class="uil uil-multiply"></i>{item.nama_variabel.replace("Ketersediaan fasilitas lapangan: ", "")}
+                        </li>
+                      </div>
+                    {/if}
                   {/each}
                 </div>
               </ul>
