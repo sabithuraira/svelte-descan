@@ -3,7 +3,6 @@
 
 	import { infoWilayah, descanStatus } from '../../stores/wilayahStores';
 	import { monografData } from '../../stores/monografStores';
-	import { umkmData } from '../../stores/umkmStores';
 	import { infrastrukturKesehatan } from '../../stores/infraKesehatanStores';
 	import { infrastrukturOlahraga } from '../../stores/infraOlahragaStores';
 	import { pengurusLast } from '../../stores/pengurusStores';
@@ -17,8 +16,6 @@
 	let sum_infrastruktur_ekonomi = '0';
 
 	let sum_lembaga_keuangan = '0';
-	let sum_industri = '0';
-	let sum_penyandang_disabilitas = '0';
 
   let sum_infrastruktur_olahraga = '0';
 
@@ -74,7 +71,6 @@
 		sum_penduduk = value.jumlah_penduduk.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_keluarga = value.jumlah_keluarga.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 		sum_luas_wilayah = value.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_penyandang_disabilitas = value.penyandang_disabilitas.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 
 		contentProfile.push(
 			{ label: "Luas Wilayah", value: `${sum_luas_wilayah} Km<sup>2</sup>`, icon: "map", url: ""},
@@ -83,15 +79,7 @@
 			{ label: "Tempat Ibadah", value: sum_infrastruktur_ibadah, icon: "moon", url: ""}, 
 			{ label: "Fasilitas Pendidikan", value: sum_infrastruktur_pendidikan, icon: "book", url: ""}, 
 			{ label: "Fasilitas Ekonomi", value: sum_infrastruktur_ekonomi, icon: "store", url: ""}, 
-			{ label: "Penyandang Disabilitas", value: sum_penyandang_disabilitas, icon: "wheelchair", url: ""}, 
     );
-	});
-
-	umkmData.subscribe((value) => {
-		sum_industri = value.industri.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		contentProfile.push(
-			{ label: "Industri Mikro & Kecil", value: sum_industri, icon: "building", url: ""}, 
-		);
 	});
 
 	infrastrukturKesehatan.subscribe((value) => {
