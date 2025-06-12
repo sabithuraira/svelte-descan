@@ -311,8 +311,8 @@
                 <div class="col-6 text-center">
                   <img class="img-fluid" src="/images/img/illustrations/i1.png"
                   srcset="/images/img/illustrations/i1@2x.png 2x" alt="" style="height:200px; width: auto;" />
-                  <h2>Laki-Laki</h2>
-                  <h1>
+                  <h2 class="display-5">Laki-Laki</h2>
+                  <h1 style="color: #943126;">
                     {#if penduduk[0] }
                       { penduduk[0].nilai==null ? 0 : penduduk[0].nilai }
                     {:else}
@@ -323,8 +323,8 @@
                 <div class="col-6 text-center">
                   <img class="img-fluid" src="/images/img/illustrations/i7.png"
                   srcset="/images/img/illustrations/i7@2x.png 2x" alt="" style="height:200px; width: auto" />
-                  <h2>Perempuan</h2>
-                  <h1>
+                  <h2 class="display-5">Perempuan</h2>
+                  <h1 style="color: #943126;">
                     {#if penduduk[1] }
                       { penduduk[1].nilai==null ? 0 : penduduk[1].nilai }
                     {:else}
@@ -336,12 +336,16 @@
             </div>
             
             <div class="col-lg-6">
-              <h2 class="display-4 mb-3">Penduduk</h2>
+              <h2 class="display-4 mb-3" style="color:#943126;">Penduduk</h2>
               <p class="lead fs-lg">Jumlah Penduduk di { info_wilayah.nama } sebanyak 
-              <span class="fs-30">{ sum_penduduk }</span> jiwa</p>
+              <span class="fs-30" style="color:#943126;">{ sum_penduduk }</span> jiwa</p>
 
-              <p class="mb-6">Karakteristik penduduk di Desa/Kelurahan { info_wilayah.nama } cenderung <b>didominasi</b> oleh 	
-                laki-laki
+              <p class="mb-6">Karakteristik penduduk di Desa/Kelurahan { info_wilayah.nama } cenderung <b>didominasi</b> oleh
+                {#if penduduk[0].nilai > penduduk[1].nilai}
+                  <span style="color:#943126;">laki-laki</span>
+                {:else}
+                  <span style="color:#943126;">perempuan</span>.
+                {/if}
               </p>
             </div>
             
