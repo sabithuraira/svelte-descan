@@ -261,7 +261,7 @@
 <section class="wrapper bg-light" id="section_download">
   <div class="container pt-8">
     <div class="d-flex flex-row-reverse">
-      <a href="" class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#modalDownload">Download</a>
+      <a href="" class="btn mx-1 text-white" style="background-color: #943126;" data-bs-toggle="modal" data-bs-target="#modalDownload">Download</a>
     </div>
   </div>
 </section>
@@ -560,8 +560,8 @@
         <div class="modal-body">
           <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           <p>Download halaman ini dengan format:</p>
-          <a href="" class="btn btn btn-primary mx-1" data-bs-dismiss="modal" on:click={downloadPDF}>PDF</a>
-          <a href="" class="btn btn btn-primary mx-1" data-bs-dismiss="modal" on:click={downloadExcel}>Excel</a>
+          <a href="" class="btn text-white" style="background-color: #943126;" data-bs-dismiss="modal" on:click={downloadPDF}>PDF</a>
+          <a href="" class="btn text-white" style="background-color: #943126;" data-bs-dismiss="modal" on:click={downloadExcel}>Excel</a>
         </div>
         <!--/.modal-body -->
       </div>
