@@ -62,4 +62,11 @@
   });
 </script>
 
-<div style="height: 400px; width: 100%;" use:createMap></div>
+<div class="container p-4" style="border: 1px solid #943126; border-radius: 25px;">
+  <h2 class="display-4 text-center mb-4" style="color:#943126;">
+    <span class="m-2">
+      <i class="fa-solid fa-map"></i>
+    </span>Peta Wilayah dan Infrastruktur Desa
+  </h2>
+  <div style="height: 400px; width: 100%; border-radius: 25px;" use:createMap></div>
+</div>
