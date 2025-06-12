@@ -4,22 +4,22 @@
 </script>
 
 <header class="wrapper bg-soft-primary">
-	<nav class="navbar navbar-expand-lg center-logo bg-image position-absolute navbar-dark"
+	<nav class="navbar navbar-expand-lg center-logo bg-image position-absolute navbar-dark py-2"
 		data-image-src="/images/img/photos/bg2.jpg">
-		<div class="container justify-content-between align-items-center mx-1 " style="max-width:100%">
+		<div class="container justify-content-between align-items-center mx-1" style="max-width:100%">
 			<div class="d-flex flex-row w-100 justify-content-between align-items-center d-lg-none">
 				<div class="navbar-brand py-2">
 				<a href="/">
 					<img
 					class="logo-dark"
-					src="/images/logo/logofont.png"
-					srcset="/images/logo/logofont.png 1x"
+					src="/images/logo/logofont-white.png"
+					srcset="/images/logo/logofont-white.png 1x"
 					alt=""
 					/>
 					<img
 					class="logo-light"
-					src="/images/logo/logofont.png"
-					srcset="/images/logo/logofont.png 1x"
+					src="/images/logo/logofont-white.png"
+					srcset="/images/logo/logofont-white.png 1x"
 					alt=""
 					/>
 				</a>
@@ -52,7 +52,7 @@
 			<div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">
 				<div class="navbar-brand px-2">
 					<a href="/">
-						<img src="/images/logo/logofont.png" srcset="/images/logo/logofont.png 1x" alt="header-logo"/>
+						<img src="/images/logo/logofont-white.png" srcset="/images/logo/logofont-white.png 1x" alt="header-logo"/>
 					</a>
 				</div>
 
