@@ -822,8 +822,8 @@
   </div>
   <!--/.modal -->
   
-  <section class="wrapper bg-light">
-    <div class="container pb-14 pb-md-16">
+  <section class="wrapper bg-soft-primary">
+    <div class="container pb-14 pb-md-16 pt-md-10">
       <div class="row mb-3">
         <div class="col-md-10 col-xl-9 col-xxl-7 mx-auto text-center">
           <h1 class="display-7 fs-40 fw-bold" style="color:#943126;">Jelajahi Desa Lainnya</h1>
@@ -855,21 +855,21 @@
                 </div>
                 <!--/.swiper-slide -->
               {/each}
-              <div class="swiper-slide">
-                <div class="item-inner">
-                  <a href="/search"><h2 class="mb-2" style="color:#943126;">Desa/Kelurahan Lainnya...</h2></a>
-                </div>
-                <!-- /.item-inner -->
-              </div>
-              <!--/.swiper-slide -->
             </div>
             <!--/.swiper-wrapper -->
           </div>
           <!-- /.swiper -->
         </div>
         <!-- /.swiper-container -->
+                    
       </div>
       <!-- /.position-relative -->
+
+      
+        <div class="row mb-3 pt-5">
+            <div class="col-md-10 col-xl-9 col-xxl-7 mx-auto text-center">
+            <a href="/search" class="btn btn-lg text-white btn-outline rounded-pill" style="background-color:#943126;">Cari Desa/Kelurahan Lainnya...</a>
+        </div>
     </div>
     <!-- /.container -->
   </section>
