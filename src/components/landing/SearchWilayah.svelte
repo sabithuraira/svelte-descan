@@ -48,7 +48,7 @@
   })
 </script>
 
-<div class="card shadow-none border-light">
+<div class="card shadow-none bg-soft-primary" style="border: none">
   <div class="card-body">
     <div class="row">
       <div class="col-6">
@@ -75,7 +75,7 @@
 <div class="d-flex flex-wrap justify-content-center align-items-center">
   <ul class="list-group list-group-flush mb-8">
     {#each desa as d}
-      <li class="list-group-item m-0">
+      <li class="list-group-item m-0 bg-soft-primary">
         <div class="text-center">
           <a href="/monograph/{d.kode_wilayah}">
             <p class="text-dark mb-0">{d.nama}</p>

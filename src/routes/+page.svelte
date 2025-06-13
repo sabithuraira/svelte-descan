@@ -168,7 +168,7 @@
 	{/each}
 </div> -->
 
-<div class="container text-center mt-4">
+<div class="container text-center mt-4 mb-2">
   <h2 class="fw-bold" style="color:#943126;">Program Unggulan</h2>
   <p class="mb-4">Program pembangunan desa yang menjadi fokus utama dalam<br>pengembangan potensi desa di Sumatera Selatan</p>
   <div class="row align-items-stretch">
@@ -221,8 +221,8 @@
   </div>
 </div> 
 {#if descanShow}
-  <div class="text-center mt-8">
-    <p class="display-1 fs-36">
+  <div class="text-center bg-soft-primary pt-4">
+    <p class="display-1 fs-36 fw-bold" style="color:#943126;">
     Desa Cinta Statistik<br />
     Provinsi Sumatera Selatan Tahun { new Date().getFullYear() }
     </p>
@@ -234,7 +234,9 @@
       </div>
     </div>
   </div>
-  <Peta desa={descan}/>
+  <div class="bg-soft-primary">
+    <Peta desa={descan}/>
+  </div>
   <!-- <div class="container mt-8">
     <div class="row align-items-stretch">
       <div class="col text-center mb-4">
@@ -251,8 +253,8 @@
   </div> -->
 {/if}
 {#if sddiShow}
-  <div class="text-center text-secondary mt-8">
-    <p class="display-1 fs-36">
+  <div class="text-center text-secondary bg-soft-primary pt-4">
+    <p class="display-1 fs-36 fw-bold" style="color:#943126;">
     Satu Data Desa Indonesia (SDDI)<br />
     Provinsi Sumatera Selatan Tahun { new Date().getFullYear() }
     </p>
@@ -264,9 +266,11 @@
         </div>
       </div>
     </div>
-    <p class="display-1 fs-24 mt-4 mb-0">Cari Desa...</p>
+    <p class="display-1 fs-24 fw-bold mt-4 mb-0">Cari Desa...</p>
   </div>
-  <div class="container">
-    <SearchWilayah />
+  <div class="bg-soft-primary">
+    <div class="container bg-soft-primary">
+      <SearchWilayah />
+    </div>
   </div>
 {/if}
