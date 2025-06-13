@@ -235,7 +235,7 @@
     </div>
   </div>
   <Peta desa={descan}/>
-  <div class="container mt-8">
+  <!-- <div class="container mt-8">
     <div class="row align-items-stretch">
       <div class="col text-center mb-4">
         <p class="display-1 fs-36 fw-bold" style="color:#943126;">{kategoriDesa.reduce((acc, item) => acc + item.total, 0)}</p>
@@ -248,7 +248,7 @@
         </div>
       {/each}
     </div>
-  </div>
+  </div> -->
 {/if}
 {#if sddiShow}
   <div class="text-center text-secondary mt-8">
