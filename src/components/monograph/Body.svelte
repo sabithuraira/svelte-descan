@@ -7,6 +7,12 @@
 	import { infrastrukturKesehatan } from '../../stores/infraKesehatanStores';
 	import { pengurusLast } from '../../stores/pengurusStores';
 	import { labelKepalaWilayah } from '../../helper/labelWilayah';
+  import {
+    informasiInternet,
+    menaraBTS,
+    operatorSeluler,
+    sinyalTelepon,
+  } from "../../stores/infraKomunikasiInformasiStores";
   import Peta from './Peta.svelte';
   import { utils, writeFile } from 'xlsx';
 
@@ -81,6 +87,14 @@
 
 	let infrastruktur_olahraga = [];
 
+  let informasi_internet = [];
+
+  let menara_bts = [];
+
+  let operator_seluler = [];
+
+  let sinyal_telepon = [];
+
 	let penduduk = [];
 
   let sum_infrastruktur_ibadah = 0;
@@ -147,6 +161,52 @@
     sum_infrastruktur_kesehatan = value.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
 	});
 
+  informasiInternet.subscribe((value) => {
+    informasi_internet = value;
+    if (informasi_internet.length > 0) {
+      let sinyal = '';
+      if (Number(informasi_internet[1].nilai) == 1) {
+        sinyal = '4G/LTE';
+      } else if (Number(informasi_internet[1].nilai) == 2) {
+        sinyal = '3G/H/H+/EVDO';
+      } else if (Number(informasi_internet[1].nilai) == 3) {
+        sinyal = '2,5G/E/GPRS';
+      } else {
+        sinyal = '';
+      }
+      informasi_internet[1].sinyal = sinyal;
+    }
+    console.log(informasi_internet);
+  });
+
+  menaraBTS.subscribe((value) => {
+    menara_bts = value;
+    console.log(menara_bts);
+  });
+
+  operatorSeluler.subscribe((value) => {
+    operator_seluler = value;
+    console.log(operator_seluler);
+  });
+
+  sinyalTelepon.subscribe((value) => {
+    sinyal_telepon = value;
+    if (sinyal_telepon.length > 0) {
+      let sinyal = '';
+      if (Number(sinyal_telepon[0].nilai) == 1) {
+        sinyal = 'Sinyal sangat kuat';
+      } else if (Number(sinyal_telepon[0].nilai) == 2) {
+        sinyal = 'Sinyal kuat';
+      } else if (Number(sinyal_telepon[0].nilai) == 3) {
+        sinyal = 'Sinyal lemah';
+      } else {
+        sinyal = '';
+      }
+      sinyal_telepon[0].sinyal = sinyal; 
+    }
+    console.log(sinyal_telepon);
+  });
+
   let content = "";
 
   function downloadPDF(){
@@ -196,6 +256,22 @@
     rows.push({
       variabel: "Jumlah Infrastruktur Olahraga",
       niai: sum_infrastruktur_olahraga,
+    });
+    rows.push({
+      variabel: "Jumlah Menara BTS",
+      niai: menara_bts[0].nilai,
+    });
+    rows.push({
+      variabel: "Jumlah Operator Layanan Komunikasi Telepon Seluler Handphone",
+      niai: operator_seluler[0].nilai,
+    });
+    rows.push({
+      variabel: "Sinyal Telepon Seluler Handphone",
+      niai: sinyal_telepon[0].sinyal,
+    });
+    rows.push({
+      variabel: "Sinyal Internet Telepon Seluler Handphone",
+      niai: informasi_internet[1].sinyal,
     });
     rows.push({
       variabel: penduduk[0].nama_variabel,
@@ -299,6 +375,9 @@
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="olahraga-tab" data-bs-toggle="tab" data-bs-target="#olahraga" type="button" role="tab" aria-controls="olahraga" aria-selected="false">Olahraga</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="telekomunikasi-tab" data-bs-toggle="tab" data-bs-target="#telekomunikasi" type="button" role="tab" aria-controls="telekomunikasi" aria-selected="false">Telekomunikasi</button>
         </li>
       </ul>
     </div>
@@ -545,7 +624,7 @@
                       {#each lembaga_keuangan as item}
                         {#if item.nama_variabel.includes("Bank")}
                           <div class="col-12">
-                            <li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
+                            <li class="icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
                               <i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==0 || item.nilai==null) ? item.nama_variabel.replace("Jumlah", "") : `${item.nilai} ${item.nama_variabel.replace("Jumlah", "")}` }
                             </li>
                           </div>
@@ -567,7 +646,7 @@
                       {#each lembaga_keuangan as item}
                         {#if item.nama_variabel.includes("Koperasi")}
                           <div class="col-12">
-                            <li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
+                            <li class="icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
                               <i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==0 || item.nilai==null) ? item.nama_variabel.replace("Jumlah", "") : `${item.nilai} ${item.nama_variabel.replace("Jumlah", "")}` }
                             </li>
                           </div>
@@ -590,7 +669,7 @@
                 <div class="row gy-4 gx-xl-12">
                   {#each infrastruktur_ekonomi as item}
                     <div class="col-12">
-                      <li class=" icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
+                      <li class="icon-list bullet-bg { (item.nilai==0 || item.nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
                         <i class="uil uil-{ (item.nilai==0 || item.nilai==null) ? 'multiply' : 'check' }"></i>{ (item.nilai==0 || item.nilai==null) ? item.nama_variabel.replace("Jumlah", "") : `${item.nilai} ${item.nama_variabel.replace("Jumlah", "")}` }
                       </li>
                     </div>
@@ -656,6 +735,71 @@
                       </div>
                     {/if}
                   {/each}
+                </div>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="tab-pane fade" id="telekomunikasi" role="tabpanel" aria-labelledby="telekomunikasi-tab">
+      <section class="wrapper bg-light" id="section_telekomunikasi">
+        <div class="container py-5">
+          <div class="row justify-content-center">
+            <div class="col-lg-12">
+              <h2 class="display-4 text-center" style="color:#943126;">
+                <span class="m-2">
+                  <i class="fa-solid fa-tower-broadcast"></i>
+                </span>
+                Infrastruktur Telekomunikasi
+              </h2>
+            </div>
+
+            <div class="col-lg-5 py-4 ms-2 mt-4" style="border:1px solid #943126; border-radius: 25px;">
+              <p class="lead fs-lg" style="color:#943126;">
+                <span class="m-2">
+                  <i class="fa-solid fa-phone"></i>
+                </span>
+                Infrastruktur Telekomunikasi di { info_wilayah.nama }
+              </p>
+              <ul class="icon-list mb-0">
+                <div class="row gy-4 gx-xl-12">
+                  {#if menara_bts.length>0}
+                    <div class="col-12">
+                      <li class="icon-list bullet-bg { (menara_bts[0].nilai==0 || menara_bts[0].nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (menara_bts[0].sumber=='' || menara_bts[0].sumber==null) ? '-' : menara_bts[0].sumber }">
+                        <i class="uil uil-{ (menara_bts[0].nilai==0 || menara_bts[0].nilai==null) ? 'multiply' : 'check' }"></i>{ (menara_bts[0].nilai==0 || menara_bts[0].nilai==null) ? menara_bts[0].nama_variabel.replace("Jumlah", "") : `${menara_bts[0].nilai} ${menara_bts[0].nama_variabel.replace("Jumlah", "")}` }
+                      </li>
+                    </div>
+                    <div class="col-12">
+                      <li class="icon-list bullet-bg { (operator_seluler[0].nilai==0 || operator_seluler[0].nilai==null) ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (operator_seluler[0].sumber=='' || operator_seluler[0].sumber==null) ? '-' : operator_seluler[0].sumber }">
+                        <i class="uil uil-{ (operator_seluler[0].nilai==0 || operator_seluler[0].nilai==null) ? 'multiply' : 'check' }"></i>{ (operator_seluler[0].nilai==0 || operator_seluler[0].nilai==null) ? operator_seluler[0].nama_variabel.replace("Jumlah", "") : `${operator_seluler[0].nilai} ${operator_seluler[0].nama_variabel.replace("Jumlah", "")}` }
+                      </li>
+                    </div>
+                  {/if}
+                </div>
+              </ul>
+            </div>
+
+            <div class="col-lg-5 py-4 ms-2 mt-4 ms-lg-4" style="border:1px solid #943126; border-radius: 25px;">
+              <p class="lead fs-lg" style="color:#943126;">
+                <span class="m-2">
+                  <i class="fa-solid fa-signal"></i>
+                </span>
+                Kekuatan Sinyal di { info_wilayah.nama }
+              </p>
+              <ul class="icon-list mb-0">
+                <div class="row gy-4 gx-xl-12">
+                  <div class="col-12">
+                    <li class="icon-list bullet-bg { sinyal_telepon[0].sinyal=='' ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (sinyal_telepon[0].sumber=='' || sinyal_telepon[0].sumber==null) ? '-' : sinyal_telepon[0].sumber }">
+                      <i class="uil uil-{ (sinyal_telepon[0].sinyal=='') ? 'multiply' : 'check' }"></i>{ sinyal_telepon[0].sinyal=='' ? sinyal_telepon[0].nama_variabel.replace("Jumlah", "") : `${sinyal_telepon[0].nama_variabel.replace("Jumlah", "")} (${sinyal_telepon[0].sinyal})` }
+                    </li>
+                  </div>
+                  <div class="col-12">
+                    <li class="icon-list bullet-bg { informasi_internet[1].sinyal=='' ? 'bullet-soft-red' : 'bullet-soft-green' }" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (informasi_internet[1].sumber=='' || informasi_internet[1].sumber==null) ? '-' : informasi_internet[1].sumber }">
+                      <i class="uil uil-{ (informasi_internet[1].sinyal=='') ? 'multiply' : 'check' }"></i>{ informasi_internet[1].sinyal=='' ? informasi_internet[1].nama_variabel.replace("Jumlah", "") : `${informasi_internet[1].nama_variabel.replace("Jumlah", "")} (${informasi_internet[1].sinyal})` }
+                    </li>
+                  </div>
                 </div>
               </ul>
             </div>

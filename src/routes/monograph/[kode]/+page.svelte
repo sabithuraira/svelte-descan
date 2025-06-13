@@ -13,6 +13,12 @@
 	/** @type {import('./$types').PageData} */
 	export let data;
 
+  import {
+    informasiInternet,
+    menaraBTS,
+    operatorSeluler,
+    sinyalTelepon,
+  } from "../../../stores/infraKomunikasiInformasiStores";
 	import { infoWilayah, parentWilayah, childWilayah, deskripsi, descanStatus } from '../../../stores/wilayahStores';
 	import { monografData } from '../../../stores/monografStores';
 	import { umkmData } from '../../../stores/umkmStores';
@@ -36,38 +42,39 @@
 					console.error(response)
 				})
 
-			await axios
-				.get(`${$urlApi}descan/${data.kode}`)
-				.then(({data})=>{
-          if(data.datas.length > 0)
-            if (data.datas[0].tahun == new Date().getFullYear())
-              descanStatus.set(true);
-            else
-              descanStatus.set(false);
-          else
-					  descanStatus.set(false);
-				}).catch(({ response })=>{
-					console.error(response)
-				})
-
-			await axios
-				.get(`${$urlApi}wilayah/${data.kode}/deskripsi`)
-				.then(({data})=>{
-					deskripsi.set(data.datas.deskripsi);
-				}).catch(({ response })=>{
-					console.error(response)
-				})
-
-			await axios
-				.get(`${$urlApi}pengurus/${data.kode}/last`)
-				.then(({data})=>{
-					pengurusLast.set(data.datas);
-				}).catch(({ response })=>{
-					console.error(response)
-				})
 		}
 
-		await axios
+    await axios
+      .get(`${$urlApi}descan/${data.kode}`)
+      .then(({data})=>{
+        if(data.datas.length > 0)
+          if (data.datas[0].tahun == new Date().getFullYear())
+            descanStatus.set(true);
+          else
+            descanStatus.set(false);
+        else
+          descanStatus.set(false);
+      }).catch(({ response })=>{
+        console.error(response);
+      });
+
+    await axios
+      .get(`${$urlApi}wilayah/${data.kode}/deskripsi`)
+      .then(({data})=>{
+        deskripsi.set(data.datas.deskripsi);
+      }).catch(({ response })=>{
+        console.error(response);
+      });
+
+    await axios
+      .get(`${$urlApi}pengurus/${data.kode}/last`)
+      .then(({data})=>{
+        pengurusLast.set(data.datas);
+      }).catch(({ response })=>{
+        console.error(response);
+      });
+
+    await axios
 			.get(`${$urlApi}dashboard/${data.kode}/monograph`)
 			.then(({data})=>{
 				let tempData = data.datas;
@@ -99,47 +106,35 @@
 				infrastrukturOlahraga.set(tempData.filter(item => item.kategori_variabel=='lapangan_olahraga'));
 
 			}).catch(({ response })=>{
-				console.error(response)
-			})
+				console.error(response);
+			});
 
-		// await axios
-		// 	.get(`${$urlApi}penduduk/${data.kode}/list?jenis_kelamin=1`)
-		// 	.then(({data})=>{
-		// 		let tempData = data.datas.total;
-		// 		monografData.update((value) => {
-		// 			let idx = value.jumlah_penduduk.findIndex(item => item.nama_variabel == 'Jumlah penduduk laki-laki');
-		// 			value.jumlah_penduduk[idx].nilai = tempData;					
-		// 			return value;
-		// 		});
-		// 	}).catch(({response})=>{
-		// 		console.error(response)
-		// 	})
-		//
-		// await axios
-		// 	.get(`${$urlApi}penduduk/${data.kode}/list?jenis_kelamin=2`)
-		// 	.then(({data})=>{
-		// 		let tempData = data.datas.total;
-		// 		monografData.update((value) => {
-		// 			let idx = value.jumlah_penduduk.findIndex(item => item.nama_variabel == 'Jumlah penduduk perempuan');
-		// 			value.jumlah_penduduk[idx].nilai = tempData;					
-		// 			return value;
-		// 		});
-		// 	}).catch(({response})=>{
-		// 		console.error(response)
-		// 	})
-		//
-		// await axios
-		// 	.get(`${$urlApi}keluarga_miskin/${data.kode}/list`)
-		// 	.then(({data})=>{
-		// 		let tempData = data.datas.total;
-		// 		monografData.update((value) => {
-		// 			let idx = value.jumlah_keluarga.findIndex(item => item.nama_variabel == 'Jumlah keluarga');
-		// 			value.jumlah_keluarga[idx].nilai = tempData;					
-		// 			return value;
-		// 		});
-		// 	}).catch(({response})=>{
-		// 		console.error(response)
-		// 	})
+    await axios
+      .get(`${$urlApi}dashboard/${data.kode}/sarana_komunikasi_informasi`)
+      .then(({ data }) => {
+        let tempData = data.datas;
+        informasiInternet.set(
+          tempData.filter(
+            (item) => item.kategori_variabel == "informasi_internet"
+          )
+        );
+        menaraBTS.set(
+          tempData.filter(
+            (item) => item.kategori_variabel == "jumlah_menara_bts"
+          )
+        );
+        operatorSeluler.set(
+          tempData.filter(
+            (item) => item.kategori_variabel == "jumlah_operator_seluler"
+          )
+        );
+        sinyalTelepon.set(
+          tempData.filter((item) => item.kategori_variabel == "sinyal_telepon")
+        );
+      })
+      .catch(({ response }) => {
+        console.error(response);
+      });
 	}
 
     let info_wilayah = {
@@ -155,9 +150,9 @@
     };
 
 	infoWilayah.subscribe((value) => {
-        if(value.kode_wilayah){
-            info_wilayah = value;
-        }
+    if(value.kode_wilayah){
+      info_wilayah = value;
+    }
 	});
 
 	function loadJS(){
