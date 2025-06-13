@@ -176,12 +176,12 @@
       <div class="card shadow-none mb-4" style="border-color:#943126;">
         <div class="card-body">
           <div class="text-start">
-            <button class="d-flex flex-row btn text-start disabled" style="opacity:1;">
+            <div class="d-flex flex-row align-items-center text-start mb-2">
               <div class="icon btn btn-circle btn-lg disabled me-2" style="background-color:#943126;">
                 <i class="uil uil-analytics text-white"></i>
               </div>
               <h5 style="color:#943126;">Desa Cinta Statistik { new Date().getFullYear() }</h5>
-            </button>
+            </div>
             <p>Program peningkatan kapasitas desa dalam hal data/statistik, mulai dari perencanaan, pengumpulan, hingga diseminasi data statistik untuk pembangunan desa yang berkelanjutan.</p>
             <ul class="list-unstyled">
               <li>✔️ Pelatihan perangkat desa</li>
@@ -201,12 +201,12 @@
       <div class="card shadow-none mb-4" style="border-color:#943126;">
         <div class="card-body">
           <div class="text-start">
-            <button class="d-flex flex-row btn text-start disabled" style="opacity:1;">
+            <div class="d-flex flex-row align-items-center text-start mb-2">
               <div class="icon btn btn-circle btn-lg disabled me-2" style="background-color:#943126;">
                 <i class="uil uil-cloud text-white"></i>
               </div>
               <h5 style="color:#943126;">Satu Data Desa Indonesia (SDDI)</h5>
-            </button>
+            </div>
             <p>Integrasi data desa dalam satu platform nasional untuk mendukung perencanaan pembangunan desa yang tepat sasaran dan berbasis bukti.</p>
             <ul class="list-unstyled mb-10">
               <li>✔️ Integrasi data lintas sektor</li>
