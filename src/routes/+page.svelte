@@ -158,8 +158,8 @@
 
 <div class="container text-center mt-4">
   <h2 class="fw-bold" style="color:#943126;">Program Unggulan</h2>
-  <p class="mb-4">Pilih program pembangunan desa yang menjadi fokus utama dalam<br>pengembangan potensi desa di Sumatera Selatan</p>
-  <div class="row">
+  <p class="mb-4">Program pembangunan desa yang menjadi fokus utama dalam<br>pengembangan potensi desa di Sumatera Selatan</p>
+  <div class="row align-items-stretch">
     <div class="col-xl-6">
       <div class="card shadow-none mb-4" style="border-color:#943126;">
         <div class="card-body">
@@ -170,7 +170,7 @@
               </div>
               <h5 style="color:#943126;">Desa Cinta Statistik { new Date().getFullYear() }</h5>
             </button>
-            <p>Program peningkatan kapasitas desa dalam pengumpulan, pengolahan, dan pemanfaatan data statistik untuk pembangunan desa yang berkelanjutan.</p>
+            <p>Program peningkatan kapasitas desa dalam hal data/statistik, mulai dari perencanaan, pengumpulan, hingga diseminasi data statistik untuk pembangunan desa yang berkelanjutan.</p>
             <ul class="list-unstyled">
               <li>✔️ Pelatihan perangkat desa</li>
               <li>✔️ Pendampingan pengumpulan data</li>
@@ -196,7 +196,7 @@
               <h5 style="color:#943126;">Satu Data Desa Indonesia (SDDI)</h5>
             </button>
             <p>Integrasi data desa dalam satu platform nasional untuk mendukung perencanaan pembangunan desa yang tepat sasaran dan berbasis bukti.</p>
-            <ul class="list-unstyled">
+            <ul class="list-unstyled mb-10">
               <li>✔️ Integrasi data lintas sektor</li>
               <li>✔️ Dashboard monitoring desa</li>
               <li>✔️ Akses data terbuka</li>
