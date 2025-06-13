@@ -176,17 +176,14 @@
       }
       informasi_internet[1].sinyal = sinyal;
     }
-    console.log(informasi_internet);
   });
 
   menaraBTS.subscribe((value) => {
     menara_bts = value;
-    console.log(menara_bts);
   });
 
   operatorSeluler.subscribe((value) => {
     operator_seluler = value;
-    console.log(operator_seluler);
   });
 
   sinyalTelepon.subscribe((value) => {
@@ -204,7 +201,6 @@
       }
       sinyal_telepon[0].sinyal = sinyal; 
     }
-    console.log(sinyal_telepon);
   });
 
   let content = "";
