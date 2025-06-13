@@ -36,6 +36,7 @@
 		nama_kab: "",
 		nama_kec: "",
     url: "",
+    status_idm_2024: "",
 	};
 
 	descanStatus.subscribe((value) => {
@@ -145,9 +146,11 @@
 
 			<div class="col-lg-9 text-white">
         {#if descanStatusBadge}
-          <span class="badge gradient-3 rounded-pill">Desa Cinta Statistik</span>
+          <span class="badge gradient-3 rounded-pill mb-2">Desa Cinta Statistik</span>
           <br>
         {/if}
+        <span class="badge gradient-2 rounded-pill">DESA {info_wilayah.status_idm_2024}</span>
+        <br>
 				<h1 class="display-1 text-white" style="display: inline-block;" id="desa_text">
 					{labelLevel(info_wilayah.kode_wilayah)}
 					<span class="typer text-white" data-words={info_wilayah.nama} data-loop="false"/>
