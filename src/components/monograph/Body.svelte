@@ -391,9 +391,11 @@
 
             <div class="col-md-8 col-lg-6 col-xl-6 order-lg-2 position-relative">
               <div class="row gx-md-5 gy-5 align-items-center">
+                <div class="col-12 text-center">
+                  <img class="img-fluid" src="/images/img/illustrations/i24.png"
+                  srcset="/images/img/illustrations/i1@2x.png 2x" alt="" style="height:300px; width: auto;" />
+                </div>
                 <div class="col-6 text-center">
-                  <img class="img-fluid" src="/images/img/illustrations/i1.png"
-                  srcset="/images/img/illustrations/i1@2x.png 2x" alt="" style="height:200px; width: auto;" />
                   <h2 class="display-5">Laki-Laki</h2>
                   <h1 style="color: #943126;">
                     {#if penduduk[0] }
@@ -404,8 +406,6 @@
                   </h1>
                 </div>
                 <div class="col-6 text-center">
-                  <img class="img-fluid" src="/images/img/illustrations/i7.png"
-                  srcset="/images/img/illustrations/i7@2x.png 2x" alt="" style="height:200px; width: auto" />
                   <h2 class="display-5">Perempuan</h2>
                   <h1 style="color: #943126;">
                     {#if penduduk[1] }
