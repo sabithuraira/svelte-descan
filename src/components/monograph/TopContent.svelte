@@ -119,13 +119,13 @@
 			<div class="col-lg-3 order-lg-2">
 				<div class="row gx-md-5 gy-5 text-center" data-cues="fadeIn" data-group="images">
 					{#if pengurus.path_foto != '' && pengurus.path_foto != null && pengurus.path_foto != 'null'}
-						<figure class="rounded mx-4 text-center">
+						<figure class="rounded text-center">
 							<img src="{pengurus.foto}"
 							srcset="{pengurus.foto} 2x" alt=""
 							style="max-height: 300px; max-width: 200px;  height:100% ; width: 100%;">
 						</figure>
 
-						<div class="card mx-4">
+						<div class="card ms-4">
 							<h4 class="mb-0 text-nowrap">
 								{pengurus.nama_ketua}
 							</h4>
@@ -134,7 +134,7 @@
 						  <!-- /section -->
 					{:else}
 						{#if info_wilayah.kode_kab!=''}
-						<figure class="rounded mx-4">
+						<figure class="rounded">
 							<img src="/images/kabs-logo/logo{info_wilayah.kode_prov+info_wilayah.kode_kab}.png"
 							srcset="/images/kabs-logo/logo{info_wilayah.kode_prov+info_wilayah.kode_kab}.png 2x" alt=""
 							style="max-height: 300px; max-width: 200px;  height:100% ; width: 100%;">

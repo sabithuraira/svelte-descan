@@ -2,7 +2,7 @@
   class="bg-dark  text-inverse"
   data-image-src="/images/img/photos/bg2.jpg"
 >
-  <div class="container mx-10 pb-7 pb-md-7 pt-3 mt-3" style="max-width:92%">
+  <div class="container pb-7 pb-md-7 pt-3 mt-3" style="max-width:92%">
     <div class="row gy-6 gy-lg-0">
       <div class="col-md-4 col-lg-4">
         <div class="widget">
