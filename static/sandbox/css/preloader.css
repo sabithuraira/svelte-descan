@@ -1,6 +1,6 @@
 .preloader {
     align-items: center;
-    background: linear-gradient(rgba(53, 147, 255, 1), rgba(218, 33, 255, 1));
+    background-color: #943126 ;
     display: flex;
     height: 100vh;
     justify-content: center;
