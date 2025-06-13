@@ -15,6 +15,7 @@
 	
 	let kabKotas = []; //as Wilayah[];
   let descan = [];
+  let kategoriDesa = [];
 	let keyword = "";
 	let randomNumberFoto = 1;
 	let arrFoto = [
@@ -42,8 +43,8 @@
 			.then(({data})=>{
 				kabKotas = data.datas
 			}).catch(({ response })=>{
-				console.error(response)
-			})
+				console.error(response);
+			});
 	}
 
 	async function loadDescan(){
@@ -56,9 +57,19 @@
         descan = descan.filter((dc) => dc.tahun == year)
         descanLoaded = true;
 			}).catch(({ response })=>{
-				console.error(response)
-			})
+				console.error(response);
+			});
 	}
+
+  async function loadKategoriDesa(){
+    await axios
+      .get(`${$urlApi}dashboard/desa_per_kategori`)
+      .then(({data})=>{
+        kategoriDesa = data.datas;
+      }).catch(({ response })=>{
+        console.error(response);
+      });
+  }
 
   function showDescan(){
     descanShow = true;
@@ -85,6 +96,7 @@
 	onMount(() => {
 		loadWilayah();
     loadDescan();
+    loadKategoriDesa();
 		randomNumberFoto = getRandomInt(1,12);
     bigScreen = window.innerHeight > 700;
 	});
@@ -223,6 +235,20 @@
     </div>
   </div>
   <Peta desa={descan}/>
+  <div class="container mt-8">
+    <div class="row align-items-stretch">
+      <div class="col text-center mb-4">
+        <p class="display-1 fs-36 fw-bold" style="color:#943126;">{kategoriDesa.reduce((acc, item) => acc + item.total, 0)}</p>
+        <p>TOTAL DESA</p>
+      </div>
+      {#each kategoriDesa as item}
+        <div class="col text-center mb-4">
+          <p class="display-1 fs-36 fw-bold" style="color:#943126;">{item.total}</p>
+          <p>{item.kategori == '' ? 'DESA BELUM DIKATEGORIKAN' : `DESA ${item.kategori}`}</p>
+        </div>
+      {/each}
+    </div>
+  </div>
 {/if}
 {#if sddiShow}
   <div class="text-center text-secondary mt-8">
