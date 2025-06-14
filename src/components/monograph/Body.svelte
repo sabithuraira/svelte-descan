@@ -351,7 +351,7 @@
     </section>
   {/if}
 
-  <section class="wrapper bg-light" id="section_data">
+  <section class="wrapper" id="section_data">
     <div class="container py-5">
       <ul class="nav nav-tabs nav-pills justify-content-center" id="dataTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -381,8 +381,8 @@
 
   <div class="tab-content mb-8" id="dataTabContent">
     <div class="tab-pane fade show active" id="penduduk" role="tabpanel" aria-labelledby="penduduk-tab">
-      <section class="wrapper bg-light" id="section_penduduk">
-        <div class="container py-5">
+      <section class="wrapper" id="section_penduduk">
+        <div class="container p-7 bg-soft-primary">
           <div class="row gx-lg-8 gx-xl-12 gy-10 align-items-center">
 
             <div class="col-md-8 col-lg-6 col-xl-6 order-lg-2 position-relative">
@@ -434,8 +434,8 @@
     </div>
 
     <div class="tab-pane fade" id="kesehatan" role="tabpanel" aria-labelledby="kesehatan-tab">
-      <section class="wrapper bg-light" id="section_kesehatan">
-        <div class="container py-5">
+      <section class="wrapper" id="section_kesehatan">
+        <div class="container p-7 bg-soft-primary">
           <div class="row">
             <div class="col-lg-12">
               <h2 class="display-4 text-center" style="color:#943126;">
@@ -495,8 +495,8 @@
     </div>
 
     <div class="tab-pane fade" id="peribadatan" role="tabpanel" aria-labelledby="peribadatan-tab">
-      <section class="wrapper bg-light" id="section_peribadatan">
-        <div class="container py-5">
+      <section class="wrapper" id="section_peribadatan">
+        <div class="container p-7 bg-soft-primary">
           <div class="row">
             <div class="col-lg-12">
               <h2 class="display-4 text-center" style="color:#943126;">
@@ -533,8 +533,8 @@
     </div>
 
     <div class="tab-pane fade show" id="pendidikan" role="tabpanel" aria-labelledby="pendidikan-tab">
-      <section class="wrapper bg-light" id="section_pendidikan">
-        <div class="container py-5">
+      <section class="wrapper" id="section_pendidikan">
+        <div class="container p-7 bg-soft-primary">
           <div class="row">
             <div class="col-lg-12">
               <h2 class="display-4 text-center" style="color:#943126;">
@@ -594,8 +594,8 @@
     </div>
 
     <div class="tab-pane fade" id="keuangan_ekonomi" role="tabpanel" aria-labelledby="keuangan_ekonomi-tab">
-      <section class="wrapper bg-light" id="section_keuangan_ekonomi">
-        <div class="container py-5">
+      <section class="wrapper" id="section_keuangan_ekonomi">
+        <div class="container p-7 bg-soft-primary">
           <div class="row">
             <div class="col-lg-12">
               <h2 class="display-4 text-center" style="color:#943126;">
@@ -679,8 +679,8 @@
     </div>
 
     <div class="tab-pane fade" id="olahraga" role="tabpanel" aria-labelledby="olahraga-tab">
-      <section class="wrapper bg-light" id="section_olahraga">
-        <div class="container py-5">
+      <section class="wrapper" id="section_olahraga">
+        <div class="container p-7 bg-soft-primary">
           <div class="row">
             <div class="col-lg-12">
               <h2 class="display-4 text-center" style="color:#943126;">
@@ -740,8 +740,8 @@
     </div>
 
     <div class="tab-pane fade" id="telekomunikasi" role="tabpanel" aria-labelledby="telekomunikasi-tab">
-      <section class="wrapper bg-light" id="section_telekomunikasi">
-        <div class="container py-5">
+      <section class="wrapper" id="section_telekomunikasi">
+        <div class="container p-5 bg-soft-primary">
           <div class="row justify-content-center">
             <div class="col-lg-12">
               <h2 class="display-4 text-center" style="color:#943126;">
@@ -822,7 +822,7 @@
   </div>
   <!--/.modal -->
   
-  <section class="wrapper bg-soft-primary">
+  <section class="wrapper">
     <div class="container pb-14 pb-md-16 pt-10">
       <div class="row mb-3">
         <div class="col-md-10 col-xl-9 col-xxl-7 mx-auto text-center">
