@@ -352,27 +352,27 @@
   {/if}
 
   <section class="wrapper" id="section_data">
-    <div class="container py-5">
-      <ul class="nav nav-tabs nav-pills justify-content-center" id="dataTab" role="tablist">
-        <li class="nav-item" role="presentation">
+    <div class="container pt-5">
+      <ul class="nav nav-tabs nav-pills " id="dataTab" role="tablist">
+        <li class="nav-item mb-2" role="presentation">
           <button class="nav-link active" id="penduduk-tab" data-bs-toggle="tab" data-bs-target="#penduduk" type="button" role="tab" aria-controls="penduduk" aria-selected="true">Penduduk</button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item mb-2" role="presentation">
           <button class="nav-link" id="kesehatan-tab" data-bs-toggle="tab" data-bs-target="#kesehatan" type="button" role="tab" aria-controls="kesehatan" aria-selected="false">Kesehatan</button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item mb-2" role="presentation">
           <button class="nav-link" id="peribadatan-tab" data-bs-toggle="tab" data-bs-target="#peribadatan" type="button" role="tab" aria-controls="peribadatan" aria-selected="false">Peribadatan</button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item mb-2" role="presentation">
           <button class="nav-link" id="pendidikan-tab" data-bs-toggle="tab" data-bs-target="#pendidikan" type="button" role="tab" aria-controls="pendidikan" aria-selected="false">Pendidikan</button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item mb-2" role="presentation">
           <button class="nav-link" id="keuangan_ekonomi-tab" data-bs-toggle="tab" data-bs-target="#keuangan_ekonomi" type="button" role="tab" aria-controls="keuangan_ekonomi" aria-selected="false">Keuangan dan Ekonomi</button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item mb-2" role="presentation">
           <button class="nav-link" id="olahraga-tab" data-bs-toggle="tab" data-bs-target="#olahraga" type="button" role="tab" aria-controls="olahraga" aria-selected="false">Olahraga</button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item mb-2" role="presentation">
           <button class="nav-link" id="telekomunikasi-tab" data-bs-toggle="tab" data-bs-target="#telekomunikasi" type="button" role="tab" aria-controls="telekomunikasi" aria-selected="false">Telekomunikasi</button>
         </li>
       </ul>
@@ -382,7 +382,7 @@
   <div class="tab-content mb-8" id="dataTabContent">
     <div class="tab-pane fade show active" id="penduduk" role="tabpanel" aria-labelledby="penduduk-tab">
       <section class="wrapper" id="section_penduduk">
-        <div class="container p-7 bg-soft-primary">
+        <div class="container card p-7">
           <div class="row gx-lg-8 gx-xl-12 gy-10 align-items-center">
 
             <div class="col-md-8 col-lg-6 col-xl-6 order-lg-2 position-relative">
@@ -435,7 +435,7 @@
 
     <div class="tab-pane fade" id="kesehatan" role="tabpanel" aria-labelledby="kesehatan-tab">
       <section class="wrapper" id="section_kesehatan">
-        <div class="container p-7 bg-soft-primary">
+        <div class="container p-7 card">
           <div class="row">
             <div class="col-lg-12">
               <h2 class="display-4 text-center" style="color:#943126;">
@@ -496,7 +496,7 @@
 
     <div class="tab-pane fade" id="peribadatan" role="tabpanel" aria-labelledby="peribadatan-tab">
       <section class="wrapper" id="section_peribadatan">
-        <div class="container p-7 bg-soft-primary">
+        <div class="container p-7 card">
           <div class="row">
             <div class="col-lg-12">
               <h2 class="display-4 text-center" style="color:#943126;">
@@ -534,7 +534,7 @@
 
     <div class="tab-pane fade show" id="pendidikan" role="tabpanel" aria-labelledby="pendidikan-tab">
       <section class="wrapper" id="section_pendidikan">
-        <div class="container p-7 bg-soft-primary">
+        <div class="container p-7 card">
           <div class="row">
             <div class="col-lg-12">
               <h2 class="display-4 text-center" style="color:#943126;">
@@ -595,7 +595,7 @@
 
     <div class="tab-pane fade" id="keuangan_ekonomi" role="tabpanel" aria-labelledby="keuangan_ekonomi-tab">
       <section class="wrapper" id="section_keuangan_ekonomi">
-        <div class="container p-7 bg-soft-primary">
+        <div class="container p-7 card">
           <div class="row">
             <div class="col-lg-12">
               <h2 class="display-4 text-center" style="color:#943126;">
@@ -680,7 +680,7 @@
 
     <div class="tab-pane fade" id="olahraga" role="tabpanel" aria-labelledby="olahraga-tab">
       <section class="wrapper" id="section_olahraga">
-        <div class="container p-7 bg-soft-primary">
+        <div class="container p-7 card">
           <div class="row">
             <div class="col-lg-12">
               <h2 class="display-4 text-center" style="color:#943126;">
@@ -741,7 +741,7 @@
 
     <div class="tab-pane fade" id="telekomunikasi" role="tabpanel" aria-labelledby="telekomunikasi-tab">
       <section class="wrapper" id="section_telekomunikasi">
-        <div class="container p-5 bg-soft-primary">
+        <div class="container p-5 card">
           <div class="row justify-content-center">
             <div class="col-lg-12">
               <h2 class="display-4 text-center" style="color:#943126;">
@@ -822,7 +822,7 @@
   </div>
   <!--/.modal -->
   
-  <section class="wrapper">
+  <section class="wrapper bg-soft-primary">
     <div class="container pb-14 pb-md-16 pt-10">
       <div class="row mb-3">
         <div class="col-md-10 col-xl-9 col-xxl-7 mx-auto text-center">
