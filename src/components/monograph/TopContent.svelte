@@ -125,11 +125,19 @@
 							style="max-height: 300px; max-width: 200px;  height:100% ; width: 100%;">
 						</figure>
 
-						<div class="card ms-4">
+						<div class="card">
 							<h4 class="mb-0 text-nowrap">
 								{pengurus.nama_ketua}
 							</h4>
-							<p class="fs-14 mb-0">{labelKepalaWilayah(info_wilayah.kode_wilayah)}</p>
+							<p class="fs-14 mb-0">
+                {#if info_wilayah.status_desa == 'DESA'}
+                  Kepala Desa
+                {:else if info_wilayah.status_desa == 'KELURAHAN'}
+                  Lurah
+                {:else}
+                  {labelKepalaWilayah(info_wilayah.kode_wilayah)}
+                {/if}
+              </p>
 						</div>
 						  <!-- /section -->
 					{:else}
@@ -154,7 +162,13 @@
           {/if}
         </div>
 				<h1 class="display-1 text-white" style="display: inline-block;" id="desa_text">
-					{labelLevel(info_wilayah.kode_wilayah)}
+          {#if info_wilayah.status_desa == 'DESA'}
+            Desa
+          {:else if info_wilayah.status_desa == 'KELURAHAN'}
+            Kelurahan
+          {:else}
+            {labelLevel(info_wilayah.kode_wilayah)}
+          {/if}
 					<span class="typer text-white" data-words={info_wilayah.nama} data-loop="false"/>
 					<span class="cursor text-white" data-owner="typer" data-cursor-display="_"/>
 				</h1>
