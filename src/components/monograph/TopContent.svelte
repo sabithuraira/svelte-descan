@@ -145,19 +145,21 @@
 			</div>
 
 			<div class="col-lg-9 text-white">
-        {#if descanStatusBadge}
-          <span class="badge gradient-3 rounded-pill mb-2">Desa Cinta Statistik</span>
-          <br>
-        {/if}
-        <span class="badge gradient-2 rounded-pill">DESA {info_wilayah.status_idm_2024}</span>
-        <br>
+        <div class="d-flex justify-content-between">
+          {#if descanStatusBadge}
+            <span class="badge bg-dark mb-2">Desa Cinta Statistik</span>
+          {/if}
+          {#if info_wilayah.status_idm_2024 != ''}
+            <span class="badge bg-dark mb-2">DESA {info_wilayah.status_idm_2024}</span>
+          {/if}
+        </div>
 				<h1 class="display-1 text-white" style="display: inline-block;" id="desa_text">
 					{labelLevel(info_wilayah.kode_wilayah)}
 					<span class="typer text-white" data-words={info_wilayah.nama} data-loop="false"/>
 					<span class="cursor text-white" data-owner="typer" data-cursor-display="_"/>
 				</h1>
 				
-				<p class="lead fs-lg mb-8 pe-xxl-2">{@html deskripsiLabel }</p>
+				<p class="lead fs-lg mb-8 pe-xxl-2">{#if descanStatusBadge}Desa/Kelurahan {info_wilayah.nama} merupakan salah satu Desa Cantik Tahun {new Date().getFullYear()}. {/if}{@html deskripsiLabel }</p>
 				<div class="row gx-xl-10 gy-6" data-cues="slideInUp" data-group="services">
           {#if contentProfileLoaded}
             {#each contentProfile as item}

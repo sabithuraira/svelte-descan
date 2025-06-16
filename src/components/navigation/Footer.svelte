@@ -67,7 +67,7 @@
       <div class="col-md-3 col-lg-3">
         <div class="widget">
           <h4 class="widget-title text-white mb-3">Referensi Data</h4>
-          <ul class="list-unstyled  mb-0">
+          <ul class="list-unstyled mb-0">
             <li>
               <a href="/files/kuesioner.pdf" target="_blank"
                 >Kuesioner</a
