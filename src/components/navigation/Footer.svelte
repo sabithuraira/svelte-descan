@@ -4,7 +4,7 @@
 >
   <div class="container pb-7 pb-md-7 pt-3 mt-3" style="max-width:92%">
     <div class="row gy-6 gy-lg-0">
-      <div class="col-md-4 col-lg-4">
+      <div class="col-md-3 col-lg-3">
         <div class="widget">
           <img
             class="mb-4"
@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      <div class="col-md-4 col-lg-4">
+      <div class="col-md-3 col-lg-3">
         <div class="widget">
           <h4 class="widget-title text-white mb-3">Hubungi Kami</h4>
           <address class="pe-xl-15 pe-xxl-17">
@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <div class="col-md-4 col-lg-4">
+      <div class="col-md-3 col-lg-3">
         <div class="widget">
           <h4 class="widget-title text-white mb-3">Selengkapnya</h4>
           <ul class="list-unstyled  mb-0">
@@ -58,6 +58,24 @@
             <li>
               <a href="https://sdgsforsumsel.bpssumsel.com" target="_blank"
                 >SDG's For Sumsel</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-lg-3">
+        <div class="widget">
+          <h4 class="widget-title text-white mb-3">Referensi Data</h4>
+          <ul class="list-unstyled  mb-0">
+            <li>
+              <a href="/files/kuesioner.pdf" target="_blank"
+                >Kuesioner</a
+              >
+            </li>
+            <li>
+              <a href="/files/metadata.pdf" target="_blank"
+                >Metadata</a
               >
             </li>
           </ul>
