@@ -263,6 +263,7 @@
         <div class="card-body">
           <p class="text-justify">Desa dan potensinya harus tersaji dengan baik sebagai informasi kewilayahan, guna mendukung pembangunan pada tingkat pemerintahan terkecil. Pemerintah Provinsi Sumatera Selatan dan Badan Pusat Statistik Provinsi Sumatera Selatan hadir bersama berkolaborasi mewujudkan ”Satu Data Desa Indonesia” dalam wujud “Desa Bumi Sriwijaya”.</p>
           <p class="text-justify">“Desa Bumi Sriwijaya” menyajikan informasi lengkap tentang potensi ekonomi dan kondisi infrastruktur desa dan kelurahan di seluruh wilayah Sumatera Selatan sebagai upaya meningkatkan literasi masyarakat desa untuk mengerti, memahami, dan memanfaatkan data untuk membangun desanya. Dengan “Desa Bumi Sriwijaya”, mewujudkan kebijakan berbasis data untuk desa yang lebih maju menuju Sumsel terus maju untuk semua.</p>
+          <p class="text-justify">Sumber data “Desa Bumi Sriwijaya” berasal dari data hasil Survei Potensi Desa (PODES) tahun 2024, Badan Pusat Statistik (BPS).</p>
         </div>
       </div>
     </div>
