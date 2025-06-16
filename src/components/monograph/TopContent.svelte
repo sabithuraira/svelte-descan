@@ -115,7 +115,17 @@
 <section class="wrapper image-wrapper bg-image"
 	data-image-src="/images/landing/songket.png">
 	<div class="container pt-6 pt-md-15 pb-8">
-		<div class="row gx-lg-8 gy-8 mt-10 mt-md-12 mt-lg-0 mb-8 align-items-center">
+		<div class="row gx-lg-8 mt-10 mt-md-12 mt-lg-0 mb-8 align-items-center">
+      <div class="col-12">
+        <div class="d-flex justify-content-between">
+          {#if descanStatusBadge}
+            <span class="badge bg-dark mb-2">Desa Cinta Statistik</span>
+          {/if}
+          {#if info_wilayah.status_idm_2024 != ''}
+            <span class="badge bg-dark mb-2">DESA {info_wilayah.status_idm_2024}</span>
+          {/if}
+        </div>
+		  </div>
 			<div class="col-lg-3 order-lg-2">
 				<div class="row gx-md-5 gy-5 text-center" data-cues="fadeIn" data-group="images">
 					{#if pengurus.path_foto != '' && pengurus.path_foto != null && pengurus.path_foto != 'null'}
@@ -145,14 +155,6 @@
 			</div>
 
 			<div class="col-lg-9 text-white">
-        <div class="d-flex justify-content-between">
-          {#if descanStatusBadge}
-            <span class="badge bg-dark mb-2">Desa Cinta Statistik</span>
-          {/if}
-          {#if info_wilayah.status_idm_2024 != ''}
-            <span class="badge bg-dark mb-2">DESA {info_wilayah.status_idm_2024}</span>
-          {/if}
-        </div>
 				<h1 class="display-1 text-white" style="display: inline-block;" id="desa_text">
 					{labelLevel(info_wilayah.kode_wilayah)}
 					<span class="typer text-white" data-words={info_wilayah.nama} data-loop="false"/>
