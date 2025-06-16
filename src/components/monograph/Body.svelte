@@ -120,6 +120,15 @@
 			info_wilayah = value;
       info_wilayah_loaded = true;
       loadOtherDesa();
+
+      if (info_wilayah.url_video != "" && info_wilayah.url_video != null) {
+        if (info_wilayah.url_video.includes("watch?v="))
+          info_wilayah.url_video_extract = info_wilayah.url_video.replace("watch?v=", "embed/");
+        if (info_wilayah.url_video.includes("youtu.be/"))
+          info_wilayah.url_video_extract = info_wilayah.url_video.replace("youtu.be/", "youtube.com/embed/");
+        if (info_wilayah.url_video.includes("youtube.com/embed/"))
+          info_wilayah.url_video_extract = info_wilayah.url_video;
+      }
 		}
 	});
 
@@ -341,6 +350,18 @@
     </div>
   </div>
 </section>
+
+{#if info_wilayah.url_video != null && info_wilayah.url_video != ""}
+  <section class="wrapper bg-light" id="section_video">
+    <div class="container my-4">
+      <div class="d-flex justify-content-center">
+        <div class="p-4" style="border:1px solid #943126; border-radius: 5px;">
+          <iframe width="560" height="315" src="{info_wilayah.url_video_extract}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+{/if}
 
 <div bind:this={content}>
   {#if info_wilayah_loaded}
