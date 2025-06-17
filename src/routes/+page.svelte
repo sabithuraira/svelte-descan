@@ -234,6 +234,7 @@
       </div>
     </div>
   </div>
+
   <div class="bg-soft-primary">
     <Peta desa={descan}/>
   </div>
