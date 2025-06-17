@@ -227,9 +227,14 @@
     Provinsi Sumatera Selatan Tahun { new Date().getFullYear() }
     </p>
     <div class="container">
-      <div class="card shadow-none bg-pale-yellow card-border-bottom border-soft-yellow">
+      <div class="card shadow-none bg-pale-yellow card-border-bottom border-soft-yellow mb-4">
         <div class="card-body">
           <p class="text-justify">Program Desa Cinta Statistik (Desa Cantik) dilatarbelakangi kondisi dimana saat ini desa/kelurahan tidak lagi dianggap sebagai obyek pembangunan, melainkan ditempatkan sebagai subyek dan ujung tombak pembangunan dalam peningkatan kesejahteraan masyarakat. Badan Pusat Statistik (BPS) sebagai leading sector dalam pengembangan statistik membuat Program Desa Cantik yang merupakan program pembinaan statistik sektoral di tingkat desa/kelurahan secara berkesinambungan dan komprehensif. Provinsi Sumatera Selatan telah mencanangkan 100 persen Desa di Sumatera Selatan sebagai Desa Cinta Statistik.</p>
+        </div>
+      </div>
+      <div class="col-lg-10 mx-auto">
+        <div class="ratio ratio-16x9">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/7QUp5uHKfb4?si=xjIosJTqNql0Tskk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
       </div>
     </div>
@@ -260,11 +265,16 @@
     Provinsi Sumatera Selatan Tahun { new Date().getFullYear() }
     </p>
     <div class="container">
-      <div class="card shadow-none bg-pale-yellow card-border-bottom border-soft-yellow">
+      <div class="card shadow-none bg-pale-yellow card-border-bottom border-soft-yellow mb-4">
         <div class="card-body">
           <p class="text-justify">Desa dan potensinya harus tersaji dengan baik sebagai informasi kewilayahan, guna mendukung pembangunan pada tingkat pemerintahan terkecil. Pemerintah Provinsi Sumatera Selatan dan Badan Pusat Statistik Provinsi Sumatera Selatan hadir bersama berkolaborasi mewujudkan ”Satu Data Desa Indonesia” dalam wujud “Desa Bumi Sriwijaya”.</p>
           <p class="text-justify">“Desa Bumi Sriwijaya” menyajikan informasi lengkap tentang potensi ekonomi dan kondisi infrastruktur desa dan kelurahan di seluruh wilayah Sumatera Selatan sebagai upaya meningkatkan literasi masyarakat desa untuk mengerti, memahami, dan memanfaatkan data untuk membangun desanya. Dengan “Desa Bumi Sriwijaya”, mewujudkan kebijakan berbasis data untuk desa yang lebih maju menuju Sumsel terus maju untuk semua.</p>
           <p class="text-justify">Sumber data “Desa Bumi Sriwijaya” berasal dari data hasil Survei Potensi Desa (PODES) tahun 2024, Badan Pusat Statistik (BPS).</p>
+        </div>
+      </div>
+      <div class="col-lg-10 mx-auto">
+        <div class="ratio ratio-16x9">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/W5Jc4CDeGec?si=X6VY2Qgds8IfBNVs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
       </div>
     </div>

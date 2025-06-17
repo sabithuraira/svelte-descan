@@ -354,12 +354,11 @@
 {#if info_wilayah.url_video != null && info_wilayah.url_video != ""}
   <section class="wrapper bg-light" id="section_video">
     <div class="container my-4">
-          <div class="col-lg-10 mx-auto">
-              <div class="ratio ratio-16x9"> 
-                <iframe width="560" height="315" src="{info_wilayah.url_video_extract}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-              </div>
-          </div>
-          <!--/column -->          
+      <div class="col-lg-10 mx-auto">
+        <div class="ratio ratio-16x9">
+          <iframe width="560" height="315" src="{info_wilayah.url_video_extract}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
     </div>
   </section>
 {/if}
