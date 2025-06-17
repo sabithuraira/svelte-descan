@@ -175,7 +175,7 @@
 					<span class="cursor text-white" data-owner="typer" data-cursor-display="_"/>
 				</h1>
 				
-				<p class="lead fs-lg mb-8 pe-xxl-2">{#if descanStatusBadge}Desa/Kelurahan {info_wilayah.nama} merupakan salah satu Desa Cantik Tahun {new Date().getFullYear()}. {/if}{@html deskripsiLabel }</p>
+				<p class="lead fs-lg mb-8 pe-xxl-2">{#if descanStatusBadge}{#if info_wilayah.status_desa == 'DESA'}Desa{:else if info_wilayah.status_desa == 'KELURAHAN'}Kelurahan{:else}Desa/Kelurahan{/if} {info_wilayah.nama} merupakan salah satu Desa Cantik Tahun {new Date().getFullYear()}. {/if}{@html deskripsiLabel }</p>
 				<div class="row gx-xl-10 gy-6" data-cues="slideInUp" data-group="services">
           {#if contentProfileLoaded}
             {#each contentProfile as item}
