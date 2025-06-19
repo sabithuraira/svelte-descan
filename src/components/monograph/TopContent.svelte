@@ -192,7 +192,7 @@
                       <h2 class="mb-0 text-white">{@html item.value}</h2>
                     {:else}
                       <a href="{item.url}" target="_blank" rel="noopener noreferrer" class="link-light">
-                        <h2 class="mb-0 text-white">{@html item.value}</h2>
+                        <u class="mb-0 text-sky">{@html item.value}</u>
                       </a>
                     {/if}
                   </div>
