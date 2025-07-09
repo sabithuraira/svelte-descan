@@ -118,9 +118,28 @@
       style="max-height:60px; width: auto"
     />
     <img
-      class="img-responsive ml-2"
-      src="/images/bps-logo/logo_bps_sumsel.png"
+      class="img-responsive ml-4"
+      src="/images/bps-logo/logo_bps.png"
       alt=""
+      style="max-height:50px; width: auto"
+    />
+    <img
+      class="img-responsive ml-2"
+      src="/images/dinas-logo/logo_bappeda.png"
+      alt=""
+      style="max-height:80px; width: auto"
+    />
+    <img
+      class="img-responsive ml-2"
+      src="/images/dinas-logo/logo_diskominfo.png"
+      alt=""
+      style="max-height:80px; width: auto"
+    />
+    <img
+      class="img-responsive ml-2"
+      src="/images/dinas-logo/logo_dinas_pmd.png"
+      alt=""
+      style="max-height:80px; width: auto"
     />
   </div>
 	<div class="container pb-8 pt-md-7 pb-md-6 text-center">
