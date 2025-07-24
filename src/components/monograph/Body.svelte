@@ -80,6 +80,7 @@
 	let infrastruktur_kesehatan = [];
 
 	let infrastruktur_pendidikan = [];
+	let disabilitas = [];
 
 	let infrastruktur_ekonomi = [];
 
@@ -136,6 +137,7 @@
 		infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.sort((a,b) => { return b.nilai - a.nilai; });	
 		infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan.sort((a,b) => { return Number(a.variabel_id) - Number(b.variabel_id); }).sort((a,b) => { return b.nilai - a.nilai; });
 		infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi.sort((a,b) => { return b.nilai - a.nilai; });
+		disabilitas = value.jumlah_disabilitas.sort((a,b) => { return b.nilai - a.nilai; });
 		lembaga_keuangan = value.jumlah_lembaga_keuangan.sort((a,b) => { return b.nilai - a.nilai; });
 		infrastruktur_olahraga = value.jumlah_infrastruktur_olahraga.map((item) => {
       let kondisi = '';
@@ -304,6 +306,12 @@
         niai: item.nilai,
       });
     });
+    disabilitas.forEach((item) => {
+      rows.push({
+        variabel: item.nama_variabel,
+        niai: item.nilai,
+      });
+    });
     infrastruktur_ekonomi.forEach((item) => {
       rows.push({
         variabel: item.nama_variabel,
@@ -395,6 +403,9 @@
         </li>
         <li class="nav-item mb-2" role="presentation">
           <button class="nav-link" id="telekomunikasi-tab" data-bs-toggle="tab" data-bs-target="#telekomunikasi" type="button" role="tab" aria-controls="telekomunikasi" aria-selected="false">Telekomunikasi</button>
+        </li>
+        <li class="nav-item mb-2" role="presentation">
+          <button class="nav-link" id="disabilitas-tab" data-bs-toggle="tab" data-bs-target="#disabilitas" type="button" role="tab" aria-controls="disabilitas" aria-selected="false">Disabilitas</button>
         </li>
       </ul>
     </div>
@@ -824,6 +835,48 @@
         </div>
       </section>
     </div>
+
+    <div class="tab-pane fade show" id="disabilitas" role="tabpanel" aria-labelledby="disabilitas-tab">
+      <section class="wrapper" id="section_disabilitas">
+        <div class="container p-7 bg-soft-primary ">
+          <div class="row">
+            <div class="col-lg-12">
+              <h2 class="display-4 text-center" style="color:#943126;">
+                <span class="m-2">
+                  <i class="fa-solid fa-book"></i>
+                </span>
+                Penyandang Disabilitas
+              </h2>
+
+              <div class="p-2 text-center mx-5">
+                <i class="fa fa-quote-left text-black"></i>
+                <i class="font-italic ml-2">Kemampuan tak terbatas dalam keterbatasan; keberanian adalah keindahan sejati</i>
+                <i class="fa fa-quote-right text-black"></i>
+              </div>
+
+                <p class="lead fs-lg text-center mt-8" style="color:#943126;">
+                  Jumlah penyandang disabilitas di { info_wilayah.nama }
+                </p>
+
+                <ul class="icon-list mb-0">
+                  <div class="row gy-3 gx-xl-8 mb-4">
+                      {#each disabilitas as item}
+                          <div class="col-12 col-md-6 col-xl-4">
+                            <li class="icon-list bullet-bg { (item.nilai!=0 && item.nilai!=null) ? 'bullet-soft-green' : 'bullet-soft-red' } " data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Sumber: { (item.sumber=='' || item.sumber==null) ? '-' : item.sumber }">
+                              <i class="uil { (item.nilai!=0 && item.nilai!=null) ? 'uil-check' : 'uil-multiply' }"></i>{item.nilai} {item.nama_variabel.replace("Jumlah", "")}
+                            </li>
+                          </div>
+
+                      {/each}
+                  </div>
+                </ul>
+
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    
   </div>
 
   <div class="modal fade" id="modalDownload" tabindex="-1">

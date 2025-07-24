@@ -95,11 +95,10 @@
 					pangan_unggulan: tempData.filter(item => item.kategori_variabel=='pangan_unggulan'),
 					hortikultura_unggulan: tempData.filter(item => item.kategori_variabel=='hortikultura_unggulan'),
 					penyandang_disabilitas: tempData.filter(item => item.kategori_variabel=='penyandang_disabilitas'),
+					jumlah_disabilitas: tempData.filter(item => item.kategori_variabel=='jumlah_disabilitas'),
 				});
 
-				umkmData.set({
-					industri: tempData.filter(item => item.kategori_variabel=='jumlah_industri'),
-				});
+				umkmData.set({ industri: tempData.filter(item => item.kategori_variabel=='jumlah_industri'),});
 
 				infrastrukturKesehatan.set(tempData.filter(item => item.kategori_variabel=='jumlah_infrastruktur_kesehatan'));
 
