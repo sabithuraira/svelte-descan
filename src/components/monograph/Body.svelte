@@ -919,7 +919,7 @@
                       <div class="card-body">
                         <h4 class="mb-2" style="color:#943126;">{item.nama}</h4>
                         <p class="mb-4">{item.deskripsi.slice(0, 200).split(' ').slice(0, -1).join(' ')} ...</p>
-                        <a href="/monograph/{item.kode_wilayah}" class="btn btn-sm text-white" style="background-color:#943126;" on:click={() => goto(`/desa/${item.slug}`)}>Selengkapnya</a>
+                        <a href="/monograph/{item.kode_wilayah}" rel="external" class="btn btn-sm text-white" style="background-color:#943126;">Selengkapnya</a>
                       </div>
                       <!--/.card-body -->
                     </div>
