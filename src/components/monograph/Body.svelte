@@ -351,13 +351,6 @@
 	}
 </script>
 
-<section class="wrapper bg-light" id="section_download">
-  <div class="container pt-8">
-    <div class="d-flex flex-row-reverse">
-      <a href="" class="btn mx-1 text-white" style="background-color: #943126;" data-bs-toggle="modal" data-bs-target="#modalDownload">Download</a>
-    </div>
-  </div>
-</section>
 
 {#if info_wilayah.url_video != null && info_wilayah.url_video != ""}
   <section class="wrapper bg-light" id="section_video">
