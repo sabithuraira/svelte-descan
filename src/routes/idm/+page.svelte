@@ -1,0 +1,573 @@
+<script>
+// @ts-nocheck
+  import PreLoader from "../../components/navigation/PreLoader.svelte";
+  import Footer from '../../components/navigation/Footer.svelte';
+  import TopContent from '../../components/idm/TopContent.svelte';
+  import BackToTop from "../../components/navigation/BackToTop.svelte";
+
+  import { onMount } from 'svelte';
+  import axios from 'axios';
+  import { urlApi } from '../../stores/generalStores';
+
+  const defaultKode = "16"; // Default kode wilayah for Sumatera Selatan
+  let preloader = false;
+  let desa = { data: [], links: [], from: 0, to: 0, total: 0, current_page: 1, last_page: 1 };
+  let perPage = 20;
+  let currentPage = 1;
+  
+  // Generate smart pagination with ellipsis (like in the image)
+  $: paginationItems = (() => {
+    if (!desa || !desa.last_page || desa.last_page <= 1) return [];
+    const items = [];
+    const current = desa.current_page || currentPage;
+    const lastPage = desa.last_page || 1;
+    
+    // Always show first page
+    items.push({ type: 'page', value: 1 });
+    
+    if (lastPage <= 7) {
+      // If 7 or fewer pages, show all
+      for (let i = 2; i <= lastPage; i++) {
+        items.push({ type: 'page', value: i });
+      }
+    } else {
+      // More than 7 pages - use ellipsis
+      if (current <= 4) {
+        // Near the start: 1 2 3 4 5 ... last
+        for (let i = 2; i <= 5; i++) {
+          items.push({ type: 'page', value: i });
+        }
+        items.push({ type: 'ellipsis' });
+        items.push({ type: 'page', value: lastPage });
+      } else if (current >= lastPage - 3) {
+        // Near the end: 1 ... (last-4) (last-3) (last-2) (last-1) last
+        items.push({ type: 'ellipsis' });
+        for (let i = lastPage - 4; i <= lastPage; i++) {
+          items.push({ type: 'page', value: i });
+        }
+      } else {
+        // In the middle: 1 ... (current-1) current (current+1) ... last
+        items.push({ type: 'ellipsis' });
+        for (let i = current - 1; i <= current + 1; i++) {
+          items.push({ type: 'page', value: i });
+        }
+        items.push({ type: 'ellipsis' });
+        items.push({ type: 'page', value: lastPage });
+      }
+    }
+    
+    return items;
+  })();
+
+  // Filter states
+  let kabList = [];
+  let kecList = [];
+  let idmList = [];
+  let statusList = [];
+
+  let kabSelected = "";
+  let kecSelected = "";
+  let idmSelected = "";
+  let statusSelected = "";
+  let keyword = "";
+
+  // Dynamic kodeWilayah based on selections
+  $: kodeWilayah = (() => {
+    let kode = defaultKode;
+    if (kabSelected) {
+      // If kabSelected already starts with "16", use it directly; otherwise prepend "16"
+      if (kabSelected.startsWith("16")) {
+        kode = kabSelected;
+      } else {
+        kode = defaultKode + kabSelected;
+      }
+    }
+    if (kecSelected) {
+      // If kecSelected already starts with the current kode, use it directly; otherwise append
+      if (kecSelected.startsWith(kode)) {
+        kode = kecSelected;
+      } else {
+        kode = kode + kecSelected;
+      }
+    }
+    return kode;
+  })();
+
+  // Load filter options
+  const loadKab = async () => {
+    await axios
+      .get(`${$urlApi}wilayah/16`)
+      .then(({ data }) => {
+        kabList = data.datas;
+      })
+      .catch((error) => {
+        console.error("Error loading kabupaten:", error);
+      });
+  };
+
+  const loadKec = async () => {
+    if (kabSelected) {
+      // If kabSelected already starts with "16", use it directly; otherwise prepend "16"
+      const kabKode = kabSelected.startsWith("16") ? kabSelected : `16${kabSelected}`;
+      await axios
+        .get(`${$urlApi}wilayah/${kabKode}`)
+        .then(({ data }) => {
+          kecList = data.datas || [];
+          kecSelected = "";
+          // Reload data when kab changes
+          currentPage = 1;
+          getDesa();
+        })
+        .catch((error) => {
+          console.error("Error loading kecamatan:", error);
+          kecList = [];
+          kecSelected = "";
+          currentPage = 1;
+          getDesa();
+        });
+    } else {
+      kecList = [];
+      kecSelected = "";
+      // Reload data when kab is cleared
+      currentPage = 1;
+      getDesa();
+    }
+  };
+
+  // Watch for changes in kecSelected to reload data
+  let initialLoad = true;
+  $: if (kecSelected !== undefined && kabSelected && !initialLoad) {
+    // Only reload if we have a kab selected and kec changes
+    currentPage = 1;
+    getDesa();
+  }
+
+  // Load IDM and Status options
+  const loadFilterOptions = () => {
+    idmList = [
+      { value: "", label: "Semua IDM" },
+      { value: "0.0-0.5", label: "0.0 - 0.5" },
+      { value: "0.5-0.6", label: "0.5 - 0.6" },
+      { value: "0.6-0.7", label: "0.6 - 0.7" },
+      { value: "0.7-0.8", label: "0.7 - 0.8" },
+      { value: "0.8-1.0", label: "0.8 - 1.0" },
+    ];
+
+    statusList = [
+      { value: "", label: "Semua Status" },
+      { value: "SANGAT TERTINGGAL", label: "Sangat Tertinggal" },
+      { value: "TERTINGGAL", label: "Tertinggal" },
+      { value: "BERKEMBANG", label: "Berkembang" },
+      { value: "MAJU", label: "Maju" },
+      { value: "MANDIRI", label: "Mandiri" },
+    ];
+  };
+
+  // Load desa data
+  const getDesa = async (suffix = null) => {
+    preloader = true;
+    let url = "";
+    if (suffix) {
+      // If suffix is a full URL, use it directly; otherwise prepend API URL
+      if (suffix.startsWith('http')) {
+        url = suffix;
+      } else if (suffix.startsWith($urlApi)) {
+        url = suffix;
+      } else {
+        url = $urlApi + suffix.replace($urlApi, '');
+      }
+    } else {
+      const params = new URLSearchParams();
+      if (idmSelected) params.append("idm", idmSelected);
+      if (statusSelected) params.append("status", statusSelected);
+      if (keyword) params.append("keyword", keyword);
+      params.append("per_page", perPage.toString());
+      params.append("page", currentPage.toString());
+
+      // kodeWilayah is dynamically set based on kab/kec selections
+      // Default: "16", With kab: "16{kab}", With kec: "16{kab}{kec}"
+      url = `${$urlApi}wilayah/${kodeWilayah}/desa?${params.toString()}`;
+    }
+
+    await axios.get(url).then((d) => {
+      if (d.data && d.data.data) {
+        // The API returns { data: [], meta: { from, to, total, links: [], ... } }
+        const responseData = d.data.data;
+        const meta = d.data.meta || {};
+        // Get links from meta.links instead of data.links
+        const links = meta.links || d.data.links || [];
+        
+        console.log("Response data:", responseData);
+        console.log("Response meta:", meta);
+        console.log("Response links from meta.links:", links);
+        
+        // Extract data array
+        const dataArray = Array.isArray(responseData) ? responseData : [];
+        
+        // Extract pagination metadata
+        const currentPageFromMeta = meta.current_page || currentPage;
+        desa = {
+          data: dataArray,
+          links: links,
+          from: meta.from || 0,
+          to: meta.to || 0,
+          total: meta.total || 0,
+          current_page: currentPageFromMeta,
+          per_page: meta.per_page || perPage,
+          last_page: meta.last_page || 1
+        };
+        
+        // Update currentPage to match API response
+        currentPage = currentPageFromMeta;
+      } else {
+        console.log("No data found in response");
+        desa = { data: [], links: [], from: 0, to: 0, total: 0 };
+      }
+    }).catch((error) => {
+      console.error("Error loading desa data:", error);
+      desa = { data: [], links: [], from: 0, to: 0, total: 0 };
+    });
+    preloader = false;
+  };
+
+  const applyFilters = () => {
+    currentPage = 1;
+    getDesa();
+  };
+
+  const resetFilters = () => {
+    kabSelected = "";
+    kecSelected = "";
+    idmSelected = "";
+    statusSelected = "";
+    keyword = "";
+    kecList = [];
+    currentPage = 1;
+    getDesa();
+  };
+
+  const getStatusBadgeClass = (status) => {
+    const statusUpper = status?.toUpperCase() || "";
+    if (statusUpper.includes("SANGAT TERTINGGAL")) return "badge bg-soft-red text-red";
+    if (statusUpper.includes("TERTINGGAL")) return "badge bg-soft-orange text-orange";
+    if (statusUpper.includes("BERKEMBANG")) return "badge bg-soft-yellow text-yellow";
+    if (statusUpper.includes("MAJU")) return "badge bg-soft-teal text-teal";
+    if (statusUpper.includes("MANDIRI")) return "badge bg-soft-green text-green";
+    return "badge bg-soft-secondary text-secondary";
+  };
+
+  function loadJS(){
+    const pluginsJS = document.createElement("script");
+    pluginsJS.setAttribute("src", "/sandbox/js/plugins.js");
+    document.head.appendChild(pluginsJS);
+
+    const themeJS = document.createElement("script");
+    themeJS.setAttribute("src", "/sandbox/js/theme.js");
+    document.head.appendChild(themeJS);
+
+    setTimeout(() => {
+      theme.initWoHeader();
+      TyperSetup();
+    }, 100);
+  }
+
+  onMount(() => {
+    loadKab();
+    loadFilterOptions();
+    // On first load, call API with kode_wilayah = 16
+    getDesa().then(() => {
+      initialLoad = false;
+      setTimeout(() => loadJS(), 100);
+    });
+  });
+</script>
+
+<svelte:head>
+  <link rel="stylesheet" href="/sandbox/css/plugins.css">
+  <link rel="stylesheet" href="/sandbox/css/style.css">
+  <link rel="stylesheet" href="/sandbox/css/preloader.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</svelte:head>
+
+<div class="content-wrapper">
+  {#if preloader}
+    <PreLoader />
+  {/if}
+  <TopContent></TopContent>
+  <section class="wrapper bg-light">
+    <div class="container py-14 py-md-6">
+      <!-- Tabs -->
+      <div class="row text-center mb-3">
+        <div class="col-xl-10 mx-auto">
+          <ul class="nav nav-tabs nav-tabs-bg justify-content-center" role="tablist" style="font-size: 0.875rem;">
+            <li class="nav-item">
+              <a class="nav-link active py-2 px-3" data-bs-toggle="tab" href="#tabel" role="tab" style="font-size: 0.875rem;">Tabel</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#grafik" role="tab" style="font-size: 0.875rem;">Grafik</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#peta" role="tab" style="font-size: 0.875rem;">Peta</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="tabel" role="tabpanel">
+          <div class="row">
+            <div class="col-xl-10 mx-auto">
+              <!-- Filters -->
+              <div class="card shadow-sm mb-3">
+                <div class="card-body p-2">
+                  <div class="row g-1" style="font-size: 0.75rem;">
+                    <div class="col-md-6 col-lg-4">
+                      <label class="form-label mb-0" style="font-size: 0.75rem;">Kabupaten</label>
+                      <select class="form-select form-select-sm" bind:value={kabSelected} on:change={() => { loadKec(); }} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                        <option value="">Semua Kabupaten</option>
+                        {#each kabList as kab}
+                          <option value={kab.kode_wilayah}>{kab.nama}</option>
+                        {/each}
+                      </select>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                      <label class="form-label mb-0" style="font-size: 0.75rem;">Kecamatan</label>
+                      <select class="form-select form-select-sm" bind:value={kecSelected} disabled={!kabSelected} on:change={() => { if (kabSelected) { currentPage = 1; getDesa(); } }} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                        <option value="">Semua Kecamatan</option>
+                        {#each kecList as kec}
+                          <option value={kec.kode_wilayah}>{kec.nama}</option>
+                        {/each}
+                      </select>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                      <label class="form-label mb-0" style="font-size: 0.75rem;">IDM</label>
+                      <select class="form-select form-select-sm" bind:value={idmSelected} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                        {#each idmList as idm}
+                          <option value={idm.value}>{idm.label}</option>
+                        {/each}
+                      </select>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                      <label class="form-label mb-0" style="font-size: 0.75rem;">Status Desa</label>
+                      <select class="form-select form-select-sm" bind:value={statusSelected} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                        {#each statusList as status}
+                          <option value={status.value}>{status.label}</option>
+                        {/each}
+                      </select>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                      <label class="form-label mb-0" style="font-size: 0.75rem;">Pencarian Cepat</label>
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        placeholder="Cari desa..."
+                        bind:value={keyword}
+                        on:keyup={(e) => {
+                          if (e.key === "Enter") applyFilters();
+                        }}
+                        style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;"
+                      />
+                    </div>
+                    <div class="col-12 d-flex gap-1 mt-1">
+                      <button type="button" class="btn btn-sm text-white py-1 px-2" style="background-color:#943126; font-size: 0.75rem;" on:click={applyFilters}>
+                        Terapkan
+                      </button>
+                      <button type="button" class="btn btn-sm btn-secondary py-1 px-2" style="font-size: 0.75rem;" on:click={resetFilters}>
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Table -->
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center mb-2" style="font-size: 0.875rem;">
+                    <div>
+                      <label class="form-label me-2 mb-0" style="font-size: 0.875rem;">Tampilkan:</label>
+                      <select class="form-select form-select-sm d-inline-block" style="width: auto; font-size: 0.875rem;" bind:value={perPage} on:change={applyFilters}>
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={25}>25</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                      </select>
+                    </div>
+                    <div>
+                      {#if desa.from && desa.to && desa.total}
+                        <span class="text-muted" style="font-size: 0.875rem;">Menampilkan {desa.from} - {desa.to} dari {desa.total} data</span>
+                      {:else if desa.data && Array.isArray(desa.data) && desa.data.length > 0}
+                        <span class="text-muted" style="font-size: 0.875rem;">Menampilkan {desa.data.length} data</span>
+                      {:else}
+                        <span class="text-muted" style="font-size: 0.875rem;">Tidak ada data</span>
+                      {/if}
+                    </div>
+                  </div>
+
+                  <div class="table-responsive">
+                    <table class="table table-hover table-sm" style="font-size: 0.875rem;">
+                      <thead>
+                        <tr>
+                          <th style="font-size: 0.875rem;">No</th>
+                          <th style="font-size: 0.875rem;">Kabupaten</th>
+                          <th style="font-size: 0.875rem;">Kecamatan</th>
+                          <th style="font-size: 0.875rem;">Desa/Kelurahan</th>
+                          <th style="font-size: 0.875rem;">Kode Desa</th>
+                          <th style="font-size: 0.875rem;">IDM</th>
+                          <th style="font-size: 0.875rem;">Status Desa</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {#if desa.data && Array.isArray(desa.data) && desa.data.length > 0}
+                          {#each desa.data as item, index}
+                            <tr>
+                              <td>{desa.from ? (desa.from - 1) + index + 1 : index + 1}</td>
+                              <td>{item.nama_kabupaten || "-"}</td>
+                              <td>{item.nama_kecamatan || "-"}</td>
+                              <td>{item.nama || item.nama_desa || "-"}</td>
+                              <td>{item.kode_wilayah || item.kode_desa || "-"}</td>
+                              <td>{item.idm_2024 || "-"}</td>
+                              <td>
+                                {#if item.status_desa || item.status}
+                                  <span class={getStatusBadgeClass(item.status_desa || item.status)} style="font-size: 0.75rem;">
+                                    {item.status_desa || item.status}
+                                  </span>
+                                {:else}
+                                  -
+                                {/if}
+                              </td>
+                            </tr>
+                          {/each}
+                        {:else}
+                          <tr>
+                            <td colspan="7" class="text-center">Tidak ada data</td>
+                          </tr>
+                        {/if}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Pagination -->
+                  {#if desa && desa.total > 0 && desa.links && desa.links.length > 0}
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-2 mt-4">
+                      <nav aria-label="pagination idm">
+                        <ul class="pagination mb-0" style="gap: 0.25rem;">
+                          {#each desa.links as link}
+                            {@const isPrevious = link.label && (link.label.toLowerCase().includes("previous") || link.label === "«" || link.label === "&laquo;" || link.label === "&lt;")}
+                            {@const isNext = link.label && (link.label.toLowerCase().includes("next") || link.label === "»" || link.label === "&raquo;" || link.label === "&gt;")}
+                            {@const isEllipsis = link.label && (link.label === "..." || link.label === "&hellip;")}
+                            {@const isPageNumber = !isPrevious && !isNext && !isEllipsis && link.label && link.label.trim() !== ""}
+                            
+                            {#if isPrevious}
+                              <!-- Previous Button -->
+                              <li class="page-item {!link.url || link.active ? 'disabled' : ''}">
+                                {#if link.url && !link.active}
+                                  <a
+                                    class="page-link"
+                                    style="border-radius: 0.375rem; border: 1px solid #dee2e6; padding: 0.375rem 0.5rem; font-size: 0.75rem; color: #495057; background: white; min-width: 2rem; text-align: center; cursor: pointer; white-space: nowrap;"
+                                    on:click|preventDefault={() => getDesa(link.url)}
+                                    href="#"
+                                  >
+                                    &lt;
+                                  </a>
+                                {:else}
+                                  <span class="page-link" style="border-radius: 0.375rem; border: 1px solid #dee2e6; padding: 0.375rem 0.5rem; font-size: 0.75rem; color: #6c757d; background: #f8f9fa; min-width: 2rem; text-align: center; cursor: not-allowed; white-space: nowrap;">
+                                    &lt;
+                                  </span>
+                                {/if}
+                              </li>
+                            {:else if isNext}
+                              <!-- Next Button -->
+                              <li class="page-item {!link.url || link.active ? 'disabled' : ''}">
+                                {#if link.url && !link.active}
+                                  <a
+                                    class="page-link"
+                                    style="border-radius: 0.375rem; border: 1px solid #dee2e6; padding: 0.375rem 0.5rem; font-size: 0.75rem; color: #495057; background: white; min-width: 2rem; text-align: center; cursor: pointer; white-space: nowrap;"
+                                    on:click|preventDefault={() => getDesa(link.url)}
+                                    href="#"
+                                  >
+                                    &gt;
+                                  </a>
+                                {:else}
+                                  <span class="page-link" style="border-radius: 0.375rem; border: 1px solid #dee2e6; padding: 0.375rem 0.5rem; font-size: 0.75rem; color: #6c757d; background: #f8f9fa; min-width: 2rem; text-align: center; cursor: not-allowed; white-space: nowrap;">
+                                    &gt;
+                                  </span>
+                                {/if}
+                              </li>
+                            {:else if isEllipsis}
+                              <!-- Ellipsis -->
+                              <li class="page-item disabled">
+                                <span class="page-link" style="border-radius: 0.375rem; border: 1px solid #dee2e6; padding: 0.375rem 0.5rem; font-size: 0.75rem; color: #6c757d; background: white; min-width: 2rem; text-align: center; white-space: nowrap;">
+                                  ...
+                                </span>
+                              </li>
+                            {:else if isPageNumber}
+                              <!-- Page Number -->
+                              <li class="page-item {link.active ? 'active' : ''} {!link.url ? 'disabled' : ''}">
+                                {#if link.url && !link.active}
+                                  <a
+                                    class="page-link"
+                                    style="border-radius: 0.375rem; border: 1px solid #dee2e6; padding: 0.375rem 0.5rem; font-size: 0.75rem; color: #495057; background: white; min-width: 2.5rem; text-align: center; cursor: pointer; white-space: nowrap;"
+                                    on:click|preventDefault={() => getDesa(link.url)}
+                                    href="#"
+                                  >
+                                    {@html link.label}
+                                  </a>
+                                {:else}
+                                  <span
+                                    class="page-link"
+                                    style="border-radius: 0.375rem; border: 1px solid {link.active ? '#0d6efd' : '#dee2e6'}; padding: 0.375rem 0.5rem; font-size: 0.75rem; color: {link.active ? 'white' : '#6c757d'}; background: {link.active ? '#0d6efd' : '#f8f9fa'}; min-width: 2.5rem; text-align: center; cursor: default; white-space: nowrap;"
+                                  >
+                                    {@html link.label}
+                                  </span>
+                                {/if}
+                              </li>
+                            {/if}
+                          {/each}
+                        </ul>
+                      </nav>
+                      {#if desa.total > 0}
+                        <div class="text-center" style="font-size: 0.875rem; color: #6c757d;">
+                          Menampilkan {desa.from || 0} - {desa.to || 0} dari {desa.total} data
+                        </div>
+                      {/if}
+                    </div>
+                  {/if}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="grafik" role="tabpanel">
+          <div class="row">
+            <div class="col-xl-10 mx-auto">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <p class="text-muted">Grafik akan ditampilkan di sini</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="peta" role="tabpanel">
+          <div class="row">
+            <div class="col-xl-10 mx-auto">
+              <div class="card shadow-sm">
+                <div class="card-body">
+                  <p class="text-muted">Peta akan ditampilkan di sini</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<Footer></Footer>
+<BackToTop />

@@ -191,49 +191,70 @@
   <h2 class="fw-bold" style="color:#943126;">Program Unggulan</h2>
   <p class="mb-4">Program pembangunan desa yang menjadi fokus utama dalam<br>pengembangan potensi desa di Sumatera Selatan</p>
   <div class="row align-items-stretch">
-    <div class="col-xl-6">
+    <div class="col-xl-4">
       <div class="card shadow-none mb-4" style="border-color:#943126;">
         <div class="card-body">
-          <div class="text-start">
+          <div class="text-start" style="font-size: 0.9rem;">
             <div class="d-flex flex-row align-items-center text-start mb-2">
               <div class="icon btn btn-circle btn-lg disabled me-2" style="background-color:#943126;">
                 <i class="uil uil-analytics text-white"></i>
               </div>
-              <h5 style="color:#943126;">Desa Cinta Statistik { new Date().getFullYear() }</h5>
+              <h6 style="color:#943126; font-size: 1rem;">Desa Cinta Statistik { new Date().getFullYear() }</h6>
             </div>
-            <p>Program peningkatan kapasitas desa dalam hal data/statistik, mulai dari perencanaan, pengumpulan, hingga diseminasi data statistik untuk pembangunan desa yang berkelanjutan.</p>
-            <ul class="list-unstyled">
+            <p style="font-size: 0.875rem;">Program peningkatan kapasitas desa dalam hal data/statistik, mulai dari perencanaan, pengumpulan, hingga diseminasi data statistik untuk pembangunan desa yang berkelanjutan.</p>
+            <ul class="list-unstyled" style="font-size: 0.875rem;">
               <li>✔️ Pelatihan perangkat desa</li>
               <li>✔️ Pendampingan pengumpulan data</li>
               <li>✔️ Visualisasi data desa</li>
             </ul>
           </div>
           {#if descanLoaded}
-            <button type="button" class="btn text-white" style="background-color:#943126;" on:click={showDescan}>Pelajari Lebih Lanjut</button>
+            <button type="button" class="btn text-white" style="background-color:#943126; font-size: 0.875rem;" on:click={showDescan}>Pelajari Lebih Lanjut</button>
           {:else}
-            <button type="button" class="btn text-white" style="background-color:#943126;" disabled>Memuat...</button>
+            <button type="button" class="btn text-white" style="background-color:#943126; font-size: 0.875rem;" disabled>Memuat...</button>
           {/if}
         </div>
       </div>
     </div>
-    <div class="col-xl-6">
+    <div class="col-xl-4">
       <div class="card shadow-none mb-4" style="border-color:#943126;">
         <div class="card-body">
-          <div class="text-start">
+          <div class="text-start" style="font-size: 0.9rem;">
             <div class="d-flex flex-row align-items-center text-start mb-2">
               <div class="icon btn btn-circle btn-lg disabled me-2" style="background-color:#943126;">
                 <i class="uil uil-cloud text-white"></i>
               </div>
-              <h5 style="color:#943126;">Satu Data Desa Indonesia (SDDI)</h5>
+              <h6 style="color:#943126; font-size: 1rem;">Satu Data Desa Indonesia (SDDI)</h6>
             </div>
-            <p>Integrasi data desa dalam satu platform nasional untuk mendukung perencanaan pembangunan desa yang tepat sasaran dan berbasis bukti.</p>
-            <ul class="list-unstyled mb-10">
+            <p style="font-size: 0.875rem;">Integrasi data desa dalam satu platform nasional untuk mendukung perencanaan pembangunan desa yang tepat sasaran dan berbasis bukti.</p>
+            <ul class="list-unstyled mb-10" style="font-size: 0.875rem;">
               <li>✔️ Integrasi data lintas sektor</li>
               <li>✔️ Dashboard monitoring desa</li>
               <li>✔️ Akses data terbuka</li>
             </ul>
           </div>
-        <button type="button" class="btn text-white" style="background-color:#943126;" on:click={showSddi}>Pelajari Lebih Lanjut</button>
+        <button type="button" class="btn text-white" style="background-color:#943126; font-size: 0.875rem;" on:click={showSddi}>Pelajari Lebih Lanjut</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4">
+      <div class="card shadow-none mb-4" style="border-color:#943126;">
+        <div class="card-body">
+          <div class="text-start" style="font-size: 0.9rem;">
+            <div class="d-flex flex-row align-items-center text-start mb-2">
+              <div class="icon btn btn-circle btn-lg disabled me-2" style="background-color:#943126;">
+                <i class="uil uil-chart-line text-white"></i>
+              </div>
+              <h6 style="color:#943126; font-size: 1rem;">Indeks Desa Membangun (IDM)</h6>
+            </div>
+            <p style="font-size: 0.875rem;">Indikator untuk mengukur pembangunan desa dalam tiga dimensi: sosial, ekonomi, dan lingkungan. IDM menetapkan status desa dari "Sangat Tertinggal" hingga "Mandiri" sebagai dasar perencanaan pembangunan.</p>
+            <ul class="list-unstyled mb-10" style="font-size: 0.875rem;">
+              <li>✔️ Menilai kondisi sosial desa</li>
+              <li>✔️ Mengukur kekuatan ekonomi dan peluang usaha</li>
+              <li>✔️ Mengidentifikasi risiko lingkungan dan kesiapsiagaan bencana</li>
+            </ul>
+          </div>
+        <a href="/idm" class="btn text-white" style="background-color:#943126; font-size: 0.875rem; text-decoration: none;">Pelajari Lebih Lanjut</a>
         </div>
       </div>
     </div>
