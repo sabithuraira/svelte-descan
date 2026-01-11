@@ -7,6 +7,7 @@
 
   import { onMount } from 'svelte';
   import axios from 'axios';
+  import Chart from 'chart.js/auto';
   import { urlApi } from '../../stores/generalStores';
 
   const defaultKode = "16"; // Default kode wilayah for Sumatera Selatan
@@ -14,6 +15,17 @@
   let desa = { data: [], links: [], from: 0, to: 0, total: 0, current_page: 1, last_page: 1 };
   let perPage = 20;
   let currentPage = 1;
+  
+  // Chart data
+  let chartInstance = null;
+  let chartData = {
+    MAJU: 0,
+    BERKEMBANG: 0,
+    TERTINGGAL: 0,
+    MANDIRI: 0
+  };
+  let chartLoading = false;
+  let activeTab = 'tabel';
   
   // Generate smart pagination with ellipsis (like in the image)
   $: paginationItems = (() => {
@@ -146,24 +158,20 @@
   const loadFilterOptions = () => {
     idmList = [
       { value: "", label: "Semua IDM" },
-      { value: "0.0-0.5", label: "0.0 - 0.5" },
-      { value: "0.5-0.6", label: "0.5 - 0.6" },
-      { value: "0.6-0.7", label: "0.6 - 0.7" },
-      { value: "0.7-0.8", label: "0.7 - 0.8" },
-      { value: "0.8-1.0", label: "0.8 - 1.0" },
+      { value: "MAJU", label: "MAJU" },
+      { value: "BERKEMBANG", label: "BERKEMBANG" },
+      { value: "TERTINGGAL", label: "TERTINGGAL" },
+      { value: "MANDIRI", label: "MANDIRI" },
     ];
 
     statusList = [
       { value: "", label: "Semua Status" },
-      { value: "SANGAT TERTINGGAL", label: "Sangat Tertinggal" },
-      { value: "TERTINGGAL", label: "Tertinggal" },
-      { value: "BERKEMBANG", label: "Berkembang" },
-      { value: "MAJU", label: "Maju" },
-      { value: "MANDIRI", label: "Mandiri" },
+      { value: "DESA", label: "DESA" },
+      { value: "KELURAHAN", label: "KELURAHAN" },
     ];
   };
 
-  // Load desa data
+  // Load desa data and chart data
   const getDesa = async (suffix = null) => {
     preloader = true;
     let url = "";
@@ -178,8 +186,8 @@
       }
     } else {
       const params = new URLSearchParams();
-      if (idmSelected) params.append("idm", idmSelected);
-      if (statusSelected) params.append("status", statusSelected);
+      if (idmSelected) params.append("status_idm_2024", idmSelected);
+      if (statusSelected) params.append("status_desa", statusSelected);
       if (keyword) params.append("keyword", keyword);
       params.append("per_page", perPage.toString());
       params.append("page", currentPage.toString());
@@ -189,17 +197,20 @@
       url = `${$urlApi}wilayah/${kodeWilayah}/desa?${params.toString()}`;
     }
 
-    await axios.get(url).then((d) => {
-      if (d.data && d.data.data) {
+    // Call both APIs in parallel
+    try {
+      const [desaResponse, chartResponse] = await Promise.all([
+        axios.get(url),
+        axios.get(`${$urlApi}wilayah/${kodeWilayah}/rekap_desa`)
+      ]);
+
+      // Process desa data
+      if (desaResponse.data && desaResponse.data.data) {
         // The API returns { data: [], meta: { from, to, total, links: [], ... } }
-        const responseData = d.data.data;
-        const meta = d.data.meta || {};
+        const responseData = desaResponse.data.data;
+        const meta = desaResponse.data.meta || {};
         // Get links from meta.links instead of data.links
-        const links = meta.links || d.data.links || [];
-        
-        console.log("Response data:", responseData);
-        console.log("Response meta:", meta);
-        console.log("Response links from meta.links:", links);
+        const links = meta.links || desaResponse.data.links || [];
         
         // Extract data array
         const dataArray = Array.isArray(responseData) ? responseData : [];
@@ -220,20 +231,63 @@
         // Update currentPage to match API response
         currentPage = currentPageFromMeta;
       } else {
-        console.log("No data found in response");
         desa = { data: [], links: [], from: 0, to: 0, total: 0 };
       }
-    }).catch((error) => {
-      console.error("Error loading desa data:", error);
+
+      // Process chart data
+      if (chartResponse.data && chartResponse.data.datas && Array.isArray(chartResponse.data.datas)) {
+        const datas = chartResponse.data.datas;
+        
+        // Reset chart data
+        const newChartData = {
+          MAJU: 0,
+          BERKEMBANG: 0,
+          TERTINGGAL: 0,
+          MANDIRI: 0
+        };
+        
+        // Process data from datas array
+        datas.forEach(item => {
+          const status = item.status_idm_2024?.toUpperCase();
+          const total = item.total || 0;
+          if (status && newChartData.hasOwnProperty(status)) {
+            newChartData[status] = total;
+          }
+        });
+        
+        // Update chartData
+        chartData = newChartData;
+        
+        // Update chart immediately if it exists
+        if (chartInstance) {
+          updateChart();
+        } else {
+          // Chart doesn't exist yet, will be created when tab is shown
+          const grafikTab = document.getElementById('grafik');
+          if (grafikTab && grafikTab.classList.contains('show')) {
+            createChart();
+          }
+        }
+      }
+
+      preloader = false;
+    } catch (error) {
+      console.error("Error loading data:", error);
       desa = { data: [], links: [], from: 0, to: 0, total: 0 };
-    });
-    preloader = false;
+      preloader = false;
+    }
   };
 
   const applyFilters = () => {
     currentPage = 1;
     getDesa();
   };
+  
+  // Watch for chartData changes to update chart
+  $: if (chartData && chartInstance) {
+    // Update chart whenever data changes
+    updateChart();
+  }
 
   const resetFilters = () => {
     kabSelected = "";
@@ -255,6 +309,117 @@
     if (statusUpper.includes("MANDIRI")) return "badge bg-soft-green text-green";
     return "badge bg-soft-secondary text-secondary";
   };
+
+  const getStatusIdmBadgeStyle = (status) => {
+    const statusUpper = status?.toUpperCase() || "";
+    if (statusUpper === "MAJU") {
+      return "background-color: #28a745; color: white;";
+    } else if (statusUpper === "BERKEMBANG") {
+      return "background-color: #ffc107; color: #000;";
+    } else if (statusUpper === "TERTINGGAL") {
+      return "background-color: #dc3545; color: white;";
+    } else if (statusUpper === "MANDIRI") {
+      return "background-color: #007bff; color: white;";
+    }
+    return "background-color: #6c757d; color: white;";
+  };
+
+  
+  // Create or update pie chart
+  const createChart = () => {
+    const canvas = document.getElementById('idmChart');
+    if (!canvas) {
+      return;
+    }
+    
+    // Check if canvas is visible (tab must be active)
+    const grafikTab = document.getElementById('grafik');
+    if (!grafikTab || !grafikTab.classList.contains('show')) {
+      return;
+    }
+    
+    // Destroy existing chart if it exists
+    if (chartInstance) {
+      chartInstance.destroy();
+      chartInstance = null;
+    }
+    
+    try {
+      const dataValues = Object.values(chartData);
+      const total = dataValues.reduce((sum, val) => sum + val, 0);
+      
+      if (total === 0) {
+        chartLoading = false;
+        return;
+      }
+      
+      chartInstance = new Chart(canvas, {
+        type: 'pie',
+        data: {
+          labels: ['MAJU', 'BERKEMBANG', 'TERTINGGAL', 'MANDIRI'],
+          datasets: [{
+            data: dataValues,
+            backgroundColor: [
+              '#28a745', // MAJU - green
+              '#ffc107', // BERKEMBANG - yellow
+              '#dc3545', // TERTINGGAL - red
+              '#007bff'  // MANDIRI - blue
+            ],
+            borderColor: '#fff',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 15,
+                font: {
+                  size: 12
+                }
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const label = context.label || '';
+                  const value = context.parsed || 0;
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                  return `${label}: ${value} (${percentage}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+      chartInitialized = true;
+    } catch (error) {
+      console.error("Error creating chart:", error);
+      chartLoading = false;
+    }
+  };
+  
+  const updateChart = () => {
+    if (chartInstance && chartData) {
+      const dataValues = Object.values(chartData);
+      const total = dataValues.reduce((sum, val) => sum + val, 0);
+      
+      if (total > 0) {
+        chartInstance.data.datasets[0].data = dataValues;
+        chartInstance.update('active'); // Use 'active' mode to show animation
+      } else {
+        chartInstance.data.datasets[0].data = [0, 0, 0, 0];
+        chartInstance.update('active');
+      }
+    }
+  };
+  
+  // Track if chart has been initialized to prevent multiple calls
+  let chartInitialized = false;
 
   function loadJS(){
     const pluginsJS = document.createElement("script");
@@ -279,6 +444,31 @@
       initialLoad = false;
       setTimeout(() => loadJS(), 100);
     });
+    
+    // Listen for tab changes using Bootstrap events
+    setTimeout(() => {
+      const tabElements = document.querySelectorAll('a[data-bs-toggle="tab"]');
+      tabElements.forEach(tab => {
+        tab.addEventListener('shown.bs.tab', (e) => {
+          const targetId = e.target.getAttribute('href');
+          if (targetId === '#grafik') {
+            activeTab = 'grafik';
+            // Create or update chart when switching to grafik tab
+            const canvas = document.getElementById('idmChart');
+            if (canvas) {
+              if (!chartInstance) {
+                createChart();
+              } else {
+                // Force update with latest chartData
+                updateChart();
+              }
+            }
+          } else {
+            activeTab = targetId.replace('#', '');
+          }
+        });
+      });
+    }, 500);
   });
 </script>
 
@@ -296,18 +486,77 @@
   <TopContent></TopContent>
   <section class="wrapper bg-light">
     <div class="container py-14 py-md-6">
+      <!-- Filters -->
+      <div class="row mb-3">
+        <div class="col-xl-10 mx-auto">
+          <div class="card shadow-sm">
+            <div class="card-body p-2">
+              <div class="row g-1" style="font-size: 0.75rem;">
+                <div class="col-md-6 col-lg-4">
+                  <label class="form-label mb-0" style="font-size: 0.75rem;">Kabupaten</label>
+                  <select class="form-select form-select-sm" bind:value={kabSelected} on:change={() => { loadKec(); }} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                    <option value="">Semua Kabupaten</option>
+                    {#each kabList as kab}
+                      <option value={kab.kode_wilayah}>{kab.nama}</option>
+                    {/each}
+                  </select>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <label class="form-label mb-0" style="font-size: 0.75rem;">Kecamatan</label>
+                  <select class="form-select form-select-sm" bind:value={kecSelected} disabled={!kabSelected} on:change={() => { if (kabSelected) { currentPage = 1; applyFilters(); } }} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                    <option value="">Semua Kecamatan</option>
+                    {#each kecList as kec}
+                      <option value={kec.kode_wilayah}>{kec.nama}</option>
+                    {/each}
+                  </select>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <label class="form-label mb-0" style="font-size: 0.75rem;">Status Desa</label>
+                  <select class="form-select form-select-sm" bind:value={idmSelected} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                    {#each idmList as idm}
+                      <option value={idm.value}>{idm.label}</option>
+                    {/each}
+                  </select>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <label class="form-label mb-0" style="font-size: 0.75rem;">Pencarian Cepat</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    placeholder="Cari desa..."
+                    bind:value={keyword}
+                    on:keyup={(e) => {
+                      if (e.key === "Enter") applyFilters();
+                    }}
+                    style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;"
+                  />
+                </div>
+                <div class="col-12 d-flex gap-1 mt-1">
+                  <button type="button" class="btn btn-sm text-white py-1 px-2" style="background-color:#943126; font-size: 0.75rem;" on:click={applyFilters}>
+                    Terapkan
+                  </button>
+                  <button type="button" class="btn btn-sm btn-secondary py-1 px-2" style="font-size: 0.75rem;" on:click={resetFilters}>
+                    Reset
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Tabs -->
       <div class="row text-center mb-3">
         <div class="col-xl-10 mx-auto">
           <ul class="nav nav-tabs nav-tabs-bg justify-content-center" role="tablist" style="font-size: 0.875rem;">
             <li class="nav-item">
-              <a class="nav-link active py-2 px-3" data-bs-toggle="tab" href="#tabel" role="tab" style="font-size: 0.875rem;">Tabel</a>
+              <a class="nav-link active py-2 px-3" data-bs-toggle="tab" href="#tabel" role="tab" style="font-size: 0.875rem;" on:click={() => activeTab = 'tabel'}>Tabel</a>
             </li>
             <li class="nav-item">
               <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#grafik" role="tab" style="font-size: 0.875rem;">Grafik</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#peta" role="tab" style="font-size: 0.875rem;">Peta</a>
+              <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#peta" role="tab" style="font-size: 0.875rem;" on:click={() => activeTab = 'peta'}>Peta</a>
             </li>
           </ul>
         </div>
@@ -318,69 +567,6 @@
         <div class="tab-pane fade show active" id="tabel" role="tabpanel">
           <div class="row">
             <div class="col-xl-10 mx-auto">
-              <!-- Filters -->
-              <div class="card shadow-sm mb-3">
-                <div class="card-body p-2">
-                  <div class="row g-1" style="font-size: 0.75rem;">
-                    <div class="col-md-6 col-lg-4">
-                      <label class="form-label mb-0" style="font-size: 0.75rem;">Kabupaten</label>
-                      <select class="form-select form-select-sm" bind:value={kabSelected} on:change={() => { loadKec(); }} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
-                        <option value="">Semua Kabupaten</option>
-                        {#each kabList as kab}
-                          <option value={kab.kode_wilayah}>{kab.nama}</option>
-                        {/each}
-                      </select>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                      <label class="form-label mb-0" style="font-size: 0.75rem;">Kecamatan</label>
-                      <select class="form-select form-select-sm" bind:value={kecSelected} disabled={!kabSelected} on:change={() => { if (kabSelected) { currentPage = 1; getDesa(); } }} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
-                        <option value="">Semua Kecamatan</option>
-                        {#each kecList as kec}
-                          <option value={kec.kode_wilayah}>{kec.nama}</option>
-                        {/each}
-                      </select>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                      <label class="form-label mb-0" style="font-size: 0.75rem;">IDM</label>
-                      <select class="form-select form-select-sm" bind:value={idmSelected} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
-                        {#each idmList as idm}
-                          <option value={idm.value}>{idm.label}</option>
-                        {/each}
-                      </select>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                      <label class="form-label mb-0" style="font-size: 0.75rem;">Status Desa</label>
-                      <select class="form-select form-select-sm" bind:value={statusSelected} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
-                        {#each statusList as status}
-                          <option value={status.value}>{status.label}</option>
-                        {/each}
-                      </select>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                      <label class="form-label mb-0" style="font-size: 0.75rem;">Pencarian Cepat</label>
-                      <input
-                        type="text"
-                        class="form-control form-control-sm"
-                        placeholder="Cari desa..."
-                        bind:value={keyword}
-                        on:keyup={(e) => {
-                          if (e.key === "Enter") applyFilters();
-                        }}
-                        style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;"
-                      />
-                    </div>
-                    <div class="col-12 d-flex gap-1 mt-1">
-                      <button type="button" class="btn btn-sm text-white py-1 px-2" style="background-color:#943126; font-size: 0.75rem;" on:click={applyFilters}>
-                        Terapkan
-                      </button>
-                      <button type="button" class="btn btn-sm btn-secondary py-1 px-2" style="font-size: 0.75rem;" on:click={resetFilters}>
-                        Reset
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <!-- Table -->
               <div class="card shadow-sm">
                 <div class="card-body">
@@ -430,9 +616,9 @@
                               <td>{item.kode_wilayah || item.kode_desa || "-"}</td>
                               <td>{item.idm_2024 || "-"}</td>
                               <td>
-                                {#if item.status_desa || item.status}
-                                  <span class={getStatusBadgeClass(item.status_desa || item.status)} style="font-size: 0.75rem;">
-                                    {item.status_desa || item.status}
+                                {#if item.status_idm_2024}
+                                  <span class="badge" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; {getStatusIdmBadgeStyle(item.status_idm_2024)}">
+                                    {item.status_idm_2024}
                                   </span>
                                 {:else}
                                   -
@@ -546,7 +732,25 @@
             <div class="col-xl-10 mx-auto">
               <div class="card shadow-sm">
                 <div class="card-body">
-                  <p class="text-muted">Grafik akan ditampilkan di sini</p>
+                  {#if chartLoading}
+                    <div class="text-center py-5">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                      <p class="text-muted mt-2">Memuat data grafik...</p>
+                    </div>
+                  {:else if chartInstance || Object.values(chartData).reduce((sum, val) => sum + val, 0) > 0}
+                    <div class="mb-3">
+                      <h5 class="card-title text-center mb-4" style="font-size: 1rem;">Distribusi Status IDM 2024</h5>
+                      <div class="d-flex justify-content-center">
+                        <canvas id="idmChart" style="max-width: 500px; max-height: 500px;"></canvas>
+                      </div>
+                    </div>
+                  {:else}
+                    <div class="text-center py-5">
+                      <p class="text-muted">Tidak ada data untuk ditampilkan</p>
+                    </div>
+                  {/if}
                 </div>
               </div>
             </div>
