@@ -428,12 +428,15 @@
 
     const themeJS = document.createElement("script");
     themeJS.setAttribute("src", "/sandbox/js/theme.js");
+    themeJS.onload = () => {
+      if (typeof theme !== 'undefined' && theme.initWoHeader) {
+        theme.initWoHeader();
+      }
+      if (typeof TyperSetup !== 'undefined') {
+        TyperSetup();
+      }
+    };
     document.head.appendChild(themeJS);
-
-    setTimeout(() => {
-      theme.initWoHeader();
-      TyperSetup();
-    }, 100);
   }
 
   onMount(() => {
