@@ -1,0 +1,1 @@
+import{i as o,d as r}from"./generalStores.fd1a65ab.js";const p=(a,e,t,d,s,i)=>{i==0?alert("Tidak ada data infrastruktur pada kategori ini"):(o.set(!0),r.set({variabel_id:a,kode_prov:e,kode_kab:t,kode_kec:d,kode_desa:s}))};export{p as s};

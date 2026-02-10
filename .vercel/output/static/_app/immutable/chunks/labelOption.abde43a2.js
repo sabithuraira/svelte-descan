@@ -1,0 +1,1 @@
+const p=(s,l)=>{let i=s.split("; ").map(t=>{let e={};return e[t.split("=")[0]]=t.split("=").filter((n,r)=>r>0).join("="),e});return i=i.reduce((t,e)=>(t[Object.keys(e)[0]]=Object.values(e)[0],t),{}),i[l]||l};p("1=ada; 2=tidak ada;",3);export{p as l};

@@ -6,6 +6,7 @@
   import BackToTop from "../../components/navigation/BackToTop.svelte";
 
   import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
   import axios from 'axios';
   import Chart from 'chart.js/auto';
   import { urlApi } from '../../stores/generalStores';
@@ -26,6 +27,14 @@
   };
   let chartLoading = false;
   let activeTab = 'tabel';
+
+  // Map (Peta tab)
+  let mapInstance = null;
+  let geoJsonLayer = null;
+  let geoJsonData = null;
+  let mapLoading = false;
+  let mapError = null;
+  let rekapByKabCache = {};
   
   // Generate smart pagination with ellipsis (like in the image)
   $: paginationItems = (() => {
@@ -421,6 +430,131 @@
   // Track if chart has been initialized to prevent multiple calls
   let chartInitialized = false;
 
+  // Load GeoJSON for map (kabupaten boundaries)
+  const loadGeoJson = async () => {
+    if (geoJsonData) return;
+    mapLoading = true;
+    mapError = null;
+    try {
+      const res = await axios.get(`${$urlApi}wilayah/json/kab/all`);
+      const data = res.data;
+      // API may return GeoJSON directly or wrapped in .data / .datas
+      if (data && data.type === 'FeatureCollection') {
+        geoJsonData = data;
+      } else if (data && data.data && data.data.type === 'FeatureCollection') {
+        geoJsonData = data.data;
+      } else if (data && data.datas) {
+        geoJsonData = Array.isArray(data.datas) ? { type: 'FeatureCollection', features: data.datas } : data.datas;
+      } else if (data && typeof data === 'object') {
+        geoJsonData = data;
+      } else {
+        geoJsonData = null;
+      }
+    } catch (err) {
+      mapError = err.message || 'Gagal memuat data peta';
+      geoJsonData = null;
+    } finally {
+      mapLoading = false;
+    }
+  };
+
+  // Fetch rekap (MAJU, BERKEMBANG, TERTINGGAL, MANDIRI) for a kabupaten and cache it.
+  // kode_wilayah = "16" + kdkab (from GeoJSON)
+  const getRekapForKab = async (kodeWilayah) => {
+    if (!kodeWilayah) return null;
+    if (rekapByKabCache[kodeWilayah]) return rekapByKabCache[kodeWilayah];
+    try {
+      const res = await axios.get(`${$urlApi}wilayah/${kodeWilayah}/rekap_desa`);
+      const datas = res.data?.datas;
+      const counts = { MAJU: 0, BERKEMBANG: 0, TERTINGGAL: 0, MANDIRI: 0 };
+      if (Array.isArray(datas)) {
+        datas.forEach((item) => {
+          const status = (item.status_idm_2024 || '').toUpperCase();
+          const total = item.total || 0;
+          if (status && counts.hasOwnProperty(status)) counts[status] = total;
+        });
+      }
+      rekapByKabCache[kodeWilayah] = counts;
+      return counts;
+    } catch {
+      rekapByKabCache[kodeWilayah] = null;
+      return null;
+    }
+  };
+
+  const formatRekapTooltipHtml = (nama, counts) => {
+    if (!counts) return `<strong>${nama || 'Kabupaten'}</strong><br/><span class="text-muted">Data tidak tersedia</span>`;
+    const total = counts.MAJU + counts.BERKEMBANG + counts.TERTINGGAL + counts.MANDIRI;
+    return `
+      <div style="min-width: 160px; font-size: 12px;">
+        <strong>${nama || 'Kabupaten'}</strong>
+        <div style="margin-top: 6px; border-top: 1px solid #eee; padding-top: 4px;">
+          <div style="color: #28a745;">MAJU: ${counts.MAJU}</div>
+          <div style="color: #ffc107;">BERKEMBANG: ${counts.BERKEMBANG}</div>
+          <div style="color: #dc3545;">TERTINGGAL: ${counts.TERTINGGAL}</div>
+          <div style="color: #007bff;">MANDIRI: ${counts.MANDIRI}</div>
+          <div style="margin-top: 4px; font-weight: 600;">Total: ${total}</div>
+        </div>
+      </div>
+    `;
+  };
+
+  const initMap = async () => {
+    if (!browser || mapInstance) return;
+    const container = document.getElementById('idmMap');
+    if (!container) return;
+    try {
+      const L = (await import('leaflet')).default;
+      mapInstance = L.map('idmMap').setView([-3.0, 104.0], 8);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(mapInstance);
+      if (geoJsonData) {
+        geoJsonLayer = L.geoJSON(geoJsonData, {
+          style: { color: '#943126', weight: 2, fillColor: '#943126', fillOpacity: 0.15 },
+          onEachFeature: (feature, layer) => {
+            const props = feature.properties || {};
+            const nama = props.nmkab ?? props.nama ?? props.NAMA ?? 'Kabupaten';
+            const kdkab = props.kdkab != null ? String(props.kdkab) : '';
+            const kodeWilayah = kdkab ? '16' + kdkab : '';
+            layer.bindTooltip('Memuat...', { permanent: false, direction: 'top', className: 'idm-map-tooltip' });
+            layer.on('mouseover', async () => {
+              const counts = await getRekapForKab(kodeWilayah);
+              layer.setTooltipContent(formatRekapTooltipHtml(nama, counts));
+            });
+            const popup = L.popup({ className: 'idm-map-popup' });
+            layer.bindPopup(popup);
+            layer.on('click', async () => {
+              const counts = await getRekapForKab(kodeWilayah);
+              popup.setContent(formatRekapTooltipHtml(nama, counts));
+              layer.openPopup();
+            });
+          }
+        }).addTo(mapInstance);
+        if (geoJsonLayer.getBounds().isValid()) {
+          mapInstance.fitBounds(geoJsonLayer.getBounds(), { padding: [20, 20] });
+        }
+      }
+      setTimeout(() => mapInstance.invalidateSize(), 100);
+    } catch (err) {
+      mapError = err.message || 'Gagal memuat peta';
+    }
+  };
+
+  const showMap = () => {
+    if (mapInstance) {
+      setTimeout(() => mapInstance.invalidateSize(), 100);
+      return;
+    }
+    if (!geoJsonData && !mapLoading && !mapError) {
+      loadGeoJson().then(() => {
+        if (geoJsonData) setTimeout(() => initMap(), 150);
+      });
+    } else if (geoJsonData) {
+      setTimeout(() => initMap(), 150);
+    }
+  };
+
   function loadJS(){
     const pluginsJS = document.createElement("script");
     pluginsJS.setAttribute("src", "/sandbox/js/plugins.js");
@@ -456,16 +590,14 @@
           const targetId = e.target.getAttribute('href');
           if (targetId === '#grafik') {
             activeTab = 'grafik';
-            // Create or update chart when switching to grafik tab
             const canvas = document.getElementById('idmChart');
             if (canvas) {
-              if (!chartInstance) {
-                createChart();
-              } else {
-                // Force update with latest chartData
-                updateChart();
-              }
+              if (!chartInstance) createChart();
+              else updateChart();
             }
+          } else if (targetId === '#peta') {
+            activeTab = 'peta';
+            showMap();
           } else {
             activeTab = targetId.replace('#', '');
           }
@@ -480,6 +612,7 @@
   <link rel="stylesheet" href="/sandbox/css/style.css">
   <link rel="stylesheet" href="/sandbox/css/preloader.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous" />
 </svelte:head>
 
 <div class="content-wrapper">
@@ -489,65 +622,6 @@
   <TopContent></TopContent>
   <section class="wrapper bg-light">
     <div class="container py-14 py-md-6">
-      <!-- Filters -->
-      <div class="row mb-3">
-        <div class="col-xl-10 mx-auto">
-          <div class="card shadow-sm">
-            <div class="card-body p-2">
-              <div class="row g-1" style="font-size: 0.75rem;">
-                <div class="col-md-6 col-lg-4">
-                  <label class="form-label mb-0" style="font-size: 0.75rem;">Kabupaten</label>
-                  <select class="form-select form-select-sm" bind:value={kabSelected} on:change={() => { loadKec(); }} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
-                    <option value="">Semua Kabupaten</option>
-                    {#each kabList as kab}
-                      <option value={kab.kode_wilayah}>{kab.nama}</option>
-                    {/each}
-                  </select>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                  <label class="form-label mb-0" style="font-size: 0.75rem;">Kecamatan</label>
-                  <select class="form-select form-select-sm" bind:value={kecSelected} disabled={!kabSelected} on:change={() => { if (kabSelected) { currentPage = 1; applyFilters(); } }} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
-                    <option value="">Semua Kecamatan</option>
-                    {#each kecList as kec}
-                      <option value={kec.kode_wilayah}>{kec.nama}</option>
-                    {/each}
-                  </select>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                  <label class="form-label mb-0" style="font-size: 0.75rem;">Status Desa</label>
-                  <select class="form-select form-select-sm" bind:value={idmSelected} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
-                    {#each idmList as idm}
-                      <option value={idm.value}>{idm.label}</option>
-                    {/each}
-                  </select>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                  <label class="form-label mb-0" style="font-size: 0.75rem;">Pencarian Cepat</label>
-                  <input
-                    type="text"
-                    class="form-control form-control-sm"
-                    placeholder="Cari desa..."
-                    bind:value={keyword}
-                    on:keyup={(e) => {
-                      if (e.key === "Enter") applyFilters();
-                    }}
-                    style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;"
-                  />
-                </div>
-                <div class="col-12 d-flex gap-1 mt-1">
-                  <button type="button" class="btn btn-sm text-white py-1 px-2" style="background-color:#943126; font-size: 0.75rem;" on:click={applyFilters}>
-                    Terapkan
-                  </button>
-                  <button type="button" class="btn btn-sm btn-secondary py-1 px-2" style="font-size: 0.75rem;" on:click={resetFilters}>
-                    Reset
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Tabs -->
       <div class="row text-center mb-3">
         <div class="col-xl-10 mx-auto">
@@ -570,6 +644,61 @@
         <div class="tab-pane fade show active" id="tabel" role="tabpanel">
           <div class="row">
             <div class="col-xl-10 mx-auto">
+              <!-- Filters (only for Tabel tab) -->
+              <div class="card shadow-sm mb-3">
+                <div class="card-body p-2">
+                  <div class="row g-1" style="font-size: 0.75rem;">
+                    <div class="col-md-6 col-lg-4">
+                      <label class="form-label mb-0" style="font-size: 0.75rem;">Kabupaten</label>
+                      <select class="form-select form-select-sm" bind:value={kabSelected} on:change={() => { loadKec(); }} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                        <option value="">Semua Kabupaten</option>
+                        {#each kabList as kab}
+                          <option value={kab.kode_wilayah}>{kab.nama}</option>
+                        {/each}
+                      </select>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                      <label class="form-label mb-0" style="font-size: 0.75rem;">Kecamatan</label>
+                      <select class="form-select form-select-sm" bind:value={kecSelected} disabled={!kabSelected} on:change={() => { if (kabSelected) { currentPage = 1; applyFilters(); } }} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                        <option value="">Semua Kecamatan</option>
+                        {#each kecList as kec}
+                          <option value={kec.kode_wilayah}>{kec.nama}</option>
+                        {/each}
+                      </select>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                      <label class="form-label mb-0" style="font-size: 0.75rem;">Status Desa</label>
+                      <select class="form-select form-select-sm" bind:value={idmSelected} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                        {#each idmList as idm}
+                          <option value={idm.value}>{idm.label}</option>
+                        {/each}
+                      </select>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                      <label class="form-label mb-0" style="font-size: 0.75rem;">Pencarian Cepat</label>
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        placeholder="Cari desa..."
+                        bind:value={keyword}
+                        on:keyup={(e) => {
+                          if (e.key === "Enter") applyFilters();
+                        }}
+                        style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;"
+                      />
+                    </div>
+                    <div class="col-12 d-flex gap-1 mt-1">
+                      <button type="button" class="btn btn-sm text-white py-1 px-2" style="background-color:#943126; font-size: 0.75rem;" on:click={applyFilters}>
+                        Terapkan
+                      </button>
+                      <button type="button" class="btn btn-sm btn-secondary py-1 px-2" style="font-size: 0.75rem;" on:click={resetFilters}>
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <!-- Table -->
               <div class="card shadow-sm">
                 <div class="card-body">
@@ -764,8 +893,19 @@
           <div class="row">
             <div class="col-xl-10 mx-auto">
               <div class="card shadow-sm">
-                <div class="card-body">
-                  <p class="text-muted">Peta akan ditampilkan di sini</p>
+                <div class="card-body p-0 position-relative">
+                  {#if mapLoading}
+                    <div class="d-flex align-items-center justify-content-center py-5">
+                      <div class="spinner-border text-secondary" role="status"></div>
+                      <span class="ms-2">Memuat peta...</span>
+                    </div>
+                  {:else if mapError}
+                    <div class="p-4 text-center text-muted">
+                      <p class="mb-0">{mapError}</p>
+                    </div>
+                  {:else}
+                    <div id="idmMap" style="height: 500px; min-height: 400px;"></div>
+                  {/if}
                 </div>
               </div>
             </div>
