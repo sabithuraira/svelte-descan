@@ -6,7 +6,6 @@
   import BackToTop from "../../components/navigation/BackToTop.svelte";
 
   import { onMount } from 'svelte';
-  import { browser } from '$app/environment';
   import axios from 'axios';
   import Chart from 'chart.js/auto';
   import { urlApi } from '../../stores/generalStores';
@@ -500,7 +499,7 @@
   };
 
   const initMap = async () => {
-    if (!browser || mapInstance) return;
+    if (typeof window === 'undefined' || mapInstance) return;
     const container = document.getElementById('idmMap');
     if (!container) return;
     try {
