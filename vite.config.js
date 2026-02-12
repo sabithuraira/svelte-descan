@@ -8,7 +8,8 @@ export default defineConfig({
 		alias: {
 			'@vercel/speed-insights/sveltekit': path.resolve(
 				'node_modules/@vercel/speed-insights/dist/sveltekit/index.mjs'
-			)
+			),
+			'svelte/legacy': path.resolve('node_modules/svelte/src/legacy/legacy-server.js')
 		}
 	}
 });
