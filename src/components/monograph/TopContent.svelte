@@ -65,13 +65,15 @@
 	});
 
 	monografData.subscribe((value) => {
-		sum_infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_lembaga_keuangan = value.jumlah_lembaga_keuangan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_penduduk = value.jumlah_penduduk.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_keluarga = value.jumlah_keluarga.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_luas_wilayah = value.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		if (!value || typeof value !== 'object') return;
+		const arr = (v) => Array.isArray(v) ? v : [];
+		sum_infrastruktur_ibadah = arr(value.jumlah_infrastruktur_ibadah).reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0);
+		sum_infrastruktur_pendidikan = arr(value.jumlah_infrastruktur_pendidikan).reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0);
+		sum_infrastruktur_ekonomi = arr(value.jumlah_infrastruktur_ekonomi).reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0);
+		sum_lembaga_keuangan = arr(value.jumlah_lembaga_keuangan).reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0);
+		sum_penduduk = arr(value.jumlah_penduduk).reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0);
+		sum_keluarga = arr(value.jumlah_keluarga).reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0);
+		sum_luas_wilayah = arr(value.luas_wilayah).reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0);
 
 		contentProfile.push(
 			{ label: "Luas Wilayah", value: `${sum_luas_wilayah} Km<sup>2</sup>`, icon: "map", url: ""},
@@ -84,14 +86,14 @@
 	});
 
 	infrastrukturKesehatan.subscribe((value) => {
-		sum_infrastruktur_kesehatan = value.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		sum_infrastruktur_kesehatan = Array.isArray(value) ? value.reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0) : 0;
 		contentProfile.push(
 			{ label: "Fasilitas Kesehatan", value: sum_infrastruktur_kesehatan, icon: "hospital", url: ""}
 		);
 	});
 
   infrastrukturOlahraga.subscribe((value) => {
-		sum_infrastruktur_olahraga = value.reduce((acc,item) => { return acc + (Number(item.nilai) == 4 || item.nilai == null ? 0 : 1); }, 0);
+		sum_infrastruktur_olahraga = Array.isArray(value) ? value.reduce((acc, item) => acc + (Number(item?.nilai) === 4 || item?.nilai == null ? 0 : 1), 0) : 0;
 		contentProfile.push(
 			{ label: "Fasilitas Olahraga", value: sum_infrastruktur_olahraga, icon: "table-tennis", url: ""}
 		);
@@ -171,8 +173,8 @@
           {:else}
             {labelLevel(info_wilayah.kode_wilayah)}
           {/if}
-					<span class="typer text-white" data-words={info_wilayah.nama} data-loop="false"/>
-					<span class="cursor text-white" data-owner="typer" data-cursor-display="_"/>
+					<span class="typer text-white" data-words={info_wilayah.nama} data-loop="false"></span>
+					<span class="cursor text-white" data-owner="typer" data-cursor-display="_"></span>
 				</h1>
 				
 				<p class="lead fs-lg mb-8 pe-xxl-2">{#if descanStatusBadge}{#if info_wilayah.status_desa == 'DESA'}Desa{:else if info_wilayah.status_desa == 'KELURAHAN'}Kelurahan{:else}Desa/Kelurahan{/if} {info_wilayah.nama} merupakan salah satu Desa Cantik Tahun {new Date().getFullYear()}. {/if}{@html deskripsiLabel }</p>

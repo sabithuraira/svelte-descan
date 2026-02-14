@@ -134,33 +134,27 @@
 	});
 
 	monografData.subscribe((value) => {
-		infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.sort((a,b) => { return b.nilai - a.nilai; });	
-		infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan.sort((a,b) => { return Number(a.variabel_id) - Number(b.variabel_id); }).sort((a,b) => { return b.nilai - a.nilai; });
-		infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi.sort((a,b) => { return b.nilai - a.nilai; });
-		disabilitas = value.jumlah_disabilitas.sort((a,b) => { return b.nilai - a.nilai; });
-		lembaga_keuangan = value.jumlah_lembaga_keuangan.sort((a,b) => { return b.nilai - a.nilai; });
-		infrastruktur_olahraga = value.jumlah_infrastruktur_olahraga.map((item) => {
-      let kondisi = '';
-      if (Number(item.nilai) == 1) {
-        kondisi = 'baik';
-      } else if (Number(item.nilai) == 2) {
-        kondisi = 'rusak sedang';
-      } else if (Number(item.nilai) == 3) {
-        kondisi = 'rusak parah';
-      } else {
-        kondisi = '';
-      }
-      return { ...item, kondisi: kondisi }; 
-    }).sort((a,b) => { return a.nilai - b.nilai; });
-		penduduk = value.jumlah_penduduk.sort((a,b) => { return b.nilai - a.nilai; });
-		sum_infrastruktur_ibadah = value.jumlah_infrastruktur_ibadah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_infrastruktur_pendidikan = value.jumlah_infrastruktur_pendidikan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_infrastruktur_ekonomi = value.jumlah_infrastruktur_ekonomi.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_lembaga_keuangan = value.jumlah_lembaga_keuangan.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_infrastruktur_olahraga = value.jumlah_infrastruktur_olahraga.reduce((acc,item) => { return item.kondisi != '' ? acc + 1 : acc + 0; }, 0);
-		sum_penduduk = value.jumlah_penduduk.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_keluarga = value.jumlah_keluarga.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
-		sum_luas_wilayah = value.luas_wilayah.reduce((acc,item) => { return acc + Number(item.nilai); }, 0);
+		if (!value || typeof value !== 'object') return;
+		const arr = (v) => Array.isArray(v) ? v : [];
+		infrastruktur_ibadah = arr(value.jumlah_infrastruktur_ibadah).slice().sort((a, b) => (Number(b?.nilai) || 0) - (Number(a?.nilai) || 0));
+		infrastruktur_pendidikan = arr(value.jumlah_infrastruktur_pendidikan).slice().sort((a, b) => Number(a?.variabel_id) - Number(b?.variabel_id)).sort((a, b) => (Number(b?.nilai) || 0) - (Number(a?.nilai) || 0));
+		infrastruktur_ekonomi = arr(value.jumlah_infrastruktur_ekonomi).slice().sort((a, b) => (Number(b?.nilai) || 0) - (Number(a?.nilai) || 0));
+		disabilitas = arr(value.jumlah_disabilitas).slice().sort((a, b) => (Number(b?.nilai) || 0) - (Number(a?.nilai) || 0));
+		lembaga_keuangan = arr(value.jumlah_lembaga_keuangan).slice().sort((a, b) => (Number(b?.nilai) || 0) - (Number(a?.nilai) || 0));
+		infrastruktur_olahraga = arr(value.jumlah_infrastruktur_olahraga).map((item) => {
+			const n = Number(item?.nilai);
+			let kondisi = n === 1 ? 'baik' : n === 2 ? 'rusak sedang' : n === 3 ? 'rusak parah' : '';
+			return { ...item, kondisi };
+		}).sort((a, b) => (Number(a?.nilai) || 0) - (Number(b?.nilai) || 0));
+		penduduk = arr(value.jumlah_penduduk).slice().sort((a, b) => (Number(b?.nilai) || 0) - (Number(a?.nilai) || 0));
+		sum_infrastruktur_ibadah = arr(value.jumlah_infrastruktur_ibadah).reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0);
+		sum_infrastruktur_pendidikan = arr(value.jumlah_infrastruktur_pendidikan).reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0);
+		sum_infrastruktur_ekonomi = arr(value.jumlah_infrastruktur_ekonomi).reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0);
+		sum_lembaga_keuangan = arr(value.jumlah_lembaga_keuangan).reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0);
+		sum_infrastruktur_olahraga = arr(value.jumlah_infrastruktur_olahraga).reduce((acc, item) => (item?.kondisi != null && item.kondisi !== '' ? acc + 1 : acc), 0);
+		sum_penduduk = arr(value.jumlah_penduduk).reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0);
+		sum_keluarga = arr(value.jumlah_keluarga).reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0);
+		sum_luas_wilayah = arr(value.luas_wilayah).reduce((acc, item) => acc + (Number(item?.nilai) || 0), 0);
 	});
 
 	pengurusLast.subscribe((value) => {
@@ -340,14 +334,18 @@
   } 
 
 	async function loadOtherDesa(){
+		const kode = `${info_wilayah.kode_prov ?? ''}${info_wilayah.kode_kab ?? ''}${info_wilayah.kode_kec ?? ''}`;
+		if (!kode || kode.length < 4) return;
 		await axios
-			.get(`${$urlApi}wilayah/${info_wilayah.kode_prov}${info_wilayah.kode_kab}${info_wilayah.kode_kec}`)
-			.then(({data})=>{
-				desa = data.datas;
-        desa = desa.filter((item) => item.kode_wilayah != info_wilayah.kode_wilayah);
-			}).catch(({ response })=>{
-				console.error(response);
-			});
+			.get(`${$urlApi}wilayah/${kode}`)
+			.then(({ data: res }) => {
+				const raw = res?.datas ?? res?.data ?? [];
+				if (!Array.isArray(raw)) return;
+				const k = (item) => item.kode_wilayah ?? (item.idProv != null && item.idKab != null && item.idKec != null && item.idDesa != null ? `${item.idProv}${item.idKab}${item.idKec}${item.idDesa}` : (item.idProv != null && item.idKab != null && item.idKec != null ? `${item.idProv}${item.idKab}${item.idKec}` : item.kode_wilayah));
+				const currentKode = info_wilayah.kode_wilayah ?? '';
+				desa = raw.map((item) => ({ ...item, nama: item.nmDesa ?? item.nama, kode_wilayah: k(item) })).filter((item) => k(item) !== currentKode);
+			})
+			.catch((err) => console.error(err));
 	}
 </script>
 
@@ -553,6 +551,7 @@
               </div>
             </div>
             <!-- /.row -->
+        </div>
         </div>
       </section>
     </div>
@@ -878,8 +877,8 @@
         <div class="modal-body">
           <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           <p>Download halaman ini dengan format:</p>
-          <a href="" class="btn text-white" style="background-color: #943126;" data-bs-dismiss="modal" on:click={downloadPDF}>PDF</a>
-          <a href="" class="btn text-white" style="background-color: #943126;" data-bs-dismiss="modal" on:click={downloadExcel}>Excel</a>
+          <button type="button" class="btn text-white" style="background-color: #943126;" data-bs-dismiss="modal" on:click={downloadPDF}>PDF</button>
+          <button type="button" class="btn text-white" style="background-color: #943126;" data-bs-dismiss="modal" on:click={downloadExcel}>Excel</button>
         </div>
         <!--/.modal-body -->
       </div>
@@ -910,7 +909,7 @@
                   <div class="item-inner">
                     <div class="card">
                       <div class="card-body">
-                        <h4 class="mb-2" style="color:#943126;">{item.nama}</h4>
+                        <h4 class="mb-2" style="color:#943126;">{item.nmDesa || item.nama}</h4>
                         <p class="mb-4">{item.deskripsi.slice(0, 200).split(' ').slice(0, -1).join(' ')} ...</p>
                         <a href="/monograph/{item.kode_wilayah}" rel="external" class="btn btn-sm text-white" style="background-color:#943126;">Selengkapnya</a>
                       </div>
@@ -934,6 +933,7 @@
         <div class="col-md-10 col-xl-9 col-xxl-7 mx-auto text-center">
         <a href="/search" class="btn btn-lg text-white btn-outline rounded-pill" style="background-color:#943126;">Cari Desa/Kelurahan Lainnya...</a>
       </div>
+    </div>
     </div>
     <!-- /.container -->
   </section>

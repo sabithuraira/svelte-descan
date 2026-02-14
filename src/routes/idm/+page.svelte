@@ -16,7 +16,7 @@
   let perPage = 20;
   let currentPage = 1;
   
-  // Chart data
+  // Chart data: for grouped bar (idm 2021-2024 per status)
   let chartInstance = null;
   let chartData = {
     MAJU: 0,
@@ -24,6 +24,8 @@
     TERTINGGAL: 0,
     MANDIRI: 0
   };
+  // Bar chart: { labels: string[], datasets: { label, data, backgroundColor }[] }
+  let chartBarData = { labels: [], datasets: [] };
   let chartLoading = false;
   let activeTab = 'tabel';
 
@@ -205,25 +207,20 @@
       url = `${$urlApi}wilayah/${kodeWilayah}/desa?${params.toString()}`;
     }
 
-    // Call both APIs in parallel
+    // Call desa list + grafik_idm_status (chart) in parallel
     try {
       const [desaResponse, chartResponse] = await Promise.all([
         axios.get(url),
-        axios.get(`${$urlApi}wilayah/${kodeWilayah}/rekap_desa`)
+        axios.get(`${$urlApi}wilayah/${kodeWilayah}/grafik_idm_status`)
       ]);
 
-      // Process desa data
-      if (desaResponse.data && desaResponse.data.data) {
-        // The API returns { data: [], meta: { from, to, total, links: [], ... } }
-        const responseData = desaResponse.data.data;
+      // Process desa data (support both data and datas from API)
+      const rawData = desaResponse.data?.data ?? desaResponse.data?.datas;
+      if (desaResponse.data && rawData) {
+        const responseData = rawData;
         const meta = desaResponse.data.meta || {};
-        // Get links from meta.links instead of data.links
         const links = meta.links || desaResponse.data.links || [];
-        
-        // Extract data array
         const dataArray = Array.isArray(responseData) ? responseData : [];
-        
-        // Extract pagination metadata
         const currentPageFromMeta = meta.current_page || currentPage;
         desa = {
           data: dataArray,
@@ -235,47 +232,30 @@
           per_page: meta.per_page || perPage,
           last_page: meta.last_page || 1
         };
-        
-        // Update currentPage to match API response
         currentPage = currentPageFromMeta;
       } else {
         desa = { data: [], links: [], from: 0, to: 0, total: 0 };
       }
 
-      // Process chart data
-      if (chartResponse.data && chartResponse.data.datas && Array.isArray(chartResponse.data.datas)) {
-        const datas = chartResponse.data.datas;
-        
-        // Reset chart data
-        const newChartData = {
-          MAJU: 0,
-          BERKEMBANG: 0,
-          TERTINGGAL: 0,
-          MANDIRI: 0
+      // Process chart from grafik_idm_status: { datas: { labels, datasets: [{ label, data }] } }
+      const chartPayload = chartResponse.data?.datas;
+      if (chartPayload && Array.isArray(chartPayload.labels) && Array.isArray(chartPayload.datasets)) {
+        const yearColors = { '2021': '#e91e8c', '2022': '#2196F3', '2023': '#FFC107', '2024': '#009688' };
+        chartBarData = {
+          labels: chartPayload.labels,
+          datasets: chartPayload.datasets.map((ds) => ({
+            label: ds.label,
+            data: Array.isArray(ds.data) ? ds.data : [],
+            backgroundColor: yearColors[ds.label] || '#6c757d'
+          }))
         };
-        
-        // Process data from datas array
-        datas.forEach(item => {
-          const status = item.status_idm_2024?.toUpperCase();
-          const total = item.total || 0;
-          if (status && newChartData.hasOwnProperty(status)) {
-            newChartData[status] = total;
-          }
-        });
-        
-        // Update chartData
-        chartData = newChartData;
-        
-        // Update chart immediately if it exists
-        if (chartInstance) {
-          updateChart();
-        } else {
-          // Chart doesn't exist yet, will be created when tab is shown
+        if (chartInstance) updateChart();
+        else {
           const grafikTab = document.getElementById('grafik');
-          if (grafikTab && grafikTab.classList.contains('show')) {
-            createChart();
-          }
+          if (grafikTab && grafikTab.classList.contains('show')) createChart();
         }
+      } else {
+        chartBarData = { labels: [], datasets: [] };
       }
 
       preloader = false;
@@ -291,9 +271,8 @@
     getDesa();
   };
   
-  // Watch for chartData changes to update chart
-  $: if (chartData && chartInstance) {
-    // Update chart whenever data changes
+  // Watch for chart bar data changes to update chart
+  $: if (chartBarData?.labels?.length && chartInstance) {
     updateChart();
   }
 
@@ -333,71 +312,59 @@
   };
 
   
-  // Create or update pie chart
+  // Create or update grouped bar chart (IDM 2021–2024 per status)
   const createChart = () => {
     const canvas = document.getElementById('idmChart');
-    if (!canvas) {
-      return;
-    }
-    
-    // Check if canvas is visible (tab must be active)
+    if (!canvas) return;
     const grafikTab = document.getElementById('grafik');
-    if (!grafikTab || !grafikTab.classList.contains('show')) {
-      return;
-    }
-    
-    // Destroy existing chart if it exists
+    if (!grafikTab || !grafikTab.classList.contains('show')) return;
     if (chartInstance) {
       chartInstance.destroy();
       chartInstance = null;
     }
-    
     try {
-      const dataValues = Object.values(chartData);
-      const total = dataValues.reduce((sum, val) => sum + val, 0);
-      
-      if (total === 0) {
+      const hasData = chartBarData.labels?.length > 0 && chartBarData.datasets?.some(d => d.data?.some(v => v > 0));
+      if (!hasData) {
         chartLoading = false;
         return;
       }
-      
       chartInstance = new Chart(canvas, {
-        type: 'pie',
+        type: 'bar',
         data: {
-          labels: ['MAJU', 'BERKEMBANG', 'TERTINGGAL', 'MANDIRI'],
-          datasets: [{
-            data: dataValues,
-            backgroundColor: [
-              '#28a745', // MAJU - green
-              '#ffc107', // BERKEMBANG - yellow
-              '#dc3545', // TERTINGGAL - red
-              '#007bff'  // MANDIRI - blue
-            ],
-            borderColor: '#fff',
-            borderWidth: 2
-          }]
+          labels: chartBarData.labels,
+          datasets: chartBarData.datasets.map(ds => ({
+            label: ds.label,
+            data: ds.data,
+            backgroundColor: ds.backgroundColor,
+            borderColor: ds.backgroundColor,
+            borderWidth: 1
+          }))
         },
         options: {
           responsive: true,
-          maintainAspectRatio: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { maxRotation: 45, minRotation: 0, font: { size: 11 } }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: { stepSize: 1 },
+              grid: { color: 'rgba(0,0,0,0.06)' }
+            }
+          },
           plugins: {
             legend: {
               position: 'bottom',
-              labels: {
-                padding: 15,
-                font: {
-                  size: 12
-                }
-              }
+              labels: { padding: 15, font: { size: 12 } }
             },
             tooltip: {
               callbacks: {
                 label: (context) => {
-                  const label = context.label || '';
-                  const value = context.parsed || 0;
-                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                  const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                  return `${label}: ${value} (${percentage}%)`;
+                  const v = context.parsed.y;
+                  const str = typeof v === 'number' ? (Number.isInteger(v) ? v : v.toFixed(2)) : v;
+                  return `${context.dataset.label}: ${str}`;
                 }
               }
             }
@@ -410,20 +377,20 @@
       chartLoading = false;
     }
   };
-  
+
   const updateChart = () => {
-    if (chartInstance && chartData) {
-      const dataValues = Object.values(chartData);
-      const total = dataValues.reduce((sum, val) => sum + val, 0);
-      
-      if (total > 0) {
-        chartInstance.data.datasets[0].data = dataValues;
-        chartInstance.update('active'); // Use 'active' mode to show animation
-      } else {
-        chartInstance.data.datasets[0].data = [0, 0, 0, 0];
-        chartInstance.update('active');
-      }
-    }
+    if (!chartInstance || !chartBarData.labels?.length) return;
+    const hasData = chartBarData.datasets?.some(d => d.data?.some(v => v > 0));
+    if (!hasData) return;
+    chartInstance.data.labels = chartBarData.labels;
+    chartInstance.data.datasets = chartBarData.datasets.map(ds => ({
+      label: ds.label,
+      data: ds.data,
+      backgroundColor: ds.backgroundColor,
+      borderColor: ds.backgroundColor,
+      borderWidth: 1
+    }));
+    chartInstance.update('active');
   };
   
   // Track if chart has been initialized to prevent multiple calls
@@ -457,8 +424,21 @@
     }
   };
 
+  // Normalize status_idm from API (e.g. "Desa Maju", "MAJU") to key: MAJU | BERKEMBANG | TERTINGGAL | MANDIRI
+  const normalizeStatusIdm = (raw) => {
+    if (raw == null || raw === '') return '';
+    const s = String(raw).toUpperCase().trim();
+    if (s.includes('MAJU') && !s.includes('BERKEMBANG')) return 'MAJU';
+    if (s.includes('BERKEMBANG')) return 'BERKEMBANG';
+    if (s.includes('MANDIRI')) return 'MANDIRI';
+    if (s.includes('SANGAT') && s.includes('TERTINGGAL')) return 'TERTINGGAL';
+    if (s.includes('TERTINGGAL')) return 'TERTINGGAL';
+    if (s === 'MAJU' || s === 'BERKEMBANG' || s === 'TERTINGGAL' || s === 'MANDIRI') return s;
+    return '';
+  };
+
   // Fetch rekap (MAJU, BERKEMBANG, TERTINGGAL, MANDIRI) for a kabupaten and cache it.
-  // kode_wilayah = "16" + kdkab (from GeoJSON)
+  // API: wilayah/{kode}/rekap_desa returns datas[] with status_idm (alias for status_idm_2024) and total
   const getRekapForKab = async (kodeWilayah) => {
     if (!kodeWilayah) return null;
     if (rekapByKabCache[kodeWilayah]) return rekapByKabCache[kodeWilayah];
@@ -468,8 +448,9 @@
       const counts = { MAJU: 0, BERKEMBANG: 0, TERTINGGAL: 0, MANDIRI: 0 };
       if (Array.isArray(datas)) {
         datas.forEach((item) => {
-          const status = (item.status_idm_2024 || '').toUpperCase();
-          const total = item.total || 0;
+          const raw = item.status_idm ?? item.status_idm_2024 ?? '';
+          const status = normalizeStatusIdm(raw);
+          const total = Number(item.total) || 0;
           if (status && counts.hasOwnProperty(status)) counts[status] = total;
         });
       }
@@ -743,9 +724,9 @@
                               <td>{desa.from ? (desa.from - 1) + index + 1 : index + 1}</td>
                               <td>{item.nama_kabupaten || "-"}</td>
                               <td>{item.nama_kecamatan || "-"}</td>
-                              <td>{item.nama || item.nama_desa || "-"}</td>
-                              <td>{item.kode_wilayah || item.kode_desa || "-"}</td>
-                              <td>{item.idm_2024 || "-"}</td>
+                              <td>{item.nmDesa || item.nama || item.nama_desa || "-"}</td>
+                              <td>{item.kode_wilayah || item.kode_desa || (item.idProv && item.idKab && item.idKec && item.idDesa ? `${item.idProv}${item.idKab}${item.idKec}${item.idDesa}` : "-")}</td>
+                              <td>{item.idm_2024 ?? "-"}</td>
                               <td>
                                 {#if item.status_idm_2024}
                                   <span class="badge" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; {getStatusIdmBadgeStyle(item.status_idm_2024)}">
@@ -860,7 +841,7 @@
 
         <div class="tab-pane fade" id="grafik" role="tabpanel">
           <div class="row">
-            <div class="col-xl-10 mx-auto">
+            <div class="col-12">
               <div class="card shadow-sm">
                 <div class="card-body">
                   {#if chartLoading}
@@ -870,11 +851,11 @@
                       </div>
                       <p class="text-muted mt-2">Memuat data grafik...</p>
                     </div>
-                  {:else if chartInstance || Object.values(chartData).reduce((sum, val) => sum + val, 0) > 0}
+                  {:else if chartInstance || (chartBarData.labels?.length > 0 && chartBarData.datasets?.some(d => d.data?.some(v => v > 0)))}
                     <div class="mb-3">
-                      <h5 class="card-title text-center mb-4" style="font-size: 1rem;">Distribusi Status IDM 2024</h5>
-                      <div class="d-flex justify-content-center">
-                        <canvas id="idmChart" style="max-width: 500px; max-height: 500px;"></canvas>
+                      <h5 class="card-title text-center mb-4" style="font-size: 1rem;">IDM per Status Desa (2021–2024)</h5>
+                      <div class="chart-container" style="position: relative; width: 100%; max-width: 100%; height: 400px;">
+                        <canvas id="idmChart"></canvas>
                       </div>
                     </div>
                   {:else}

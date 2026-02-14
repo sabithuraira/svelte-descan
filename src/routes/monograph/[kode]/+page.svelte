@@ -26,7 +26,6 @@
 	import { infrastrukturOlahraga } from "../../../stores/infraOlahragaStores";
 	import { pengurusLast } from '../../../stores/pengurusStores';
 	import { urlApi } from '../../../stores/generalStores';
-  import { subscribe } from "svelte/internal";
 
 	let preloader = true;
 
@@ -34,10 +33,25 @@
 		if(data.kode!=info_wilayah.kode_wilayah){
 			await axios
 				.get(`${$urlApi}wilayah/${data.kode}/show`)
-				.then(({data})=>{
-					infoWilayah.set(data.datas.result);
-					parentWilayah.set(data.datas.info_induk);
-					childWilayah.set(data.datas.info_child);
+				.then(({ data: res }) => {
+					const datas = res?.datas || res?.data;
+					const r = (datas?.result ?? datas ?? {}) || {};
+					const kodeProv = r.kode_prov ?? r.idProv ?? '';
+					const kodeKab = r.kode_kab ?? r.idKab ?? '';
+					const kodeKec = r.kode_kec ?? r.idKec ?? '';
+					const kodeDesa = r.kode_desa ?? r.idDesa ?? '';
+					const kodeWilayah = r.kode_wilayah ?? (kodeProv && kodeKab && kodeKec && kodeDesa ? `${kodeProv}${kodeKab}${kodeKec}${kodeDesa}` : (kodeProv && kodeKab && kodeKec ? `${kodeProv}${kodeKab}${kodeKec}` : (kodeProv && kodeKab ? `${kodeProv}${kodeKab}` : kodeProv || data.kode)));
+					infoWilayah.set({
+						...r,
+						kode_prov: kodeProv,
+						kode_kab: kodeKab,
+						kode_kec: kodeKec,
+						kode_desa: kodeDesa,
+						kode_wilayah: kodeWilayah,
+						nama: r.nmDesa ?? r.nama ?? ''
+					});
+					parentWilayah.set(datas?.info_induk ?? []);
+					childWilayah.set(datas?.info_child ?? []);
 				}).catch(({ response })=>{
 					console.error(response)
 				})
@@ -46,38 +60,34 @@
 
     await axios
       .get(`${$urlApi}descan/${data.kode}`)
-      .then(({data})=>{
-        if(data.datas.length > 0)
-          if (data.datas[0].tahun == new Date().getFullYear())
-            descanStatus.set(true);
-          else
-            descanStatus.set(false);
-        else
-          descanStatus.set(false);
-      }).catch(({ response })=>{
-        console.error(response);
-      });
+      .then(({ data: res }) => {
+        const arr = res?.datas ?? res?.data;
+        const list = Array.isArray(arr) ? arr : [];
+        if (list.length > 0 && list[0]?.tahun == new Date().getFullYear()) descanStatus.set(true);
+        else descanStatus.set(false);
+      })
+      .catch(() => descanStatus.set(false));
 
     await axios
       .get(`${$urlApi}wilayah/${data.kode}/deskripsi`)
-      .then(({data})=>{
-        deskripsi.set(data.datas.deskripsi);
-      }).catch(({ response })=>{
-        console.error(response);
-      });
+      .then(({ data: res }) => {
+        const d = res?.datas ?? res?.data ?? {};
+        deskripsi.set(d.deskripsi ?? '');
+      })
+      .catch((err) => console.error(err));
 
     await axios
       .get(`${$urlApi}pengurus/${data.kode}/last`)
-      .then(({data})=>{
-        pengurusLast.set(data.datas);
-      }).catch(({ response })=>{
-        console.error(response);
-      });
+      .then(({ data: res }) => {
+        const raw = res?.datas ?? res?.data;
+        pengurusLast.set(raw && typeof raw === 'object' ? raw : {});
+      })
+      .catch(() => pengurusLast.set({}));
 
     await axios
 			.get(`${$urlApi}dashboard/${data.kode}/monograph`)
-			.then(({data})=>{
-				let tempData = data.datas;
+			.then(({ data: res }) => {
+				const tempData = Array.isArray(res?.datas) ? res.datas : (Array.isArray(res?.data) ? res.data : []);
 				monografData.set({
 					luas_wilayah: tempData.filter(item => item.kategori_variabel=='luas_wilayah'),
 					ketinggian_wilayah: tempData.filter(item => item.kategori_variabel=='ketinggian_wilayah'),
@@ -110,30 +120,14 @@
 
     await axios
       .get(`${$urlApi}dashboard/${data.kode}/sarana_komunikasi_informasi`)
-      .then(({ data }) => {
-        let tempData = data.datas;
-        informasiInternet.set(
-          tempData.filter(
-            (item) => item.kategori_variabel == "informasi_internet"
-          )
-        );
-        menaraBTS.set(
-          tempData.filter(
-            (item) => item.kategori_variabel == "jumlah_menara_bts"
-          )
-        );
-        operatorSeluler.set(
-          tempData.filter(
-            (item) => item.kategori_variabel == "jumlah_operator_seluler"
-          )
-        );
-        sinyalTelepon.set(
-          tempData.filter((item) => item.kategori_variabel == "sinyal_telepon")
-        );
+      .then(({ data: res }) => {
+        const tempData = Array.isArray(res?.datas) ? res.datas : (Array.isArray(res?.data) ? res.data : []);
+        informasiInternet.set(tempData.filter((item) => item?.kategori_variabel === 'informasi_internet'));
+        menaraBTS.set(tempData.filter((item) => item?.kategori_variabel === 'jumlah_menara_bts'));
+        operatorSeluler.set(tempData.filter((item) => item?.kategori_variabel === 'jumlah_operator_seluler'));
+        sinyalTelepon.set(tempData.filter((item) => item?.kategori_variabel === 'sinyal_telepon'));
       })
-      .catch(({ response }) => {
-        console.error(response);
-      });
+      .catch(() => {});
 	}
 
     let info_wilayah = {
