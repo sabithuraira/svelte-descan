@@ -92,6 +92,7 @@
   let idmSelected = "";
   let statusSelected = "";
   let keyword = "";
+  let tahunSelected = "2024"; // 2021–2024: controls which IDM columns are shown and used for status filter
 
   // Dynamic kodeWilayah based on selections
   $: kodeWilayah = (() => {
@@ -196,7 +197,7 @@
       }
     } else {
       const params = new URLSearchParams();
-      if (idmSelected) params.append("status_idm_2024", idmSelected);
+      if (idmSelected) params.append(`status_idm_${tahunSelected}`, idmSelected);
       if (statusSelected) params.append("status_desa", statusSelected);
       if (keyword) params.append("keyword", keyword);
       params.append("per_page", perPage.toString());
@@ -647,6 +648,15 @@
                       </select>
                     </div>
                     <div class="col-md-6 col-lg-4">
+                      <label class="form-label mb-0" style="font-size: 0.75rem;">Tahun</label>
+                      <select class="form-select form-select-sm" bind:value={tahunSelected} on:change={() => { currentPage = 1; applyFilters(); }} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
                       <label class="form-label mb-0" style="font-size: 0.75rem;">Status Desa</label>
                       <select class="form-select form-select-sm" bind:value={idmSelected} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
                         {#each idmList as idm}
@@ -713,8 +723,8 @@
                           <th style="font-size: 0.875rem;">Kecamatan</th>
                           <th style="font-size: 0.875rem;">Desa/Kelurahan</th>
                           <th style="font-size: 0.875rem;">Kode Desa</th>
-                          <th style="font-size: 0.875rem;">IDM</th>
-                          <th style="font-size: 0.875rem;">Status Desa</th>
+                          <th style="font-size: 0.875rem;">IDM ({tahunSelected})</th>
+                          <th style="font-size: 0.875rem;">Status Desa ({tahunSelected})</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -726,11 +736,11 @@
                               <td>{item.nama_kecamatan || "-"}</td>
                               <td>{item.nmDesa || item.nama || item.nama_desa || "-"}</td>
                               <td>{item.kode_wilayah || item.kode_desa || (item.idProv && item.idKab && item.idKec && item.idDesa ? `${item.idProv}${item.idKab}${item.idKec}${item.idDesa}` : "-")}</td>
-                              <td>{item.idm_2024 ?? "-"}</td>
+                              <td>{item[`idm_${tahunSelected}`] ?? "-"}</td>
                               <td>
-                                {#if item.status_idm_2024}
-                                  <span class="badge" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; {getStatusIdmBadgeStyle(item.status_idm_2024)}">
-                                    {item.status_idm_2024}
+                                {#if item[`status_idm_${tahunSelected}`]}
+                                  <span class="badge" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; {getStatusIdmBadgeStyle(item[`status_idm_${tahunSelected}`])}">
+                                    {item[`status_idm_${tahunSelected}`]}
                                   </span>
                                 {:else}
                                   -
