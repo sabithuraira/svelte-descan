@@ -27,6 +27,19 @@
   // Bar chart: { labels: string[], datasets: { label, data, backgroundColor }[] }
   let chartBarData = { labels: [], datasets: [] };
   let chartLoading = false;
+
+  // Short category labels for Grafik: Mandiri, Maju, Berkembang, Tertinggal, Sangat Tertinggal
+  const IDM_CHART_CATEGORY_ORDER = ['Mandiri', 'Maju', 'Berkembang', 'Tertinggal', 'Sangat Tertinggal'];
+  const shortIdmCategoryLabel = (label) => {
+    if (!label) return '';
+    const s = String(label).trim();
+    if (/mandiri/i.test(s)) return 'Mandiri';
+    if (/maju/i.test(s) && !/berkembang/i.test(s)) return 'Maju';
+    if (/berkembang/i.test(s)) return 'Berkembang';
+    if (/sangat\s*tertinggal/i.test(s)) return 'Sangat Tertinggal';
+    if (/tertinggal/i.test(s)) return 'Tertinggal';
+    return s;
+  };
   let activeTab = 'tabel';
 
   // Map (Peta tab)
@@ -36,6 +49,8 @@
   let mapLoading = false;
   let mapError = null;
   let rekapByKabCache = {};
+  let tahunPetaSelected = '2024'; // 2021–2024: rekap data shown in map tooltips
+  let mapRekapLoading = false; // true while rekap data is being fetched (e.g. after hover/click or year change)
   
   // Generate smart pagination with ellipsis (like in the image)
   $: paginationItems = (() => {
@@ -91,7 +106,6 @@
   let kecSelected = "";
   let idmSelected = "";
   let statusSelected = "";
-  let keyword = "";
   let tahunSelected = "2024"; // 2021–2024: controls which IDM columns are shown and used for status filter
 
   // Dynamic kodeWilayah based on selections
@@ -199,7 +213,6 @@
       const params = new URLSearchParams();
       if (idmSelected) params.append(`status_idm_${tahunSelected}`, idmSelected);
       if (statusSelected) params.append("status_desa", statusSelected);
-      if (keyword) params.append("keyword", keyword);
       params.append("per_page", perPage.toString());
       params.append("page", currentPage.toString());
 
@@ -221,19 +234,29 @@
         const responseData = rawData;
         const meta = desaResponse.data.meta || {};
         const links = meta.links || desaResponse.data.links || [];
-        const dataArray = Array.isArray(responseData) ? responseData : [];
+        let dataArray = Array.isArray(responseData) ? responseData : [];
         const currentPageFromMeta = meta.current_page || currentPage;
+
+        // Client-side filter by Status Desa when set, so filter works even if API ignores params
+        const hasStatusFilter = idmSelected && idmSelected !== '';
+        if (hasStatusFilter) {
+          dataArray = dataArray.filter((item) => {
+            const statusVal = item[`status_idm_${tahunSelected}`];
+            return normalizeStatusIdm(statusVal) === normalizeStatusIdm(idmSelected);
+          });
+        }
+
         desa = {
           data: dataArray,
-          links: links,
-          from: meta.from || 0,
-          to: meta.to || 0,
-          total: meta.total || 0,
-          current_page: currentPageFromMeta,
+          links: hasStatusFilter ? [] : links,
+          from: dataArray.length ? 1 : 0,
+          to: dataArray.length,
+          total: hasStatusFilter ? dataArray.length : (meta.total || 0),
+          current_page: hasStatusFilter ? 1 : currentPageFromMeta,
           per_page: meta.per_page || perPage,
-          last_page: meta.last_page || 1
+          last_page: hasStatusFilter ? 1 : (meta.last_page || 1)
         };
-        currentPage = currentPageFromMeta;
+        currentPage = desa.current_page;
       } else {
         desa = { data: [], links: [], from: 0, to: 0, total: 0 };
       }
@@ -242,14 +265,21 @@
       const chartPayload = chartResponse.data?.datas;
       if (chartPayload && Array.isArray(chartPayload.labels) && Array.isArray(chartPayload.datasets)) {
         const yearColors = { '2021': '#e91e8c', '2022': '#2196F3', '2023': '#FFC107', '2024': '#009688' };
-        chartBarData = {
-          labels: chartPayload.labels,
-          datasets: chartPayload.datasets.map((ds) => ({
+        const rawLabels = chartPayload.labels.map(shortIdmCategoryLabel);
+        const order = IDM_CHART_CATEGORY_ORDER;
+        const orderIndices = order.map((shortName) => rawLabels.findIndex((l) => l === shortName)).filter((i) => i >= 0);
+        const reorder = orderIndices.length > 0 ? orderIndices : [...rawLabels.keys()];
+        const labels = reorder.map((i) => rawLabels[i]);
+        const datasets = chartPayload.datasets.map((ds) => {
+          const rawData = Array.isArray(ds.data) ? ds.data : [];
+          const data = reorder.map((i) => rawData[i] ?? 0);
+          return {
             label: ds.label,
-            data: Array.isArray(ds.data) ? ds.data : [],
+            data,
             backgroundColor: yearColors[ds.label] || '#6c757d'
-          }))
-        };
+          };
+        });
+        chartBarData = { labels, datasets };
         if (chartInstance) updateChart();
         else {
           const grafikTab = document.getElementById('grafik');
@@ -282,7 +312,6 @@
     kecSelected = "";
     idmSelected = "";
     statusSelected = "";
-    keyword = "";
     kecList = [];
     currentPage = 1;
     getDesa();
@@ -438,37 +467,45 @@
     return '';
   };
 
-  // Fetch rekap (MAJU, BERKEMBANG, TERTINGGAL, MANDIRI) for a kabupaten and cache it.
-  // API: wilayah/{kode}/rekap_desa returns datas[] with status_idm (alias for status_idm_2024) and total
+  // Fetch rekap (MAJU, BERKEMBANG, TERTINGGAL, MANDIRI) for a kabupaten by year; cache per kode+year.
+  // API: wilayah/{kode}/rekap_desa or rekap_desa?tahun=YYYY returns datas[] with status_idm_YYYY and total
   const getRekapForKab = async (kodeWilayah) => {
     if (!kodeWilayah) return null;
-    if (rekapByKabCache[kodeWilayah]) return rekapByKabCache[kodeWilayah];
+    const year = tahunPetaSelected || '2024';
+    const cacheKey = `${kodeWilayah}_${year}`;
+    if (rekapByKabCache[cacheKey]) return rekapByKabCache[cacheKey];
+    mapRekapLoading = true;
     try {
-      const res = await axios.get(`${$urlApi}wilayah/${kodeWilayah}/rekap_desa`);
-      const datas = res.data?.datas;
+      const url = `${$urlApi}wilayah/${kodeWilayah}/rekap_desa?tahun=${year}`;
+      const res = await axios.get(url);
+      const datas = res.data?.datas ?? res.data?.data;
       const counts = { MAJU: 0, BERKEMBANG: 0, TERTINGGAL: 0, MANDIRI: 0 };
       if (Array.isArray(datas)) {
         datas.forEach((item) => {
-          const raw = item.status_idm ?? item.status_idm_2024 ?? '';
+          const raw = item[`status_idm_${year}`] ?? item.status_idm ?? item.status_idm_2024 ?? '';
           const status = normalizeStatusIdm(raw);
-          const total = Number(item.total) || 0;
-          if (status && counts.hasOwnProperty(status)) counts[status] = total;
+          const total = Number(item.total) || 1;
+          if (status && counts.hasOwnProperty(status)) counts[status] += total;
         });
       }
-      rekapByKabCache[kodeWilayah] = counts;
+      rekapByKabCache[cacheKey] = counts;
       return counts;
     } catch {
-      rekapByKabCache[kodeWilayah] = null;
+      rekapByKabCache[cacheKey] = null;
       return null;
+    } finally {
+      mapRekapLoading = false;
     }
   };
 
   const formatRekapTooltipHtml = (nama, counts) => {
     if (!counts) return `<strong>${nama || 'Kabupaten'}</strong><br/><span class="text-muted">Data tidak tersedia</span>`;
     const total = counts.MAJU + counts.BERKEMBANG + counts.TERTINGGAL + counts.MANDIRI;
+    const year = tahunPetaSelected || '2024';
     return `
       <div style="min-width: 160px; font-size: 12px;">
         <strong>${nama || 'Kabupaten'}</strong>
+        <div style="color: #666; font-size: 11px;">Tahun ${year}</div>
         <div style="margin-top: 6px; border-top: 1px solid #eee; padding-top: 4px;">
           <div style="color: #28a745;">MAJU: ${counts.MAJU}</div>
           <div style="color: #ffc107;">BERKEMBANG: ${counts.BERKEMBANG}</div>
@@ -664,19 +701,6 @@
                         {/each}
                       </select>
                     </div>
-                    <div class="col-md-6 col-lg-4">
-                      <label class="form-label mb-0" style="font-size: 0.75rem;">Pencarian Cepat</label>
-                      <input
-                        type="text"
-                        class="form-control form-control-sm"
-                        placeholder="Cari desa..."
-                        bind:value={keyword}
-                        on:keyup={(e) => {
-                          if (e.key === "Enter") applyFilters();
-                        }}
-                        style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;"
-                      />
-                    </div>
                     <div class="col-12 d-flex gap-1 mt-1">
                       <button type="button" class="btn btn-sm text-white py-1 px-2" style="background-color:#943126; font-size: 0.75rem;" on:click={applyFilters}>
                         Terapkan
@@ -863,7 +887,7 @@
                     </div>
                   {:else if chartInstance || (chartBarData.labels?.length > 0 && chartBarData.datasets?.some(d => d.data?.some(v => v > 0)))}
                     <div class="mb-3">
-                      <h5 class="card-title text-center mb-4" style="font-size: 1rem;">IDM per Status Desa (2021–2024)</h5>
+                      <h5 class="card-title text-center mb-4" style="font-size: 1rem;">Perkembangan Indeks Desa Membangun (IDM) Menurut Status Desa di Provinsi Sumatera Selatan Tahun 2021 - 2024</h5>
                       <div class="chart-container" style="position: relative; width: 100%; max-width: 100%; height: 400px;">
                         <canvas id="idmChart"></canvas>
                       </div>
@@ -882,6 +906,27 @@
         <div class="tab-pane fade" id="peta" role="tabpanel">
           <div class="row">
             <div class="col-xl-10 mx-auto">
+              <div class="card shadow-sm mb-3">
+                <div class="card-body py-2 px-3">
+                  <div class="d-flex align-items-center gap-2 flex-wrap" style="font-size: 0.875rem;">
+                    <label class="form-label mb-0" for="tahun-peta-filter">Tahun:</label>
+                    <select id="tahun-peta-filter" class="form-select form-select-sm" style="width: auto; border-color: #943126; font-size: 0.875rem;" bind:value={tahunPetaSelected} on:change={() => { rekapByKabCache = {}; }}>
+                      <option value="2021">2021</option>
+                      <option value="2022">2022</option>
+                      <option value="2023">2023</option>
+                      <option value="2024">2024</option>
+                    </select>
+                    {#if mapRekapLoading}
+                      <span class="d-inline-flex align-items-center gap-1 text-primary" style="font-size: 0.8rem;">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Memuat data rekap...
+                      </span>
+                    {:else}
+                      <span class="text-muted" style="font-size: 0.8rem;">Rekap per kabupaten mengikuti tahun yang dipilih. Arahkan kursor atau klik poligon untuk melihat data.</span>
+                    {/if}
+                  </div>
+                </div>
+              </div>
               <div class="card shadow-sm">
                 <div class="card-body p-0 position-relative">
                   {#if mapLoading}
