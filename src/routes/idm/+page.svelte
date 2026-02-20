@@ -27,6 +27,7 @@
   // Bar chart: { labels: string[], datasets: { label, data, backgroundColor }[] }
   let chartBarData = { labels: [], datasets: [] };
   let chartLoading = false;
+  let kabGrafikSelected = ''; // Kab/Kota filter for Grafik tab: '' = provinsi, or kode_wilayah kabupaten
 
   // Short category labels for Grafik: Mandiri, Maju, Berkembang, Tertinggal, Sangat Tertinggal
   const IDM_CHART_CATEGORY_ORDER = ['Mandiri', 'Maju', 'Berkembang', 'Tertinggal', 'Sangat Tertinggal'];
@@ -301,7 +302,52 @@
     currentPage = 1;
     getDesa();
   };
-  
+
+  // Load chart data for Grafik tab: GET wilayah/{kode_wilayah}/grafik_idm_status, then refresh chart
+  const loadGrafikData = async () => {
+    const kode_wilayah = kabGrafikSelected && kabGrafikSelected !== '' ? kabGrafikSelected : '16';
+    // Destroy existing chart so we don't reference a canvas that was unmounted during loading
+    if (chartInstance) {
+      chartInstance.destroy();
+      chartInstance = null;
+    }
+    chartLoading = true;
+    try {
+      const url = `${$urlApi}wilayah/${kode_wilayah}/grafik_idm_status`;
+      const res = await axios.get(url);
+      const data = res.data;
+      // Support .datas, .data, or direct .labels/.datasets
+      const chartPayload = data?.datas ?? data?.data ?? (data?.labels && data?.datasets ? data : null);
+      if (chartPayload && Array.isArray(chartPayload.labels) && Array.isArray(chartPayload.datasets)) {
+        const yearColors = { '2021': '#e91e8c', '2022': '#2196F3', '2023': '#FFC107', '2024': '#009688' };
+        const rawLabels = chartPayload.labels.map((l) => shortIdmCategoryLabel(l));
+        const order = IDM_CHART_CATEGORY_ORDER;
+        const orderIndices = order.map((shortName) => rawLabels.findIndex((l) => l === shortName)).filter((i) => i >= 0);
+        const reorder = orderIndices.length > 0 ? orderIndices : [...rawLabels.keys()];
+        const labels = reorder.map((i) => rawLabels[i]);
+        const datasets = chartPayload.datasets.map((ds) => {
+          const rawData = Array.isArray(ds.data) ? ds.data : [];
+          const data = reorder.map((i) => rawData[i] ?? 0);
+          return {
+            label: ds.label,
+            data,
+            backgroundColor: yearColors[ds.label] || '#6c757d'
+          };
+        });
+        chartBarData = { labels, datasets };
+      } else {
+        chartBarData = { labels: [], datasets: [] };
+      }
+    } catch (err) {
+      console.error('Error loading grafik data:', err);
+      chartBarData = { labels: [], datasets: [] };
+    } finally {
+      chartLoading = false;
+      // Defer so Svelte renders the canvas, then create chart (we always create; chartInstance was cleared above)
+      setTimeout(() => createChart(), 100);
+    }
+  };
+
   // Watch for chart bar data changes to update chart
   $: if (chartBarData?.labels?.length && chartInstance) {
     updateChart();
@@ -346,18 +392,13 @@
   const createChart = () => {
     const canvas = document.getElementById('idmChart');
     if (!canvas) return;
-    const grafikTab = document.getElementById('grafik');
-    if (!grafikTab || !grafikTab.classList.contains('show')) return;
     if (chartInstance) {
       chartInstance.destroy();
       chartInstance = null;
     }
+    const hasLabelsAndDatasets = chartBarData.labels?.length > 0 && chartBarData.datasets?.length > 0;
+    if (!hasLabelsAndDatasets) return;
     try {
-      const hasData = chartBarData.labels?.length > 0 && chartBarData.datasets?.some(d => d.data?.some(v => v > 0));
-      if (!hasData) {
-        chartLoading = false;
-        return;
-      }
       chartInstance = new Chart(canvas, {
         type: 'bar',
         data: {
@@ -409,9 +450,7 @@
   };
 
   const updateChart = () => {
-    if (!chartInstance || !chartBarData.labels?.length) return;
-    const hasData = chartBarData.datasets?.some(d => d.data?.some(v => v > 0));
-    if (!hasData) return;
+    if (!chartInstance || !chartBarData.labels?.length || !chartBarData.datasets?.length) return;
     chartInstance.data.labels = chartBarData.labels;
     chartInstance.data.datasets = chartBarData.datasets.map(ds => ({
       label: ds.label,
@@ -608,11 +647,7 @@
           const targetId = e.target.getAttribute('href');
           if (targetId === '#grafik') {
             activeTab = 'grafik';
-            const canvas = document.getElementById('idmChart');
-            if (canvas) {
-              if (!chartInstance) createChart();
-              else updateChart();
-            }
+            loadGrafikData();
           } else if (targetId === '#peta') {
             activeTab = 'peta';
             showMap();
@@ -876,6 +911,19 @@
         <div class="tab-pane fade" id="grafik" role="tabpanel">
           <div class="row">
             <div class="col-12">
+              <div class="card shadow-sm mb-3">
+                <div class="card-body py-2 px-3">
+                  <div class="d-flex align-items-center gap-2 flex-wrap" style="font-size: 0.875rem;">
+                    <label class="form-label mb-0" for="kab-grafik-filter">Kab/Kota:</label>
+                    <select id="kab-grafik-filter" class="form-select form-select-sm" style="width: auto; max-width: 280px; border-color: #943126; font-size: 0.875rem;" bind:value={kabGrafikSelected} on:change={loadGrafikData}>
+                      <option value="">Semua Kab/Kota (Provinsi)</option>
+                      {#each kabList as kab}
+                        <option value={kab.kode_wilayah}>{kab.nama}</option>
+                      {/each}
+                    </select>
+                  </div>
+                </div>
+              </div>
               <div class="card shadow-sm">
                 <div class="card-body">
                   {#if chartLoading}
@@ -885,7 +933,7 @@
                       </div>
                       <p class="text-muted mt-2">Memuat data grafik...</p>
                     </div>
-                  {:else if chartInstance || (chartBarData.labels?.length > 0 && chartBarData.datasets?.some(d => d.data?.some(v => v > 0)))}
+                  {:else if chartBarData.labels?.length > 0 && chartBarData.datasets?.length > 0}
                     <div class="mb-3">
                       <h5 class="card-title text-center mb-4" style="font-size: 1rem;">Perkembangan Indeks Desa Membangun (IDM) Menurut Status Desa di Provinsi Sumatera Selatan Tahun 2021 - 2024</h5>
                       <div class="chart-container" style="position: relative; width: 100%; max-width: 100%; height: 400px;">
