@@ -108,7 +108,6 @@
 
   let kabSelected = "";
   let kecSelected = "";
-  let idmSelected = "";
   let statusSelected = "";
   let tahunSelected = "2024"; // 2021–2024: controls which IDM columns are shown and used for status filter
 
@@ -201,30 +200,42 @@
     ];
   };
 
-  // Load desa data and chart data
+  // Load desa data and chart data — always send status_idm (and other params) so filter is applied
   const getDesa = async (suffix = null) => {
     preloader = true;
     let url = "";
     if (suffix) {
-      // If suffix is a full URL, use it directly; otherwise prepend API URL
-      if (suffix.startsWith('http')) {
-        url = suffix;
-      } else if (suffix.startsWith($urlApi)) {
-        url = suffix;
-      } else {
-        url = $urlApi + suffix.replace($urlApi, '');
+      let baseUrl = suffix.startsWith('http') ? suffix : (suffix.startsWith($urlApi) ? suffix : $urlApi + suffix.replace($urlApi, ''));
+      try {
+        const u = new URL(baseUrl);
+        u.searchParams.set("status_idm", statusSelected ?? "");
+        u.searchParams.set("tahun", tahunSelected ?? "");
+        u.searchParams.set("kode_kab", kabSelected ?? "");
+        u.searchParams.set("kode_kec", kecSelected ?? "");
+        url = u.toString();
+      } catch {
+        const extra = [
+          'status_idm=' + encodeURIComponent(statusSelected ?? ''),
+          'tahun=' + encodeURIComponent(tahunSelected ?? ''),
+          'kode_kab=' + encodeURIComponent(kabSelected ?? ''),
+          'kode_kec=' + encodeURIComponent(kecSelected ?? '')
+        ].join('&');
+        url = baseUrl + (baseUrl.includes('?') ? '&' : '?') + extra;
       }
+      console.log('[Terapkan] Full URL (pagination):', url);
     } else {
       const params = new URLSearchParams();
-      // Do not send status_idm to API: backend may expect different formats per status (e.g. "Desa Maju" vs "MAJU").
-      // We always fetch without status filter, then filter client-side so all status options show data.
-      if (statusSelected) params.append("status_desa", statusSelected);
+      params.append("status_idm", statusSelected ?? "");
+      params.append("tahun", tahunSelected ?? "");
+      params.append("kode_kab", kabSelected ?? "");
+      params.append("kode_kec", kecSelected ?? "");
       params.append("per_page", perPage.toString());
       params.append("page", currentPage.toString());
 
       // kodeWilayah is dynamically set based on kab/kec selections
-      // Default: "16", With kab: "16{kab}", With kec: "16{kab}{kec}"
       url = `${$urlApi}wilayah/${kodeWilayah}/desa?${params.toString()}`;
+      console.log('[Terapkan] Params:', Object.fromEntries(params));
+      console.log('[Terapkan] Full URL:', url);
     }
 
     // Call desa list + grafik_idm_status (chart) in parallel
@@ -240,27 +251,18 @@
         const responseData = rawData;
         const meta = desaResponse.data.meta || {};
         const links = meta.links || desaResponse.data.links || [];
-        let dataArray = Array.isArray(responseData) ? responseData : [];
+        const dataArray = Array.isArray(responseData) ? responseData : [];
         const currentPageFromMeta = meta.current_page || currentPage;
-
-        // Client-side filter by Status Desa when set, so filter works even if API ignores params
-        const hasStatusFilter = idmSelected && idmSelected !== '';
-        if (hasStatusFilter) {
-          dataArray = dataArray.filter((item) => {
-            const statusVal = item[`status_idm_${tahunSelected}`];
-            return normalizeStatusIdm(statusVal) === normalizeStatusIdm(idmSelected);
-          });
-        }
 
         desa = {
           data: dataArray,
-          links: hasStatusFilter ? [] : links,
-          from: dataArray.length ? 1 : 0,
-          to: dataArray.length,
-          total: hasStatusFilter ? dataArray.length : (meta.total || 0),
-          current_page: hasStatusFilter ? 1 : currentPageFromMeta,
+          links: links,
+          from: meta.from ?? (dataArray.length ? 1 : 0),
+          to: meta.to ?? dataArray.length,
+          total: meta.total ?? 0,
+          current_page: currentPageFromMeta,
           per_page: meta.per_page || perPage,
-          last_page: hasStatusFilter ? 1 : (meta.last_page || 1)
+          last_page: meta.last_page ?? 1
         };
         currentPage = desa.current_page;
       } else {
@@ -361,7 +363,6 @@
   const resetFilters = () => {
     kabSelected = "";
     kecSelected = "";
-    idmSelected = "";
     statusSelected = "";
     kecList = [];
     currentPage = 1;
@@ -739,7 +740,7 @@
                     </div>
                     <div class="col-md-6 col-lg-4">
                       <label class="form-label mb-0" style="font-size: 0.75rem;">Status Desa</label>
-                      <select class="form-select form-select-sm" bind:value={idmSelected} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                      <select class="form-select form-select-sm" bind:value={statusSelected} style="border-color: #943126; font-size: 0.75rem; padding: 0.25rem 0.5rem;">
                         {#each idmList as idm}
                           <option value={idm.value}>{idm.label}</option>
                         {/each}
