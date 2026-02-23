@@ -28,16 +28,19 @@
   let chartBarData = { labels: [], datasets: [] };
   let chartLoading = false;
   let kabGrafikSelected = ''; // Kab/Kota filter for Grafik tab: '' = provinsi, or kode_wilayah kabupaten
+  $: grafikTitleWilayah = kabGrafikSelected && kabGrafikSelected !== ''
+    ? (kabList.find((k) => k.kode_wilayah === kabGrafikSelected)?.nama ?? kabGrafikSelected)
+    : 'Provinsi Sumatera Selatan';
 
   // Short category labels for Grafik: Mandiri, Maju, Berkembang, Tertinggal, Sangat Tertinggal
-  const IDM_CHART_CATEGORY_ORDER = ['Mandiri', 'Maju', 'Berkembang', 'Tertinggal', 'Sangat Tertinggal'];
+  const IDM_CHART_CATEGORY_ORDER = ['Mandiri', 'Maju', 'Berkembang', 'Tertinggal', 'SANGAT TERTINGGAL'];
   const shortIdmCategoryLabel = (label) => {
     if (!label) return '';
     const s = String(label).trim();
     if (/mandiri/i.test(s)) return 'Mandiri';
     if (/maju/i.test(s) && !/berkembang/i.test(s)) return 'Maju';
     if (/berkembang/i.test(s)) return 'Berkembang';
-    if (/sangat\s*tertinggal/i.test(s)) return 'Sangat Tertinggal';
+    if (/sangat\s*tertinggal/i.test(s)) return 'SANGAT TERTINGGAL';
     if (/tertinggal/i.test(s)) return 'Tertinggal';
     return s;
   };
@@ -187,6 +190,7 @@
       { value: "MAJU", label: "MAJU" },
       { value: "BERKEMBANG", label: "BERKEMBANG" },
       { value: "TERTINGGAL", label: "TERTINGGAL" },
+      { value: "SANGAT TERTINGGAL", label: "SANGAT TERTINGGAL" },
       { value: "MANDIRI", label: "MANDIRI" },
     ];
 
@@ -212,7 +216,8 @@
       }
     } else {
       const params = new URLSearchParams();
-      if (idmSelected) params.append(`status_idm_${tahunSelected}`, idmSelected);
+      // Do not send status_idm to API: backend may expect different formats per status (e.g. "Desa Maju" vs "MAJU").
+      // We always fetch without status filter, then filter client-side so all status options show data.
       if (statusSelected) params.append("status_desa", statusSelected);
       params.append("per_page", perPage.toString());
       params.append("page", currentPage.toString());
@@ -379,6 +384,8 @@
       return "background-color: #28a745; color: white;";
     } else if (statusUpper === "BERKEMBANG") {
       return "background-color: #ffc107; color: #000;";
+    } else if (statusUpper.includes("SANGAT") && statusUpper.includes("TERTINGGAL")) {
+      return "background-color: #a71d2a; color: white;";
     } else if (statusUpper === "TERTINGGAL") {
       return "background-color: #dc3545; color: white;";
     } else if (statusUpper === "MANDIRI") {
@@ -493,16 +500,16 @@
     }
   };
 
-  // Normalize status_idm from API (e.g. "Desa Maju", "MAJU") to key: MAJU | BERKEMBANG | TERTINGGAL | MANDIRI
+  // Normalize status_idm from API to key: MAJU | BERKEMBANG | TERTINGGAL | SANGAT TERTINGGAL | MANDIRI
   const normalizeStatusIdm = (raw) => {
     if (raw == null || raw === '') return '';
     const s = String(raw).toUpperCase().trim();
     if (s.includes('MAJU') && !s.includes('BERKEMBANG')) return 'MAJU';
     if (s.includes('BERKEMBANG')) return 'BERKEMBANG';
     if (s.includes('MANDIRI')) return 'MANDIRI';
-    if (s.includes('SANGAT') && s.includes('TERTINGGAL')) return 'TERTINGGAL';
+    if (s.includes('SANGAT') && s.includes('TERTINGGAL')) return 'SANGAT TERTINGGAL';
     if (s.includes('TERTINGGAL')) return 'TERTINGGAL';
-    if (s === 'MAJU' || s === 'BERKEMBANG' || s === 'TERTINGGAL' || s === 'MANDIRI') return s;
+    if (s === 'MAJU' || s === 'BERKEMBANG' || s === 'TERTINGGAL' || s === 'SANGAT TERTINGGAL' || s === 'MANDIRI') return s;
     return '';
   };
 
@@ -518,7 +525,7 @@
       const url = `${$urlApi}wilayah/${kodeWilayah}/rekap_desa?tahun=${year}`;
       const res = await axios.get(url);
       const datas = res.data?.datas ?? res.data?.data;
-      const counts = { MAJU: 0, BERKEMBANG: 0, TERTINGGAL: 0, MANDIRI: 0 };
+      const counts = { MAJU: 0, BERKEMBANG: 0, TERTINGGAL: 0, 'SANGAT TERTINGGAL': 0, MANDIRI: 0 };
       if (Array.isArray(datas)) {
         datas.forEach((item) => {
           const raw = item[`status_idm_${year}`] ?? item.status_idm ?? item.status_idm_2024 ?? '';
@@ -539,17 +546,19 @@
 
   const formatRekapTooltipHtml = (nama, counts) => {
     if (!counts) return `<strong>${nama || 'Kabupaten'}</strong><br/><span class="text-muted">Data tidak tersedia</span>`;
-    const total = counts.MAJU + counts.BERKEMBANG + counts.TERTINGGAL + counts.MANDIRI;
+    const st = counts['SANGAT TERTINGGAL'] ?? 0;
+    const total = (counts.MAJU || 0) + (counts.BERKEMBANG || 0) + (counts.TERTINGGAL || 0) + st + (counts.MANDIRI || 0);
     const year = tahunPetaSelected || '2024';
     return `
       <div style="min-width: 160px; font-size: 12px;">
         <strong>${nama || 'Kabupaten'}</strong>
         <div style="color: #666; font-size: 11px;">Tahun ${year}</div>
         <div style="margin-top: 6px; border-top: 1px solid #eee; padding-top: 4px;">
-          <div style="color: #28a745;">MAJU: ${counts.MAJU}</div>
-          <div style="color: #ffc107;">BERKEMBANG: ${counts.BERKEMBANG}</div>
-          <div style="color: #dc3545;">TERTINGGAL: ${counts.TERTINGGAL}</div>
-          <div style="color: #007bff;">MANDIRI: ${counts.MANDIRI}</div>
+          <div style="color: #28a745;">MAJU: ${counts.MAJU ?? 0}</div>
+          <div style="color: #ffc107;">BERKEMBANG: ${counts.BERKEMBANG ?? 0}</div>
+          <div style="color: #dc3545;">TERTINGGAL: ${counts.TERTINGGAL ?? 0}</div>
+          <div style="color: #a71d2a;">SANGAT TERTINGGAL: ${st}</div>
+          <div style="color: #007bff;">MANDIRI: ${counts.MANDIRI ?? 0}</div>
           <div style="margin-top: 4px; font-weight: 600;">Total: ${total}</div>
         </div>
       </div>
@@ -935,7 +944,7 @@
                     </div>
                   {:else if chartBarData.labels?.length > 0 && chartBarData.datasets?.length > 0}
                     <div class="mb-3">
-                      <h5 class="card-title text-center mb-4" style="font-size: 1rem;">Perkembangan Indeks Desa Membangun (IDM) Menurut Status Desa di Provinsi Sumatera Selatan Tahun 2021 - 2024</h5>
+                      <h5 class="card-title text-center mb-4" style="font-size: 1rem;">Perkembangan Indeks Desa Membangun (IDM) Menurut Status Desa di {grafikTitleWilayah} Tahun 2021 - 2024</h5>
                       <div class="chart-container" style="position: relative; width: 100%; max-width: 100%; height: 400px;">
                         <canvas id="idmChart"></canvas>
                       </div>
