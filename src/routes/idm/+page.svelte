@@ -28,9 +28,18 @@
   let chartBarData = { labels: [], datasets: [] };
   let chartLoading = false;
   let kabGrafikSelected = ''; // Kab/Kota filter for Grafik tab: '' = provinsi, or kode_wilayah kabupaten
-  $: grafikTitleWilayah = kabGrafikSelected && kabGrafikSelected !== ''
-    ? (kabList.find((k) => k.kode_wilayah === kabGrafikSelected)?.nama ?? kabGrafikSelected)
-    : 'Provinsi Sumatera Selatan';
+  let kecGrafikSelected = ''; // Kecamatan filter for Grafik tab; depends on kabGrafikSelected
+  let kecListGrafik = []; // Kecamatan list for Grafik tab (loaded when Kab/Kota selected)
+  $: grafikTitleWilayah = (() => {
+    if (kecGrafikSelected && kecListGrafik.length) {
+      const nama = kecListGrafik.find((k) => k.kode_wilayah === kecGrafikSelected)?.nama;
+      if (nama) return nama;
+    }
+    if (kabGrafikSelected && kabGrafikSelected !== '') {
+      return kabList.find((k) => k.kode_wilayah === kabGrafikSelected)?.nama ?? kabGrafikSelected;
+    }
+    return 'Provinsi Sumatera Selatan';
+  })();
 
   // Short category labels for Grafik: Mandiri, Maju, Berkembang, Tertinggal, Sangat Tertinggal
   const IDM_CHART_CATEGORY_ORDER = ['Mandiri', 'Maju', 'Berkembang', 'Tertinggal', 'SANGAT TERTINGGAL'];
@@ -310,9 +319,30 @@
     getDesa();
   };
 
+  // Load Kecamatan list for Grafik tab when Kab/Kota is selected
+  const loadKecGrafik = async () => {
+    if (!kabGrafikSelected || kabGrafikSelected === '') {
+      kecListGrafik = [];
+      kecGrafikSelected = '';
+      return;
+    }
+    const kabKode = kabGrafikSelected.startsWith('16') ? kabGrafikSelected : `16${kabGrafikSelected}`;
+    try {
+      const { data } = await axios.get(`${$urlApi}wilayah/${kabKode}`);
+      kecListGrafik = data?.datas ?? data?.data ?? [];
+      kecGrafikSelected = '';
+    } catch (err) {
+      console.error('Error loading kecamatan for grafik:', err);
+      kecListGrafik = [];
+      kecGrafikSelected = '';
+    }
+  };
+
   // Load chart data for Grafik tab: GET wilayah/{kode_wilayah}/grafik_idm_status, then refresh chart
   const loadGrafikData = async () => {
-    const kode_wilayah = kabGrafikSelected && kabGrafikSelected !== '' ? kabGrafikSelected : '16';
+    const kode_wilayah = kecGrafikSelected && kecGrafikSelected !== ''
+      ? kecGrafikSelected
+      : (kabGrafikSelected && kabGrafikSelected !== '' ? kabGrafikSelected : '16');
     // Destroy existing chart so we don't reference a canvas that was unmounted during loading
     if (chartInstance) {
       chartInstance.destroy();
@@ -923,14 +953,25 @@
             <div class="col-12">
               <div class="card shadow-sm mb-3">
                 <div class="card-body py-2 px-3">
-                  <div class="d-flex align-items-center gap-2 flex-wrap" style="font-size: 0.875rem;">
-                    <label class="form-label mb-0" for="kab-grafik-filter">Kab/Kota:</label>
-                    <select id="kab-grafik-filter" class="form-select form-select-sm" style="width: auto; max-width: 280px; border-color: #943126; font-size: 0.875rem;" bind:value={kabGrafikSelected} on:change={loadGrafikData}>
-                      <option value="">Semua Kab/Kota (Provinsi)</option>
-                      {#each kabList as kab}
-                        <option value={kab.kode_wilayah}>{kab.nama}</option>
-                      {/each}
-                    </select>
+                  <div class="d-flex align-items-center gap-3 flex-wrap" style="font-size: 0.875rem;">
+                    <div class="d-flex align-items-center gap-2">
+                      <label class="form-label mb-0" for="kab-grafik-filter">Kab/Kota:</label>
+                      <select id="kab-grafik-filter" class="form-select form-select-sm" style="width: auto; max-width: 280px; border-color: #943126; font-size: 0.875rem;" bind:value={kabGrafikSelected} on:change={async () => { await loadKecGrafik(); loadGrafikData(); }}>
+                        <option value="">Semua Kab/Kota (Provinsi)</option>
+                        {#each kabList as kab}
+                          <option value={kab.kode_wilayah}>{kab.nama}</option>
+                        {/each}
+                      </select>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                      <label class="form-label mb-0" for="kec-grafik-filter">Kecamatan:</label>
+                      <select id="kec-grafik-filter" class="form-select form-select-sm" style="width: auto; max-width: 280px; border-color: #943126; font-size: 0.875rem;" bind:value={kecGrafikSelected} on:change={loadGrafikData} disabled={!kabGrafikSelected}>
+                        <option value="">Semua Kecamatan</option>
+                        {#each kecListGrafik as kec}
+                          <option value={kec.kode_wilayah}>{kec.nama}</option>
+                        {/each}
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
